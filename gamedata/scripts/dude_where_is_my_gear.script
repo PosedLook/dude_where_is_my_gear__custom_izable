@@ -230,13 +230,39 @@ local actor_last_health = 1
 
 -- Utils
 local function save_sleep_state(args, sleep)
-	if type(args) == table then
+	if type(args) == "table" then
 		for _, arg in ipairs(args) do
-			alife_storage_manager.get_state().dude_where_is_my_gear[arg] = sleep[arg]
+			alife_storage_manager.get_state().dude_where_is_my_gear[arg] = sleep[arg]	
 		end
 	else
 		alife_storage_manager.get_state().dude_where_is_my_gear[args] = sleep[args]	
 	end
+end
+
+local function get_sleep_state()
+	if not alife_storage_manager.get_state().dude_where_is_my_gear then
+		alife_storage_manager.get_state().dude_where_is_my_gear = {
+			level = false,
+			position = false,
+			level_vert = false,
+			game_vert = false,
+			dead = false,
+			stash_created = false,
+			sleep_created = false,
+			last_death_time = 0,
+			stash_save = {},
+			dropped_stashes = {},
+			last_dropped_item_list = {},
+			last_lost_item_list = {},
+			health_status_msg = "",
+			wounds_status_msg = "",
+			dead = nil,
+			bleeding = nil,
+			healing = nil,
+			rank = nil,
+		}
+	end
+	return alife_storage_manager.get_state().dude_where_is_my_gear
 end
 
 
@@ -423,7 +449,7 @@ local function table_to_string(tbl)
 end
 
 local function add_to_dropped_item_list(item, status, stash_id)
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
     local item_name = ui_item.get_sec_name(item:section()) or 'unknown'
     local drop_stash = sleep.dropped_stashes[stash_id]
     if status == "d" then
@@ -445,7 +471,7 @@ end
 
 local function create_report_msg_string(list_lost_only, stash_id)
     list_lost_only = list_lost_only or false
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
     local stash_items = sleep.dropped_stashes[stash_id] or nil
     local msg = ""
     if not list_lost_only and stash_items then
@@ -858,28 +884,6 @@ function on_game_start()
 	RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
 	RegisterScriptCallback("actor_on_first_update",actor_on_first_update)
     options_vol = ui_options.get("sound/general/master_volume")
-	if not alife_storage_manager.get_state().dude_where_is_my_gear then
-		alife_storage_manager.get_state().dude_where_is_my_gear = {
-		level = false,
-		position = false,
-		level_vert = false,
-		game_vert = false,
-		dead = false,
-		stash_created = false,
-		sleep_created = false,
-		last_death_time = 0,
-		stash_save = {},
-		dropped_stashes = {},
-		last_dropped_item_list = {},
-		last_lost_item_list = {},
-		health_status_msg = "",
-		wounds_status_msg = "",
-		dead = nil,
-		bleeding = nil,
-		healing = nil,
-		rank = nil,
-		}
-	end
 	print_dbg("V-3-1-p10")
 end
 
@@ -888,7 +892,7 @@ function on_game_load()
     RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
     exec_console_cmd("snd_volume_eff " .. options_vol)
     -- Make sure older versions are updated:
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
 	if not sleep.last_dropped_item_list then
         sleep.last_dropped_item_list = {}
         sleep.last_lost_item_list = {}
@@ -899,7 +903,7 @@ function on_game_load()
 end
 
 local function handle_stashes()
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
 	if config.remove_previous_stash == 0 then
 		return
 	end
@@ -934,7 +938,7 @@ local function handle_stashes()
 end
 
 function actor_on_first_update()
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
 	if sleep.dead then
         sleep.dead = false
 		save_sleep_state("dead", sleep)
@@ -986,7 +990,7 @@ function actor_on_before_death(who, flags)
 	end
 
 	print_dbg("Is undead")
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
 	sleep.dead = true
 	save_sleep_state("dead", sleep)
 	bind_stalker_ext.invulnerable_time = time_global() + 10000
@@ -1343,7 +1347,7 @@ function get_chances(item, section, item_id)
 end
 
 local function get_exemption(item, section)
-	local sleep = alife_storage_manager.get_state().dude_where_is_my_gear	
+	local sleep = get_sleep_state()	
 	if not sleep.rank then
 		sleep.rank = 0
 		sleep.time = 0
@@ -1836,7 +1840,7 @@ local function itr_inv(temp, item)
 end
 
 function actor_on_item_take(obj)
-	local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+	local sleep = get_sleep_state()
 	if sleep.dead then
 		time_item_calc = time_global()
 		print_dbg("item spawn hook: [" .. obj:id() .. "]")
@@ -1894,7 +1898,7 @@ function apply_punishments()
 	r_obj = nil
 	print_dbg("Dropping stash")
     dropped_stash = alife_create("inv_backpack", db.actor:position(), db.actor:level_vertex_id(), db.actor:game_vertex_id())
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
 	
 			if not sleep.dropped_stashes then
 				sleep.dropped_stashes = {}
@@ -1952,7 +1956,7 @@ end
 --end
 
 function save_position(stash_data)
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
     pos = db.actor:position()
     print_dbg("SAVE POSITION %s| %s %s %s |", level.name(), pos.x, pos.y, pos.z)
     if stash_data then
@@ -1990,7 +1994,7 @@ function actor_on_sleep()
     if not config.use_sleep_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or check_all_lists("ignored_levels", level.name()) then
 		return
 	end
-	local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+	local sleep = get_sleep_state()
 	print_dbg("SET POSITION on SLEEP " .. tostring(config.use_sleep_respawn))
 	sleep.sleep_created = true
 	save_sleep_state("sleep_created", sleep)
@@ -2001,14 +2005,14 @@ function actor_on_stash_create(stash_data)
     if not(config.use_stash_respawn) or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or check_all_lists("ignored_levels", level.name()) then
 		return
 	end
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
     sleep.stash_created = true
 	save_sleep_state("stash_created", sleep)
     save_position(stash_data)
 end
 
 function actor_on_stash_remove(stash_data)
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
     if sleep.stash_save and (stash_data.stash_id == sleep.stash_save.stash_id) then
         sleep.stash_created = false;
         sleep.stash_save = nil
@@ -2029,7 +2033,7 @@ function on_before_save_input(flags, typ_, text)
 	if not config.use_campfire_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or check_all_lists("ignored_levels", level.name()) then
 		return
 	end
-    local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+    local sleep = get_sleep_state()
     local nearby_campfire = bind_campfire.get_nearby_campfire(10, true)
     if not nearby_campfire then
         return
@@ -2041,7 +2045,7 @@ function on_before_save_input(flags, typ_, text)
 end
 
 local function delete_empty_stash()
-	local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+	local sleep = get_sleep_state()
 	currently_respawning = nil
 	local empty_stash = true
 	r_obj:iterate_inventory_box( function(owner,itm)
@@ -2057,7 +2061,7 @@ local function delete_empty_stash()
 end
 
 local function set_player_stats()
-	local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+	local sleep = get_sleep_state()
 	sleep.bleed = db.actor.bleeding
 	sleep.healing = global_healing
 	save_sleep_state({"bleed", "healing"}, sleep)
@@ -2071,7 +2075,7 @@ local function set_player_stats()
 end
 
 local function respawn_teleport()
-	local sleep = alife_storage_manager.get_state().dude_where_is_my_gear
+	local sleep = get_sleep_state()
 	
 	if sleep and (sleep.posX and sleep.level and (sleep.level ~= level.name())) or
 		(sleep.stash_save and sleep.stash_save.posX and sleep.stash_save.level and

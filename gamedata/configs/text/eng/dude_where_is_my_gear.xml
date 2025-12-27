@@ -1,0 +1,1249 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<string_table>
+
+    <string id="ui_mcm_menu_dude_where_is_my_gear">
+		<text>Dude where's my gear?</text>
+	</string>
+	
+    <string id="ui_mcm_dwimg_money">
+		<text>Money</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_condition">
+		<text>Condition</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_condition_ga">
+		<text>Guns & Armor</text>
+	</string>
+	
+    <string id="ui_mcm_dwimg_condition_o">
+		<text>Others</text>
+	</string>
+	
+    <string id="ui_mcm_dwimg_item_loss">
+		<text>Item loss</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_lose_keep">
+		<text>Chances</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_loss_scaling">
+		<text>Scaling</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_protection">
+		<text>Grace period</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_ignore">
+		<text>Exclusions</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_item_punish">
+		<text>Damaged items</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_item_break">
+		<text>Broken items</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_break_o">
+		<text>Others</text>
+	</string>
+	
+    <string id="ui_mcm_dwimg_character">
+		<text>Character</text>
+	</string>
+	
+    <string id="ui_mcm_dwimg_day_time">
+		<text>Day time</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_time_skip">
+		<text>Time skip</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_sat_thirst">
+		<text>Satiety & Thirst</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_old_stuff">
+		<text>Respawn</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_presets">
+		<text>Presets</text>
+	</string>
+	
+    <string id="ui_mcm_dwimg_default_presets">
+		<text>Default presets</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_custom_presets">
+		<text>Custom presets</text>
+	</string>
+	
+    <string id="ui_mcm_dwimg_debug">
+		<text>Debug/Dev</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">
+		<text>Min percentage of money that can be lost.</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_money_max_money_percentage">
+		<text>Max percentage of money that can be lost.</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_drop_percentage">
+		<text>Min percentage of money that can be dropped [i]</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_drop_percentage_desc">
+		<text>Percentage is based on whats left after losing money first.</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_money_max_money_to_drop_percentage">
+		<text>Max percentage of money that can be dropped [i]</text>
+	</string>
+	
+    <string id="ui_mcm_dude_where_is_my_gear_money_max_money_to_drop_percentage_desc">
+		<text>Percentage is based on whats left after losing money first.</text>
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_money">
+		<text>Protect money</text>
+	</string>
+	<string id="ui_mcm_dude_where_is_my_gear_money_max_lost_money">
+		<text>Max money to lose</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_min_weapon_condition">
+		<text>Min condition guns will be left at</text>
+
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_min_armor_condition">
+		<text>Min condition armors will be left at</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_part_break_chance">
+		<text>Armor/Gun part breaking chance [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_part_break_chance_desc">
+		<text>Will set condition to 1 and will bypass minimum condition</text>
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_break_o_remove_upgrade_chance">
+		<text>Chance to lose installed upgrades [i]</text>
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_break_o_remove_upgrade_chance_desc">
+		<text>Multiple upgrades can be lost. Due to the upgrade tree higher level upgrades will be removed before their related lower level and less expensive upgrade.</text>
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_o_min_condition_lose2">
+		<text>Min condition to lose on melee weapons, artefacts and pelts</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_o_max_condition_lose2">
+		<text>Max condition to lose on melee weapons, artefacts and pelts</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_o_condition_melee">
+		<text>Apply condition loss to melee weapons</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_o_condition_perk_artefact">
+		<text>Apply condition loss to perk artefacts</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_o_condition_stat_artefact">
+		<text>Apply condition loss to stat artefacts</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_o_condition_pelt">
+		<text>Apply condition loss to hides and pelts</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_money_money_x_2">
+		<text>money_flat (multiples of 100)</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_money_money_y_rank">
+		<text>Max money to lose per rank [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_money_money_y_rank_desc">
+		<text>Value will be multiplied with your rank number. Adds on top of the flat value of max money to lose. Rank number can be seen in PDA. (Rookie 4000- ; Trainee 4000+ ; Experienced 6000+; Professional 10000+; Legend 50000+ ... )</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_spread_weapon_condition">
+		<text>Spread condition loss of gun parts [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_spread_weapon_condition_desc">
+		<text>The lost condition value will be distributed evenly across all weapon parts.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_max_condition_lose">
+		<text>Max condition to lose on all armors and guns</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_min_condition_lose">
+		<text>Min condition to lose on all armors and guns</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_condition_condition_ga_condition_unequipped">
+		<text>Condition loss will apply to unequipped armors/guns</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_broken_gun_chance">
+		<text>Broken gun chance [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_broken_gun_chance_desc">
+		<text>Will destroy the gun model while keeping the parts. Attachments will be kept.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_broken_armor_chance">
+		<text>Broken armor chance [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_broken_armor_chance_desc">
+		<text>Will destroy the armor while keeping the parts. PSU will be kept.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_keep_gun_armor_parts_chance">
+		<text>Chance to obtain a part of broken guns/armors</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_keep_upgrade_chance">
+		<text>Chance to obtain upgrades of broken guns/armor</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_broken_device_chance">
+		<text>Upgraded item breaking chance [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_broken_device_chance_desc">
+		<text>Retained parts after breaking include all items that were needed for crafting the item since the buyable base version. Upgraded items are those which can only be obtained by crafting. Most of them are devices and belt attachements.</text>
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_item_break_keep_device_part_chance">
+		<text>Chance to obtain a part of broken item</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance">
+		<text>Chance of dropping ammo [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_desc">
+		<text>Does not include explosives.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_anti">
+		<text>Override: Scaled chance for dropping ammo [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo">
+		<text>Chance of losing ammo [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_desc">
+		<text>Does not include explosives.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_anti">
+		<text>Override: Scaled chance for losing ammo [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance">
+		<text>Chance of dropping weapon attachments [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_desc">
+		<text>Includes scopes, suppressors and grenade launchers and detachable gun kits.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_anti">
+		<text>Override: Scaled chance for dropping weapon attachments [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments">
+		<text>Chance of losing weapon attachments [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_desc">
+		<text>Includes scopes, suppressors and grenade launchers and detachable gun kits.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_anti">
+		<text>Override: Scaled chance for losing weapon attachments [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance">
+		<text>Chance of dropping explosives [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_desc">
+		<text>Includes explosive ammo (for grenade launchers and RPGs) as well as mines/time bombs.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_anti">
+		<text>Override: Scaled chance for dropping explosives [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives">
+		<text>Chance of losing explosives [i]</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_desc">
+		<text>Includes explosive ammo (for grenade launchers and RPGs) as well as mines/time bombs.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_anti">
+		<text>Override: Scaled chance for losing explosives [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_ammo">
+		<text>Enable protection for ammo [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_ammo_desc">
+		<text>Does not include explosives.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance">
+		<text>Chance of dropping guns</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_anti">
+		<text>Override: Scaled chance for dropping guns [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns">
+		<text>Chance of losing guns</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_anti">
+		<text>Override: Scaled chance for losing guns [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_guns">
+		<text>Enable protection for guns</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance">
+		<text>Chance of dropping armor</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_anti">
+		<text>Override: Scaled chance for dropping armor [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits">
+		<text>Chance of losing armor</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_anti">
+		<text>Override: Scaled chance for losing armor [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_outfits">
+		<text>Enable protection for armors</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance">
+		<text>Chance of dropping artefacts and pelts</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_anti">
+		<text>Override: Scaled chance for dropping artefacts and pelts [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts">
+		<text>Chance of losing artefacts and pelts</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_anti">
+		<text>Override: Scaled chance for losing artefacts and pelts [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance">
+		<text>Chance of dropping upgraded items [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_desc">
+		<text>Upgraded items are those which can only be obtained by crafting. Most of them are devices and belt attachements.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_anti">
+		<text>Override: Scaled chance for dropping upgraded items [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>		
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices">
+		<text>Chance of losing upgraded items [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_desc">
+		<text>Upgraded items are those which can only be obtained by crafting. Most of them are devices and belt attachements.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_anti">
+		<text>Override: Scaled chance for losing upgraded items [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_break_o_downgrade_chance">
+		<text>Chance of downgrading upgraded items [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_punish_break_o_downgrade_chance_desc">
+		<text>Will only take effect once per item (e.g. Lv3 item cannot be downgraded to Lv1 but only Lv2). Upgraded items are those which can only be obtained by crafting. Most of them are devices and belt attachements.</text>
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance">
+		<text>Chance of dropping kits [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_desc">
+		<text>Includes drugmaking kit, gunshmithing tools, artefact melter and hunter kit.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_anti">
+		<text>Override: Scaled chance for dropping kits [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits">
+		<text>Chance of losing kits [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_desc">
+		<text>Includes drugmaking kit, gunshmithing tools and artefact melter.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_anti">
+		<text>Override: Scaled chance for losing kits [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance">
+		<text>Chance of dropping tools</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_anti">
+		<text>Override: Scaled chance for dropping tools [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools">
+		<text>Chance of losing tools</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_anti">
+		<text>Override: Scaled chance for losing tools [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance">
+		<text>Chance of dropping meds</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_anti">
+		<text>Override: Scaled chance for dropping meds [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics">
+		<text>Chance of losing meds</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_anti">
+		<text>Override: Scaled chance for losing meds [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_medics">
+		<text>Protect meds</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance">
+		<text>Chance of dropping misc items [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_desc">
+		<text>All items which are not included by any other category mentioned above are considered misc items.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_anti">
+		<text>Override: Scaled chance for dropping misc items [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_anti_desc">
+		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_keep_inventory">
+		<text>Min money to keep in inventory [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_keep_inventory_desc">
+		<text>Will first try to save money that is intended to be dropped before lost money.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_keep_general">
+		<text>Min money to keep (inventory and dropped)</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_min_time_skip">
+		<text>Min time passing [i]</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_min_time_skip_desc">
+		<text> Minimal time that will pass between passing out and waking up. You will not be affected by natural hunger and thirst increase and can instead chose the rate of it yourself dow below. (Unit: hours)</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_max_time_skip">
+		<text>Max time passing [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_max_time_skip_desc">
+		<text>Maximal time that will pass between passing out and waking up. You will not be affected by natural hunger and thirst increase and can instead chose the rate of it yourself dow below. (Unit: hours)</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_min_wake_hour">
+		<text>Do not wake up before this time [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_min_wake_hour_desc">
+		<text>Will overwrite the minimum and maximum time to pass if necessary. (If you want to set the time frame as e.g. from 20:00 to 6:00 you can set #not before = 20 and #not after = 6)</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_max_wake_hour">
+		<text>Do not wake up after this time [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_max_wake_hour_desc">
+		<text>Will overwrite the minimum and maximum time to pass if necessary. (If you want to set the time frame as e.g. from 20:00 to 6:00 you can set #not before = 20 and #not after = 6)</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_min_health">
+		<text>Min health</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_max_health">
+		<text>Max health</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_sat_thirst_min_satiety">
+		<text>Min satiety [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_sat_thirst_min_satiety_desc">
+		<text>You can also gain satiety if you were below the threshold.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_sat_thirst_min_thirst">
+		<text>Min thirst [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_sat_thirst_min_thirst_desc">
+		<text>You can also lose thirst if you were below the threshold.</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_sat_thirst_satiety_loss_per_hour">
+		<text>Satiety and thirst loss rate [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_sat_thirst_satiety_loss_per_hour_desc">
+		<text>You will lose % percent of satiety per hour passed before waking up. Thirst is affected by half the value.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_full_heal_chance">
+		<text>Chance of respawning with full health</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_full_satiety_chance">
+		<text>Chance respawning without hunger and thirst</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items">
+		<text>Chance of losing misc items [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_desc">
+		<text>All items which are not included by any other category mentioned above are considered misc items.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_anti">
+		<text>Override: Scaled chance for losing misc items [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_anti_desc">
+		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier">
+		<text>Increase item loss chance [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_desc">
+		<text>Increases the chance to lose a item depending on rank by up to this amount (%). 30% loss chance and 50% item loss chance increase -> 45% loss chance.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti">
+		<text>Decrease item not-loss chance [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti_desc">
+		<text>Decrease the chance to not lose a item depending on rank by up to this amount (%). Will use the (not-)loss chance after the loss chance increase was applied. 45% loss chance = 55% not-loss chance. 55% not-loss chance and 50% not-loss decrease -> 27,5% not-loss chance. 27,5% not-loss chance = 72,5% loss chance.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti_override">
+		<text>Category-based item not-loss chance [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti_override_desc">
+		<text>If enabled, item not-loss scaling chance is configured per item category. The global setting above will be ignored.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from">
+		<text>Loss scaling starts at this rank [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from_desc">
+		<text>Increased loss chances will start at 0% from this rank and scales linearly.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until">
+		<text>Loss scaling ends at this rank [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until_desc">
+		<text>Increased loss chance will reach set values at this rank and stay at it.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier2">
+		<text>Increase item drop chance [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier2_desc">
+		<text>Increases the chance to drop a item depending on rank by up to this amount (%). 20% drop chance and 100% item drop chance increase -> 40% drop chance.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2">
+		<text>Decrease item not-drop chance [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2_desc">
+		<text>Decrease the chance to not drop a item depending on rank by up to this amount (%). Will use the (not-)drop chance after the loss chance increase was applied. 40% drop chance = 60% not-drop chance. 60% not-drop chance and 10% not-drop decrease -> 54% not-drop chance. 54% not-drop chance = 46% drop chance.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2_override">
+		<text>Category-based item not-drop chance [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2_override_desc">
+		<text>If enabled, item not-drop scaling chance is configured per item category. The global setting above will be ignored.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from2">
+		<text>Drop scaling starts at this rank [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from2_desc">
+		<text>Increased drop chances will start at 0% from this rank and scales linearly.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until2">
+		<text>Drop scaling ends at this rank [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until2_desc">
+		<text>Increased drop chance will reach set values at this rank and stay at it.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_enable_scale">
+		<text>Enable scaling of loss & drop chances</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_scaling_exponent">
+		<text>Scaling Exponent [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_scaling_exponent_desc">
+		<text>The exponent of the scaling function.\n \n - The default value of 1 is linear scaling: loss and drop chances are directly proportional to the player's position between min and max scaling rank.\n \n - Values greater than 1 will make this scaling start slow and increase progressively faster towards later ranks.\n \n - Values less than 1 will make the scaling start fast and begin levelling out towards later ranks.\n \n(tldr. 1 = linear scaling, 2 = quadratic scaling, 0.5 = square-root scaling)</text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_exemption1_desc">
+		<text>Ruleset A</text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_exemption2_desc">
+		<text>Ruleset B</text>
+	</string>
+	
+	<string id="ui_mcm_lst_no_protection">
+		<text>No grace period</text>
+	</string>
+	
+	<string id="ui_mcm_lst_protection_a">
+		<text>Use ruleset A</text>
+	</string>	
+
+	<string id="ui_mcm_lst_protection_b">
+		<text>Use ruleset B</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_gun_attachements">
+		<text>Protect gun attachements</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_artefacts">
+		<text>Protect artefacts & pelts</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_device">
+		<text>Protect upgraded items [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_device_desc">
+		<text>Upgraded items are those which can only be obtained by crafting. Most of them are devices and belt attachements.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_kit">
+		<text>Protect kits [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_kit_desc">
+		<text>Includes drugmaking kit, gunshmithing tools, artefact melter and hunter kit.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_tools">
+		<text>Protect tools</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_explosives">
+		<text>Protect explosives</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_misc">
+		<text>Protect misc items</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_everything">
+		<text>Protect all items</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_rank_exemption">
+		<text>Protection after game start (by rank) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_rank_exemption2">
+		<text>Protection after game start (by rank) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_rank_exemption_desc">
+		<text>If a category down below is checked and your rank is below this value, items of that category will not be affected by punishments. Rank number can be seen in PDA. (Rookie 4000- ; Trainee 4000+ ; Experienced 6000+; Professional 10000+; Legend 50000+ ... )</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_rank_exemption2_desc">
+		<text>If a category down below is checked and your rank is below this value, items of that category will not be affected by punishments. Rank number can be seen in PDA. (Rookie 4000- ; Trainee 4000+ ; Experienced 6000+; Professional 10000+; Legend 50000+ ... )</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_gained_rank_exemption">
+		<text>Protection after death (by rank) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_gained_rank_exemption2">
+		<text>Protection after death (by rank) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_gained_rank_exemption_desc">
+		<text>If a category down below is checked and your gained rank since the last death is below this value, items of that category will not be affected by punishments. Rank number can be seen in PDA. (Rookie 4000- ; Trainee 4000+ ; Experienced 6000+; Professional 10000+; Legend 50000+ ... )</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_gained_rank_exemption2_desc">
+		<text>If a category down below is checked and your gained rank since the last death is below this value, items of that category will not be affected by punishments. Rank number can be seen in PDA. (Rookie 4000- ; Trainee 4000+ ; Experienced 6000+; Professional 10000+; Legend 50000+ ... )</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_time_exemption">
+		<text>Protection after game start (by time[h]) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_time_exemption2">
+		<text>Protection after game start (by time[h]) [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_time_exemption_desc">
+		<text>If a category down below is checked and the in game time that passed since game start is below this value (measured in hours), items of that category will not be affected by punishments.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_max_time_exemption2_desc">
+		<text>If a category down below is checked and the in game time that passed since game start is below this value (measured in hours), items of that category will not be affected by punishments.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_passed_time_exemption">
+		<text>Protection after death (by time[h]) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_protection_passed_time_exemption2">
+		<text>Protection after death (by time[h]) [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_passed_time_exemption_desc">
+		<text>If a category down below is checked and the in game time that passed since the last death is below this value (measured in hours), items of that category will not be affected by punishments.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_protection_passed_time_exemption2_desc">
+		<text>If a category down below is checked and the in game time that passed since the last death is below this value (measured in hours), items of that category will not be affected by punishments.</text>
+	</string>
+
+	<string id="ui_mcm_dwimg_ignore_desc">
+		<text>Down below you can set certain categories of basic items to be excluded from punishments. Chose a certain level and all items of that level and below are protected. Chose 0 to disable the protection.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_pda">
+		<text>Ignore PDAs</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_backpack">
+		<text>Ignore backpacks</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_detector">
+		<text>Ignore artefact detectors</text>
+	</string>	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_torch_nvg">
+		<text>Ignore flashlights/NVGs [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_torch_nvg_desc">
+		<text>Lv1 Flashlight; Lv2 Headlamp; Lv3+ NVGs</text>
+	</string>		
+
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_knife">
+		<text>Ignore knifes</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_axe">
+		<text>Ignore axe and sledgehammer</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_special_equipment">
+		<text>Ignore special equipment [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_special_equipment_desc">
+		<text>Includes quick release, hunters kit, field cooker, radio, anomaly measurement and geiger.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_ignore_ignore_binoculars">
+		<text>Always keep binoculars</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_exemption_scale">
+		<text>Limited scaling for essential items [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_exemption_scale_desc">
+		<text>Scaling chances don't affect guns, armors, artefacts and upgraded items</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_basic_prot">
+		<text>Always keep echo detector, </text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_goodwill_desc">
+		<text>If you disable a rule set the general goodwill settings will be used instead.</text>
+	</string>
+	
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_flat">
+		<text>Goodwill loss</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent">
+		<text>Goodwill loss towards minimum (%) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent_desc">
+		<text>Will be applied after the flat goodwill loss. Will lose goodwill based on the difference between your current goodwill and set minimum goodwill. E.g. 500 current goodwill, -500 minimum goodwill and 30% loss will result in 300 goodwill loss -> 200 goodwill.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_min_goodwill">
+		<text>Minimum goodwill</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_friends">
+		<text>Rule set: friendly factions</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_flat_f">
+		<text>Goodwill loss</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent_f">
+		<text>Goodwill loss towards minimum (%) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent_f_desc">
+		<text>Will be applied after the flat goodwill loss. Will lose goodwill based on the difference between your current goodwill and set minimum goodwill. E.g. 500 current goodwill, -500 minimum goodwill and 30% loss will result in 300 goodwill loss -> 200 goodwill.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_min_goodwill_f">
+		<text>Minimum goodwill</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_enemies">
+		<text>Rule set: enemy factions</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_flat_e">
+		<text>Goodwill loss</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent_e">
+		<text>Goodwill loss towards minimum (%) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent_e_desc">
+		<text>Will be applied after the flat goodwill loss. Will lose goodwill based on the difference between your current goodwill and set minimum goodwill. E.g. 500 current goodwill, -500 minimum goodwill and 30% loss will result in 300 goodwill loss -> 200 goodwill.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_min_goodwill_e">
+		<text>Minimum goodwill</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_neutrals">
+		<text>Rule set: neutral factions</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_flat_n">
+		<text>Goodwill loss</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent_n">
+		<text>Goodwill loss towards minimum (%) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_goodwill_loss_percent_n_desc">
+		<text>Will be applied after the flat goodwill loss. Will lose goodwill based on the difference between your current goodwill and set minimum goodwill. E.g. 500 current goodwill, -500 minimum goodwill and 30% loss will result in 300 goodwill loss -> 200 goodwill.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_min_goodwill_n">
+		<text>Minimum goodwill</text>
+	</string>
+    			
+	<string id="ui_mcm_dude_where_is_my_gear_character_rank_loss">
+		<text>Rank lost (%)</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_character_quest_fail_chance">
+		<text>Chance to fail a secondary quest</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_enable_wake_hours">
+		<text>Wake up within time frame [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_enable_wake_hours_desc">
+		<text>Will also work if no time skip is activated.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_remove_previous_stash">
+		<text>Max number of dropped stashes [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_remove_previous_stash_desc">
+		<text>Will delete the oldest stash(es) if number of current stashes surpasses this number. Chose 0 to not delete any stashes. A stash will not be created if you did not drop any item.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_delete_empty_stash_desc">
+		<text>Turning on this feature may result in bugged behaviour where your stash is deleted despite containing dropped items.</text>
+	</string>	
+
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_use_campfire_respawn">
+		<text>Enable respawn points at campfires</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_use_stash_respawn">
+		<text>Enable respawn points at stashes</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_use_sleep_respawn">
+		<text>Enable respawn points after sleeping</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_old_stuff_use_campfire_respawn_desc">
+		<text>Set respawn point only by saving at campfires.</text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_loss_desc">
+		<text>Loss chance will be rolled first. Drop chance second. If neither succeeds the item will be kept. (E.g. 50% loss chance and 60% drop chance results in: 50% lost, 30% dropped and 20% kept)</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_chosen_preset">
+		<text>Select preset slot</text>
+	</string>
+	
+	<string id="dude_where_is_my_gear_presets_custom_presets_chosen_preset_lst_preset_1">
+		<text>Preset 1</text>
+	</string>
+
+	<string id="dude_where_is_my_gear_presets_custom_presets_chosen_preset_lst_preset_2">
+		<text>Preset 2</text>
+	</string>
+	
+	<string id="dude_where_is_my_gear_presets_custom_presets_chosen_preset_lst_preset_3">
+		<text>Preset 3</text>
+	</string>
+	
+	<string id="dude_where_is_my_gear_presets_custom_presets_chosen_preset_lst_preset_4">
+		<text>Preset 4</text>
+	</string>
+	
+	<string id="dude_where_is_my_gear_presets_custom_presets_chosen_preset_lst_preset_5">
+		<text>Preset 5</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_save_preset">
+		<text>Save current MCM settings as preset</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_load_preset">
+		<text>Load preset and overwrite current MCM settings</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_money">
+		<text>Consider money settings</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_condition">
+		<text>Consider condition settings</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_item_loss">
+		<text>Consider item loss settings</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_ignore">
+		<text>Consider exclusions settings</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_protection">
+		<text>Consider grace period settings</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_item_punish">
+		<text>Consider damaged items settings</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_character">
+		<text>Consider character settings</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_day_time">
+		<text>Consider day time settings</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_cst_preset_old_stuff">
+		<text>Consider respawn settings</text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_def_presets">
+		<text>Presets will be loaded and current MCM values overwritten only when the player is in-game. General settings like "Time skip" and "Respawn" have no corresponding presets and have to be set up manually. (Order: Load custom preset -> Load default presets -> Save custom preset)</text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_def_presets_dif">
+		<text>~Easy: The individual death doesn't matter much ... the loading screen is already half the punishment. Important items are mostly save if you don't challenge fate to often.\n~Medium: A single death once in a while is mostly sustainable. Deaths will drain a noticable amount of recources and losing important items is a real threat.\n~Hard: Every death will set you back a few steps since important items are regularly lost.\n~Hardcore: Lose almost everything.</text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_cst_presets">
+		<text>Presets will be loaded and current MCM values overwritten only when the player is in-game. (Order: Load custom preset -> Load default presets -> Save custom preset)\nThe checkbox will be unchecked automatically once the settings are saved or loaded.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_money">
+		<text>Money loss</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_condition">
+		<text>Condition degrade</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_loss_basic">
+		<text>Item loss (materials & consumables)</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_loss_core">
+		<text>Item loss (equipment & progression) [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_loss_core_desc">
+		<text>Since this presets punishments are targeting the same items as the preset for "Broken items and downgrades" each on its own is more forgiving than usual and the intended difficulty is only reached by turning both to the same difficulty so they can add up.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_loss_scaling">
+		<text>Item loss scaling over time</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_ignore">
+		<text>Exclude core items from punishment</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_protection">
+		<text>Grace period</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_punish">
+		<text>Broken items and downgrades [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_punish_desc">
+		<text>Since this presets punishments are targeting the same items as the preset for "Item loss (equipment & progression)" each on its own is more forgiving than usual and the intended difficulty is only reached by turning both to the same difficulty so they can add up.</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_character">
+		<text>Character / Goodwill</text>
+	</string>
+
+	<string id="ui_mcm_lst_no_preset">
+		<text>No preset</text>
+	</string>	
+	
+	<string id="ui_mcm_lst_preset_easy">
+		<text>Easy</text>
+	</string>
+
+	<string id="ui_mcm_lst_preset_medium">
+		<text>Medium</text>
+	</string>
+
+	<string id="ui_mcm_lst_preset_hard">
+		<text>Hard</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_hardcore">
+		<text>Hardcore</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_very_hard">
+		<text>Very hard</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_100_easy">
+		<text>Scale toward 100% loss chance (easy/slow)</text>
+	</string>
+
+	<string id="ui_mcm_lst_preset_100_medium">
+		<text>Scale toward 100% loss chance (medium)</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_100_hard">
+		<text>Scale toward 100% loss chance (hard/fast)</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_off">
+		<text>Turned off</text>
+	</string>
+
+	<string id="ui_mcm_lst_preset_ignore_all">
+		<text>All exclusions on</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_ignore_midway">
+		<text>Exclusion except for high tier equipment</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_ignore_basic">
+		<text>Exclusion for basic variants</text>
+	</string>
+
+	<string id="ui_mcm_lst_preset_ignore_nothing">
+		<text>All exclusions off</text>
+	</string>
+	
+	<string id="ui_mcm_lst_preset_protection_early">
+		<text>Early game guard</text>
+	</string>
+</string_table>

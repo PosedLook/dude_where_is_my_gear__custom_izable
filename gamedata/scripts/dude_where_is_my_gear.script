@@ -229,16 +229,6 @@ end
 local actor_last_health = 1
 
 -- Utils
-local function save_sleep_state(args, sleep)
-	if type(args) == "table" then
-		for _, arg in ipairs(args) do
-			alife_storage_manager.get_state().dude_where_is_my_gear[arg] = sleep[arg]	
-		end
-	else
-		alife_storage_manager.get_state().dude_where_is_my_gear[args] = sleep[args]	
-	end
-end
-
 local function get_sleep_state()
 	if not alife_storage_manager.get_state().dude_where_is_my_gear then
 		alife_storage_manager.get_state().dude_where_is_my_gear = {
@@ -896,8 +886,6 @@ function on_game_load()
 	if not sleep.last_dropped_item_list then
         sleep.last_dropped_item_list = {}
         sleep.last_lost_item_list = {}
-		save_sleep_state({"last_dropped_item_list", "last_lost_item_list"}, sleep)
-		alife_storage_manager.get_state().dude_where_is_my_gear = sleep
     end
 	death_init = false
 end
@@ -934,14 +922,12 @@ local function handle_stashes()
 		level.map_remove_object_spot(oldest_stash_id, "treasure")
 		alife_release_id(oldest_stash_id)
 	end
-	save_sleep_state("dropped_stashes", sleep)	
 end
 
 function actor_on_first_update()
     local sleep = get_sleep_state()
 	if sleep.dead then
         sleep.dead = false
-		save_sleep_state("dead", sleep)
 		if db.actor.bleeding > 0 then
 			print_dbg("Leftover bleeding " .. db.actor.bleeding)
 		elseif sleep.bleed > 0 then
@@ -965,7 +951,6 @@ function actor_on_first_update()
 			sleep.rank = db.actor:character_rank()
 			sleep.time = get_game_seconds()
 		end
-		save_sleep_state({"rank", "time"}, sleep)
 		
 		handle_stashes()
         -- db.actor:give_game_news("Severe Injured", sleep.health_status_msg, "ui_inGame2_neutral_2_mask", 5000, 20000)			
@@ -992,14 +977,12 @@ function actor_on_before_death(who, flags)
 	print_dbg("Is undead")
     local sleep = get_sleep_state()
 	sleep.dead = true
-	save_sleep_state("dead", sleep)
 	bind_stalker_ext.invulnerable_time = time_global() + 10000
     local current_time = time_global()
     if last_death_time < current_time then
         last_death_time = current_time + 10000
         respawn_done = false
         sleep.last_death_time = last_death_time
-        save_sleep_state("last_death_time", sleep)
     end
     if last_death_time > current_time and not respawn_done then
         local final_cause_of_death = determine_main_cause_of_death(death_last_attacks)
@@ -1108,7 +1091,6 @@ function actor_on_before_death(who, flags)
                                                    math.floor(global_healing * 100 + 0.5) .. "% of health " ..
                                                    math.floor(global_satiety * 100 + 0.5) .. "% Satiety" ..
 												   math.floor(global_thirst * 100 + 0.5) .. "% thirst")
-			save_sleep_state("health_status_msg", sleep)	
 			currently_respawning = 4		
 		end
 
@@ -1351,7 +1333,6 @@ local function get_exemption(item, section)
 	if not sleep.rank then
 		sleep.rank = 0
 		sleep.time = 0
-		save_sleep_state({"rank", "time"}, sleep)
 	end
 	local i_type =  getItemType(item, "exemption")
 	local rule_a = false
@@ -1908,7 +1889,6 @@ function apply_punishments()
 				last_lost_item_list = {},
 				time = get_game_seconds()
 			}
-			save_sleep_state("dropped_stashes", sleep)
 
 			lose_rank_goodwill()
 			lose_money()
@@ -1987,7 +1967,6 @@ function save_position(stash_data)
     local save_message = strformat("Respawn point set.", text)
     exec_console_cmd("main_menu off")
     actor_menu.set_msg(1, save_message, 4) 
-	save_sleep_state({"stash_save", "stash_created", "type", "level", "posX", "posY", "posZ", "position", "level_vert", "game_vert", "sleep_created", "type"}, sleep)
 end
 
 function actor_on_sleep()
@@ -1997,7 +1976,6 @@ function actor_on_sleep()
 	local sleep = get_sleep_state()
 	print_dbg("SET POSITION on SLEEP " .. tostring(config.use_sleep_respawn))
 	sleep.sleep_created = true
-	save_sleep_state("sleep_created", sleep)
 	save_position()
 end
 
@@ -2007,7 +1985,6 @@ function actor_on_stash_create(stash_data)
 	end
     local sleep = get_sleep_state()
     sleep.stash_created = true
-	save_sleep_state("stash_created", sleep)
     save_position(stash_data)
 end
 
@@ -2022,7 +1999,6 @@ function actor_on_stash_remove(stash_data)
         send_items_report_news_msg(true, stash_data.stash_id)
         sleep.dropped_stashes[stash_data.stash_id] = nil
     end
-    save_sleep_state({"stash_save", "stash_created", "type", "dropped_stashes"}, sleep)
 end
 
 function actor_on_save()
@@ -2040,7 +2016,6 @@ function on_before_save_input(flags, typ_, text)
     end
 	print_dbg("SET POSITION on CAMPFIRE " .. tostring(config.use_campfire_respawn))
 	sleep.sleep_created = true
-	save_sleep_state("sleep_created", sleep)
 	save_position()
 end
 
@@ -2057,14 +2032,12 @@ local function delete_empty_stash()
 		alife_release(r_obj)
 		print_dbg("Empty stash detected and deleted!")
 	end
-	save_sleep_state("dropped_stashes", sleep)
 end
 
 local function set_player_stats()
 	local sleep = get_sleep_state()
 	sleep.bleed = db.actor.bleeding
 	sleep.healing = global_healing
-	save_sleep_state({"bleed", "healing"}, sleep)
 	db.actor.bleeding = 1
 	db.actor.radiation = 0
 	db.actor.health = global_healing

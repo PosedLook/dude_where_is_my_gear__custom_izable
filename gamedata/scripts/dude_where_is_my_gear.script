@@ -22,23 +22,6 @@ local skipped_time = 0
 local time_item_calc = nil
 local actor_last_health = 1
 
-local item_type = {
-    MEDICAL = "medical",
-    GUN   = "gun",
-    UPGRADED = "upgraded",
-	TOOL = "tool",
-	KIT = "kit",
-	ARMOR = "armor",
-	AMMO = "ammo",
-	EXPLOSIVE = "explosive",
-	ARTEFACT_PERK = "artefact_perk",
-	ARTEFACT_STAT = "artefact_stat",
-	PELT = "pelt",
-	ATTACHEMENT_WPN = "attachement_weapon",
-	QUEST = "quest",
-	MISC = "misc"
-}
-
 all_lists ={
 	list_ignore_pda = {
 		"device_pda_1",
@@ -146,6 +129,63 @@ all_lists ={
 	},
 }
 
+local function check_all_lists(list, i)
+	return all_lists[list][i]
+end
+
+local item_type = {
+    MEDICAL = "medical",
+    GUN   = "gun",
+    UPGRADED = "upgraded",
+	TOOL = "tool",
+	KIT = "kit",
+	ARMOR = "armor",
+	AMMO = "ammo",
+	EXPLOSIVE = "explosive",
+	ARTEFACT_PERK = "artefact_perk",
+	ARTEFACT_STAT = "artefact_stat",
+	PELT = "pelt",
+	ATTACHEMENT_WPN = "attachement_weapon",
+	QUEST = "quest",
+	MISC = "misc"
+}
+
+local function getItemType(item, dbg_info)
+	local r_type = item_type.MISC
+	local g_type = (ini_sys:r_string_ex(item:section(), "kind"))
+	
+	if g_type == "i_medical" then
+		r_type = item_type.MEDICAL
+	elseif IsWeapon(item) and not (IsGrenade(item) or IsMelee(item)) then
+		r_type = item_type.GUN
+	elseif check_all_lists("devices",section) ~= nil then
+		r_type = item_type.UPGRADED
+	elseif check_all_lists("tools_list",section) then
+		r_type = item_type.TOOL
+	elseif check_all_lists("kits_list",section) then
+		r_type = item_type.KIT
+	elseif IsOutfit(item) or IsHeadgear(item) then
+		r_type = item_type.ARMOR
+	elseif g_type == "w_ammo" or string.match(item:section(), "^mag_") or IsAmmo(item) then
+		r_type = item_type.AMMO
+	elseif g_type == "w_explosive" then
+		r_type = item_type.EXPLOSIVE
+	elseif g_type == "i_arty_junk" then
+		r_type = item_type.ARTEFACT_PERK
+	elseif g_type == "i_arty" then
+		r_type = item_type.ARTEFACT_STAT
+	elseif g_type == "i_mutant_belt" then
+		r_type = item_type.PELT
+	elseif (ini_sys:r_string_ex(item:section(), "kind") == "w_misc") and not (item:section() == "bolt_bullet" or item:section() == "bolt" or item:section() == "wpn_binoc_inv") then
+		r_type = item_type.ATTACHEMENT_WPN
+	elseif g_type == "i_quest" then
+		r_type = item_type.QUEST
+	end
+	
+	print_dbg("Item type of <" .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
+	return r_type
+end
+
 local rule_a_prot = {}
 local rule_b_prot = {}
 local function init_protections()
@@ -244,10 +284,6 @@ local function issue()
 	if config.display_issue then
 		actor_menu.set_msg(1, strformat("Dude where is my gear ran into an issue! Please save the log for further investigation! (You can keep playing)", text), 10)
 	end
-end
-
-local function check_all_lists(list, i)
-	return all_lists[list][i]
 end
 
 function get_game_seconds()
@@ -379,42 +415,6 @@ function detach_gl_dwimg(weapon)
 		end
 	end
 	return false
-end
-
-local function getItemType(item, dbg_info)
-	local r_type = item_type.MISC
-	local g_type = (ini_sys:r_string_ex(item:section(), "kind"))
-	
-	if g_type == "i_medical" then
-		r_type = item_type.MEDICAL
-	elseif IsWeapon(item) and not (IsGrenade(item) or IsMelee(item)) then
-		r_type = item_type.GUN
-	elseif check_all_lists("devices",section) ~= nil then
-		r_type = item_type.UPGRADED
-	elseif check_all_lists("tools_list",section) then
-		r_type = item_type.TOOL
-	elseif check_all_lists("kits_list",section) then
-		r_type = item_type.KIT
-	elseif IsOutfit(item) or IsHeadgear(item) then
-		r_type = item_type.ARMOR
-	elseif g_type == "w_ammo" or string.match(item:section(), "^mag_") or IsAmmo(item) then
-		r_type = item_type.AMMO
-	elseif g_type == "w_explosive" then
-		r_type = item_type.EXPLOSIVE
-	elseif g_type == "i_arty_junk" then
-		r_type = item_type.ARTEFACT_PERK
-	elseif g_type == "i_arty" then
-		r_type = item_type.ARTEFACT_STAT
-	elseif g_type == "i_mutant_belt" then
-		r_type = item_type.PELT
-	elseif (ini_sys:r_string_ex(item:section(), "kind") == "w_misc") and not (item:section() == "bolt_bullet" or item:section() == "bolt" or item:section() == "wpn_binoc_inv") then
-		r_type = item_type.ATTACHEMENT_WPN
-	elseif g_type == "i_quest" then
-		r_type = item_type.QUEST
-	end
-	
-	print_dbg("Item type of <" .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
-	return r_type
 end
 
 -- End of Utils

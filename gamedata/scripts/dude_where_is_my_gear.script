@@ -291,32 +291,6 @@ local function issue()
 	end
 end
 
-function get_game_seconds()
-    return math.floor(game.get_game_time():diffSec(level.get_start_time()))
-end
-
-function math.clamp(x, min_val, max_val)
-    return math.max(min_val, math.min(x, max_val))
-end
-
-function binomial_sample(y, x)
-    local successes = 0
-    for i = 1, y do
-        if math.random(1,100) < x then
-            successes = successes + 1
-        end
-    end
-    return successes
-end
-
-function shuffle(tbl)
-    for i = #tbl, 2, -1 do
-        local j = math.random(i)
-        tbl[i], tbl[j] = tbl[j], tbl[i]
-    end
-    return tbl
-end
-
 local function add_to_dropped_item_list(item, status, stash_id)
     local sleep = get_sleep_state()
     local item_name = ui_item.get_sec_name(item:section()) or 'unknown'
@@ -789,10 +763,10 @@ function actor_on_first_update()
 			db.actor:give_game_news("Recovery", sleep.wounds_status_msg .. sleep.health_status_msg, "ui_inGame2_neutral_2_mask", 0, 20000)
 		end
 		
-		if not ((db.actor:character_rank() - sleep.rank < config.gained_rank_exemption) or (config.passed_time_exemption > (get_game_seconds() - sleep.time)/3600)) then
+		if not ((db.actor:character_rank() - sleep.rank < config.gained_rank_exemption) or (config.passed_time_exemption > (dwimg_utils.get_game_seconds() - sleep.time)/3600)) then
 			print_dbg("New grace period")
 			sleep.rank = db.actor:character_rank()
-			sleep.time = get_game_seconds()
+			sleep.time = dwimg_utils.get_game_seconds()
 		end
 		
 		handle_stashes()
@@ -1168,8 +1142,8 @@ local function get_exemption(item, section)
 	local max_rank_exemption_a = config.max_rank_exemption > db.actor:character_rank()
 	local gained_rank_enabled_a = config.gained_rank_exemption > 0
 	local gained_rank_exemption_a = gained_rank_enabled_a and (db.actor:character_rank() - sleep.rank < config.gained_rank_exemption)
-	local passed_time_exemption_a = config.passed_time_exemption > (get_game_seconds() - (sleep.time+skipped_time))/3600
-	local max_time_exemption_a = config.max_time_exemption > (get_game_seconds()-skipped_time)/3600
+	local passed_time_exemption_a = config.passed_time_exemption > (dwimg_utils.get_game_seconds() - (sleep.time+skipped_time))/3600
+	local max_time_exemption_a = config.max_time_exemption > (dwimg_utils.get_game_seconds()-skipped_time)/3600
 	
 	rule_a = max_rank_exemption_a or gained_rank_exemption_a or passed_time_exemption_a or max_time_exemption_a
 	
@@ -1177,8 +1151,8 @@ local function get_exemption(item, section)
 	local max_rank_exemption_b = config.max_rank_exemption2 > db.actor:character_rank()
 	local gained_rank_enabled_b = config.gained_rank_exemption2 > 0
 	local gained_rank_exemption_b = gained_rank_enabled_b and (db.actor:character_rank() - sleep.rank < config.gained_rank_exemption2)
-	local passed_time_exemption_b = config.passed_time_exemption2 > (get_game_seconds()-(skipped_time+sleep.time))/3600
-	local max_time_exemption_b = config.max_time_exemption2 > (get_game_seconds()-skipped_time)/3600
+	local passed_time_exemption_b = config.passed_time_exemption2 > (dwimg_utils.get_game_seconds()-(skipped_time+sleep.time))/3600
+	local max_time_exemption_b = config.max_time_exemption2 > (dwimg_utils.get_game_seconds()-skipped_time)/3600
 	
 	rule_b = max_rank_exemption_b or gained_rank_exemption_b or passed_time_exemption_b or max_time_exemption_b
 	
@@ -1196,7 +1170,7 @@ local function get_exemption(item, section)
 		print_dbg("Exemption conditions met: " .. table.concat(true_conditions, ", "))
 	end
 	
-	--print_dbg("Current time " .. tostring(get_game_seconds()/3600) .. " without skipped time " .. tostring(skipped_time/3600) .. " is " .. tostring((get_game_seconds()-skipped_time)/3600) )
+	--print_dbg("Current time " .. tostring(dwimg_utils.get_game_seconds()/3600) .. " without skipped time " .. tostring(skipped_time/3600) .. " is " .. tostring((dwimg_utils.get_game_seconds()-skipped_time)/3600) )
 	if (rule_a == false) and (rule_b == false) then
 		return false
 	end
@@ -1319,7 +1293,7 @@ function scaled_chances(chances, item, section)
 			mult  = ( -------------------------------------- )					
 					( config.rank_scale_until - config.rank_scale_from     )
 		]]
-		local effective_rank = math.clamp(actor_rank, config.rank_scale_from, config.rank_scale_until)
+		local effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from, config.rank_scale_until)
 		local rank_mult = math.pow((effective_rank - config.rank_scale_from) / (config.rank_scale_until - config.rank_scale_from), config.scaling_exponent)
 		print_dbg("Loss: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from .. " until: " .. config.rank_scale_until .. " = " .. rank_mult)
 
@@ -1338,7 +1312,7 @@ function scaled_chances(chances, item, section)
 
 		if not(section == "bolt" or section == "bolt_bullet") then 
 			--print_dbg("Case 3*")
-			effective_rank = math.clamp(actor_rank, config.rank_scale_from2, config.rank_scale_until2)
+			effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from2, config.rank_scale_until2)
 			rank_mult = math.pow((effective_rank - config.rank_scale_from2) / (config.rank_scale_until2 - config.rank_scale_from2), config.scaling_exponent)
 			print_dbg("Drop: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from2 .. " until: " .. config.rank_scale_until2 .. " = " .. rank_mult)
 
@@ -1466,7 +1440,7 @@ local function itr_inv(temp, item)
 			end
 		end
 		if IsOutfit(item) or IsHeadgear(item) then
-			item:set_condition(math.clamp(math.ceil(sum/cnt),1,100)/100)
+			item:set_condition(dwimg_utils.clamp(math.ceil(sum/cnt),1,100)/100)
 		end
 		parts[section] = sum/cnt
 		item_parts.set_parts_con(item_id, parts)
@@ -1512,16 +1486,16 @@ local function itr_inv(temp, item)
 			else
 				return false
 			end
-			end, new_bat.id, math.clamp(power_overflow, 0, 100))
-			power_overflow = power_overflow - math.clamp(power_overflow, 0, 100)
+			end, new_bat.id, dwimg_utils.clamp(power_overflow, 0, 100))
+			power_overflow = power_overflow - dwimg_utils.clamp(power_overflow, 0, 100)
 		end
 		item_exo_device.remove_psu(item)
 	end
 	
 	--remove upgrades
 	if not(no_sec_dwg[tostring(item_id)]) and ((IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) or IsOutfit(item) or IsHeadgear(item) or section == "wpn_binoc_inv")) and config.remove_upgrade_chance > 0  then
-		local found_upgrades = shuffle(utils_item.get_upgrades_installed(item, item_id, false))
-		local to_keep = binomial_sample(#found_upgrades, 100-config.remove_upgrade_chance)
+		local found_upgrades = dwimg_utils.shuffle_table(utils_item.get_upgrades_installed(item, item_id, false))
+		local to_keep = dwimg_utils.binomial_sample(#found_upgrades, 100-config.remove_upgrade_chance)
 		if #found_upgrades > 0 and not(to_keep == #found_upgrades ) then 	
 			local clo_itm = alife_create_item(section, db.actor)
 			no_sec_dwg[tostring(clo_itm.id)] = true
@@ -1601,7 +1575,7 @@ local function itr_inv(temp, item)
 	--other condition loss
 	if (config.max_condition_lose2 > 0) then
 		if (IsMelee(item) and config.condition_melee) or (getItemType(item, "condition loss 2") == item_type.ARTEFACT_PERK and config.condition_perk_artefact) or (getItemType(item, "condition loss 2") == item_type.ARTEFACT_STAT and config.condition_stat_artefact) or (getItemType(item, "condition loss 2") == item_type.PELT and config.condition_pelt) then
-			item:set_condition(math.clamp(item:condition()-math.random(config.min_condition_lose2, config.max_condition_lose2)/100,0.01,1))
+			item:set_condition(dwimg_utils.clamp(item:condition()-math.random(config.min_condition_lose2, config.max_condition_lose2)/100,0.01,1))
 		end
 	end
 
@@ -1711,7 +1685,7 @@ function apply_punishments()
 			sleep.dropped_stashes[dropped_stash.id] = {
 				last_dropped_item_list = {},
 				last_lost_item_list = {},
-				time = get_game_seconds()
+				time = dwimg_utils.get_game_seconds()
 			}
 
 			lose_rank_goodwill()

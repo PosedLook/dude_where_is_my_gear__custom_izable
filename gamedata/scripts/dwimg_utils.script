@@ -302,7 +302,7 @@ function get_chances(item, section, item_id)
 	end
 end
 
-local function get_exemption(item, section)
+function get_exemption(item, section)
 	local sleep = get_sleep_state()	
 	local i_type =  get_item_type(item, "exemption")
 	local rule_a = false

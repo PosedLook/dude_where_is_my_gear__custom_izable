@@ -24,6 +24,18 @@ function shuffle_table(tbl)
     return tbl
 end
 
+local function deep_copy_table(tbl)
+    local copy = {}
+    for k, v in pairs(tbl) do
+        if type(v) == "table" then
+            copy[k] = deep_copy_table(v)
+        else
+            copy[k] = v
+        end
+    end
+    return copy
+end
+
 -- ==============================================================
 -- GAME UTILS
 -- ==============================================================
@@ -49,30 +61,50 @@ function issue(dbg_msg)
     end
 end
 
+local blank_sleep_state = {
+	level = false,
+	position = false,
+	level_vert = false,
+	game_vert = false,
+	dead = false,
+	stash_created = false,
+	sleep_created = false,
+	last_death_time = 0,
+	stash_save = {},
+	dropped_stashes = {},
+	last_dropped_item_list = {},
+	last_lost_item_list = {},
+	health_status_msg = "",
+	wounds_status_msg = "",
+	dead = false,
+	bleeding = false,
+	healing = 1,
+	rank = 0,
+	time = 0,
+}
+
 function get_sleep_state()
 	if not alife_storage_manager.get_state().dude_where_is_my_gear then
-		alife_storage_manager.get_state().dude_where_is_my_gear = {
-			level = false,
-			position = false,
-			level_vert = false,
-			game_vert = false,
-			dead = false,
-			stash_created = false,
-			sleep_created = false,
-			last_death_time = 0,
-			stash_save = {},
-			dropped_stashes = {},
-			last_dropped_item_list = {},
-			last_lost_item_list = {},
-			health_status_msg = "",
-			wounds_status_msg = "",
-			dead = nil,
-			bleeding = nil,
-			healing = nil,
-			rank = nil,
-		}
+		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(blank_sleep_state)
 	end
 	return alife_storage_manager.get_state().dude_where_is_my_gear
+end
+
+function on_game_start()
+	local state = alife_storage_manager.get_state().dude_where_is_my_gear
+	if not state then
+		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(blank_sleep_state)
+	else
+		for i, v in pairs(blank_sleep_state) do
+            if state[i] == nil then
+				if type(v) == "table" then
+					alife_storage_manager.get_state().dude_where_is_my_gear[i] = deep_copy_table(v)
+				else
+					alife_storage_manager.get_state().dude_where_is_my_gear[i] = v
+				end
+			end
+		end
+	end
 end
 
 -- ==============================================================

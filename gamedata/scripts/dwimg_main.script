@@ -217,11 +217,6 @@ function on_game_load()
     RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
     exec_console_cmd("snd_volume_eff " .. options_vol)
     -- Make sure older versions are updated:    
-	local sleep = dwimg_utils.get_sleep_state()
-	if not sleep.last_dropped_item_list then
-        sleep.last_dropped_item_list = {}
-        sleep.last_lost_item_list = {}
-    end
 	init_protections()
 	death_init = false
 end
@@ -616,10 +611,6 @@ end
 
 local function get_exemption(item, section)
 	local sleep = dwimg_utils.get_sleep_state()	
-	if not sleep.rank then
-		sleep.rank = 0
-		sleep.time = 0
-	end
 	local i_type =  dwimg_utils.get_item_type(item, "exemption")
 	local rule_a = false
 	local rule_b = false

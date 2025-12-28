@@ -1450,6 +1450,7 @@ local function itr_inv(temp, item)
 			
 		end
 	end
+
 	--part break
 	if ((IsWeapon(item) and not (ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) or IsOutfit(item) or IsHeadgear(item)) and (item_backpack.is_in_slot(item) or config.condition_unequipped)) and config.part_break_chance > 0 then
 		local sum, cnt = 0,0
@@ -1471,8 +1472,7 @@ local function itr_inv(temp, item)
 		item_parts.set_parts_con(item_id, parts)
 		
 	end
-	
-	
+
 	--remove scope, silencer and gl
 	if IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsMelee(item) or IsGrenade(item)) then					
 		local scope = detach_scope_dwimg(item)
@@ -1494,6 +1494,7 @@ local function itr_inv(temp, item)
 		detach_suppressor_dwimg(item)
 		detach_gl_dwimg(item)
 	end
+
 	--remove psu and convert overflow power to exo batteries_exo
 	if IsOutfit(item) and item_exo_device.is_exo(item) and item_exo_device.check_remove_psu(item) == "st_remove_psu" then
 		local power_overflow = 0
@@ -1593,13 +1594,10 @@ local function itr_inv(temp, item)
 		return
 	end
 
-	--if ini_sys:r_float_ex(section,"cost") ~= nil and ini_sys:r_float_ex(section,"cost") ~= 0 then
-	--	if  math.clamp(ini_sys:r_float_ex(section,"cost") - min_cost_saver) then
-	--		print_dbg("Cost saver for " .. section .. " with cost " .. ini_sys:r_float_ex(section,"cost"))
-	--		return
-	--	end
-	--end
-	
+	--[[ Here is how to get money value of item if ever needed
+		ini_sys:r_float_ex(section,"cost")
+	]]
+
 	--other condition loss
 	if (config.max_condition_lose2 > 0) then
 		if (IsMelee(item) and config.condition_melee) or (getItemType(item, "condition loss 2") == item_type.ARTEFACT_PERK and config.condition_perk_artefact) or (getItemType(item, "condition loss 2") == item_type.ARTEFACT_STAT and config.condition_stat_artefact) or (getItemType(item, "condition loss 2") == item_type.PELT and config.condition_pelt) then
@@ -1648,7 +1646,7 @@ end
 
 function actor_on_item_take(obj)
 	local sleep = get_sleep_state()
-	if sleep.dead then
+	if obj and sleep.dead then
 		time_item_calc = time_global()
 		print_dbg("item spawn hook: [" .. obj:id() .. "]")
 		CreateTimeEvent("Wait_for_death_inits", 0, 0, function(obj)
@@ -1753,14 +1751,6 @@ function apply_punishments()
 			end
 end
 
---function forward_time(p)
---    if config.enable_time_forward then
---        xr_effects.forward_game_time(nil, nil, p)
---        local forward_text = tostring("You have been out of action for " .. p[1] .. " Hours and " .. p[2] .. " Minutes")
---        db.actor:give_game_news("Severe Injured", forward_text, "ui_inGame2_neutral_2_mask", 0, 20000)
---    end
---end
-
 function save_position(stash_data)
     local sleep = get_sleep_state()
     pos = db.actor:position()
@@ -1825,10 +1815,6 @@ function actor_on_stash_remove(stash_data)
         send_items_report_news_msg(true, stash_data.stash_id)
         sleep.dropped_stashes[stash_data.stash_id] = nil
     end
-end
-
-function actor_on_save()
-
 end
 
 function on_before_save_input(flags, typ_, text)

@@ -24,71 +24,9 @@ local actor_last_health = 1
 
 local ignore_items = nil
 
-local rule_a_prot = {}
-local rule_b_prot = {}
-local function init_protections()
-	rule_a_prot = {}
-	rule_b_prot = {}
-	if config.exemption_guns == 1 then
-		rule_a_prot[dwimg_lists.item_type.GUN] = true
-	elseif config.exemption_guns == 2 then
-		rule_b_prot[dwimg_lists.item_type.GUN] = true
-	end
-	if exemption_gun_attachements == 1 then
-		rule_a_prot[dwimg_lists.item_type.ATTACHEMENT_WPN] = true
-	elseif exemption_gun_attachements == 2 then
-		rule_b_prot[dwimg_lists.item_type.ATTACHEMENT_WPN] = true
-	end
-	if config.exemption_outfits == 1 then
-		rule_a_prot[dwimg_lists.item_type.ARMOR] = true
-	elseif config.exemption_outfits == 2 then
-		rule_b_prot[dwimg_lists.item_type.ARMOR] = true
-	end
-	if exemption_artefacts == 1 then
-		rule_a_prot[dwimg_lists.item_type.ARTEFACT_PERK] = true
-		rule_a_prot[dwimg_lists.item_type.ARTEFACT_STAT] = true
-		rule_a_prot[dwimg_lists.item_type.PELT] = true
-	elseif exemption_artefacts == 2 then
-		rule_a_prot[dwimg_lists.item_type.ARTEFACT_PERK] = true
-		rule_a_prot[dwimg_lists.item_type.ARTEFACT_STAT] = true
-		rule_a_prot[dwimg_lists.item_type.PELT] = true
-	end
-	if exemption_device == 1 then
-		rule_a_prot[dwimg_lists.item_type.UPGRADED] = true
-	elseif exemption_device == 2 then
-		rule_b_prot[dwimg_lists.item_type.UPGRADED] = true
-	end
-	if exemption_kit == 1 then
-		rule_a_prot[dwimg_lists.item_type.KIT] = true
-	elseif exemption_kit == 2 then
-		rule_b_prot[dwimg_lists.item_type.KIT] = true
-	end
-	if exemption_tools == 1 then
-		rule_a_prot[dwimg_lists.item_type.TOOL] = true
-	elseif exemption_tools == 2 then
-		rule_b_prot[dwimg_lists.item_type.TOOL] = true
-	end
-	if exemption_explosives == 1 then
-		rule_a_prot[dwimg_lists.item_type.EXPLOSIVE] = true
-	elseif exemption_explosives == 2 then
-		rule_b_prot[dwimg_lists.item_type.EXPLOSIVE] = true
-	end
-	if config.exemption_ammo == 1 then
-		rule_a_prot[dwimg_lists.item_type.AMMO] = true
-	elseif config.exemption_ammo == 2 then
-		rule_b_prot[dwimg_lists.item_type.AMMO] = true
-	end
-	if config.exemption_medics == 1 then
-		rule_a_prot[dwimg_lists.item_type.MEDICAL] = true
-	elseif config.exemption_medics == 2 then
-		rule_b_prot[dwimg_lists.item_type.MEDICAL] = true
-	end
-	if config.exemption_misc == 1 then
-		rule_a_prot[dwimg_lists.item_type.MISC] = true
-	elseif config.exemption_misc == 2 then
-		rule_b_prot[dwimg_lists.item_type.MISC] = true
-	end
-end
+rule_a_prot = {}
+rule_b_prot = {}
+
 
 local function add_to_dropped_item_list(item, status, stash_id)
     local sleep = dwimg_utils.get_sleep_state()
@@ -139,62 +77,6 @@ local function send_items_report_news_msg(list_lost, stash_id)
         20000)
 end
 
-function detach_scope_dwimg(weapon)
-	local detach_infos = {
-	["spw_wpn"] = nil,
-	["spw_att"] = nil,
-	}
-	local parent_section = ini_sys:r_string_ex(weapon:section(),"parent_section")
-	if (not parent_section or weapon:section() == parent_section) then 
-		return nil
-	end
-	
-	local old_weapon = alife_object(weapon:id())	
-	
-	-- Determine which addon is attached to the weapon.
-	-- Create the item in the db.actor's inventory when found.
-	for k, v in pairs(utils_data.collect_sections(ini_sys, {"addons_table"})) do
-		if (string.find(weapon:section(), k)) then
-			--give_object_to_db.actor(k)
-			detach_infos["spw_att"] = alife_create_item(k, db.actor)
-			break
-		end
-	end
-	if detach_infos["spw_att"] == nil then
-		return nil
-	end
-	-- Create objects for the 'before' and 'after' detachment weapons.
-	local new_weapon = old_weapon and alife_clone_weapon(old_weapon, parent_section)
-	detach_infos["spw_wpn"] = new_weapon
-	return detach_infos
-end
-
-function detach_suppressor_dwimg(weapon)	
-	if weapon:weapon_silencer_status() == 2 then
-		if weapon:weapon_is_silencer() then
-			local supSection = utils_item.get_param(weapon:section(), weapon:id(), "silencer_name", "string")
-			local sil_info = {id = weapon:id(), section = supSection}
-			weapon:weapon_addon_detach(sil_info.section, true)
-			--dwimg_utils.print_dbg("Detached suppressor")
-			return true
-		end
-	end
-	return false
-end
-
-function detach_gl_dwimg(weapon)
-	if (ini_sys:r_float_ex(weapon:section(),"grenade_launcher_status") > 0) then
-		if weapon:is_weapon_gl() then
-			local supSection = utils_item.get_wpn_param(obj, weapon:section(), "grenade_launcher_name")
-			local gl_info = {id = weapon:id(), section = supSection}
-			weapon:weapon_addon_detach(gl_info.section, true)
-			--dwimg_utils.print_dbg("Detached gl")
-			return true		
-		end
-	end
-	return false
-end
-
 function on_game_start()
     local ini_stash = ini_file("items\\settings\\backpack_stash.ltx")
     keep_items = utils_data.collect_section(ini_stash, "actor_backpack_keep_items", true)
@@ -216,8 +98,6 @@ function on_game_load()
 	UnregisterScriptCallback("actor_on_before_death", actor_on_before_death)
     RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
     exec_console_cmd("snd_volume_eff " .. options_vol)
-    -- Make sure older versions are updated:    
-	init_protections()
 	death_init = false
 end
 
@@ -258,7 +138,6 @@ end
 function actor_on_first_update()
     local sleep = dwimg_utils.get_sleep_state()
 	if sleep.dead then
-        sleep.dead = false
 		if db.actor.bleeding > 0 then
 			dwimg_utils.print_dbg("Leftover bleeding " .. db.actor.bleeding)
 		elseif sleep.bleed > 0 then
@@ -287,6 +166,8 @@ function actor_on_first_update()
         -- db.actor:give_game_news("Severe Injured", sleep.health_status_msg, "ui_inGame2_neutral_2_mask", 5000, 20000)			
 
 		--get_console():execute("hud_draw on")
+		sleep.dead = false
+		print_dbg("No longer undead")
 	end
 end
 
@@ -924,24 +805,13 @@ local function itr_inv(temp, item)
 
 	--remove scope, silencer and gl
 	if IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsMelee(item) or IsGrenade(item)) then					
-		local scope = detach_scope_dwimg(item)
+		local scope = dwimg_utils.detach_scope_dwimg(item)
 		if scope ~= nil then
-			--CreateTimeEvent("Wait_for_scope", scope["spw_att"].id, 0, function(id1, id2)
-			--  dwimg_utils.print_dbg("Wait for scope " .. id1 .. " and weapon " .. id2)
-			--  if level.object_by_id(id1) and level.object_by_id(id2) then
-			--	itr_inv(nil, level.object_by_id(id2))
-			--	itr_inv(nil, level.object_by_id(id1))
-			--	return true
-			--  else
-			--	return false
-			--  end
-			--end, scope["spw_att"].id, scope["spw_wpn"].id)
-			
 			dwimg_utils.print_dbg("Cancelled for scope: " .. item_id)
 			return
 		end
-		detach_suppressor_dwimg(item)
-		detach_gl_dwimg(item)
+		dwimg_utils.detach_suppressor_dwimg(item)
+		dwimg_utils.detach_gl_dwimg(item)
 	end
 
 	--remove psu and convert overflow power to exo batteries_exo
@@ -1095,7 +965,7 @@ end
 
 function actor_on_item_take(obj)
 	local sleep = dwimg_utils.get_sleep_state()
-	if obj and sleep.dead then
+	if obj and sleep.dead == true then
 		time_item_calc = time_global()
 		dwimg_utils.print_dbg("item spawn hook: [" .. obj:id() .. "]")
 		CreateTimeEvent("Wait_for_death_inits", 0, 0, function(obj)

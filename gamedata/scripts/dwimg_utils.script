@@ -61,31 +61,9 @@ function issue(dbg_msg)
     end
 end
 
-local blank_sleep_state = {
-	level = false,
-	position = false,
-	level_vert = false,
-	game_vert = false,
-	dead = false,
-	stash_created = false,
-	sleep_created = false,
-	last_death_time = 0,
-	stash_save = {},
-	dropped_stashes = {},
-	last_dropped_item_list = {},
-	last_lost_item_list = {},
-	health_status_msg = "",
-	wounds_status_msg = "",
-	dead = false,
-	bleeding = false,
-	healing = 1,
-	rank = 0,
-	time = 0,
-}
-
 function get_sleep_state()
 	if not alife_storage_manager.get_state().dude_where_is_my_gear then
-		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(blank_sleep_state)
+		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(dwimg_lists.blank_sleep_state)
 	end
 	return alife_storage_manager.get_state().dude_where_is_my_gear
 end
@@ -93,9 +71,9 @@ end
 function on_game_start()
 	local state = alife_storage_manager.get_state().dude_where_is_my_gear
 	if not state then
-		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(blank_sleep_state)
+		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(dwimg_lists.blank_sleep_state)
 	else
-		for i, v in pairs(blank_sleep_state) do
+		for i, v in pairs(dwimg_lists.blank_sleep_state) do
             if state[i] == nil then
 				if type(v) == "table" then
 					alife_storage_manager.get_state().dude_where_is_my_gear[i] = deep_copy_table(v)
@@ -190,4 +168,64 @@ function get_item_type(item, dbg_info)
 	
 	dwimg_utils.print_dbg("Item type of <" .. tostring(item:section()) .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
 	return r_type
+end
+
+-- --------------------------------------------------------------
+-- DETACH WEAPON ATTACHEMENTS
+-- --------------------------------------------------------------
+
+function detach_scope_dwimg(weapon)
+	local detach_infos = {
+	["spw_wpn"] = nil,
+	["spw_att"] = nil,
+	}
+	local parent_section = ini_sys:r_string_ex(weapon:section(),"parent_section")
+	if (not parent_section or weapon:section() == parent_section) then 
+		return nil
+	end
+	
+	local old_weapon = alife_object(weapon:id())	
+	
+	-- Determine which addon is attached to the weapon.
+	-- Create the item in the db.actor's inventory when found.
+	for k, v in pairs(utils_data.collect_sections(ini_sys, {"addons_table"})) do
+		if (string.find(weapon:section(), k)) then
+			--give_object_to_db.actor(k)
+			detach_infos["spw_att"] = alife_create_item(k, db.actor)
+			break
+		end
+	end
+	if detach_infos["spw_att"] == nil then
+		return nil
+	end
+	-- Create objects for the 'before' and 'after' detachment weapons.
+	local new_weapon = old_weapon and alife_clone_weapon(old_weapon, parent_section)
+	detach_infos["spw_wpn"] = new_weapon
+	return detach_infos
+end
+
+function detach_suppressor_dwimg(weapon)	
+	if weapon:weapon_silencer_status() == 2 then
+		if weapon:weapon_is_silencer() then
+			local supSection = utils_item.get_param(weapon:section(), weapon:id(), "silencer_name", "string")
+			local sil_info = {id = weapon:id(), section = supSection}
+			weapon:weapon_addon_detach(sil_info.section, true)
+			--dwimg_utils.print_dbg("Detached suppressor")
+			return true
+		end
+	end
+	return false
+end
+
+function detach_gl_dwimg(weapon)
+	if (ini_sys:r_float_ex(weapon:section(),"grenade_launcher_status") > 0) then
+		if weapon:is_weapon_gl() then
+			local supSection = utils_item.get_wpn_param(obj, weapon:section(), "grenade_launcher_name")
+			local gl_info = {id = weapon:id(), section = supSection}
+			weapon:weapon_addon_detach(gl_info.section, true)
+			--dwimg_utils.print_dbg("Detached gl")
+			return true		
+		end
+	end
+	return false
 end

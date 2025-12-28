@@ -222,6 +222,74 @@ local function load_settings_old_stuff()
 	end
 end
 
+-- --------------------------------------------------------------
+-- INIT EXEMPTIONS
+-- --------------------------------------------------------------
+
+local function init_protections()
+	dwimg_main.rule_a_prot = {}
+	dwimg_main.rule_b_prot = {}
+	if dwimg_main.config.exemption_guns == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.GUN] = true
+	elseif dwimg_main.config.exemption_guns == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.GUN] = true
+	end
+	if exemption_gun_attachements == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.ATTACHEMENT_WPN] = true
+	elseif exemption_gun_attachements == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.ATTACHEMENT_WPN] = true
+	end
+	if dwimg_main.config.exemption_outfits == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.ARMOR] = true
+	elseif dwimg_main.config.exemption_outfits == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.ARMOR] = true
+	end
+	if exemption_artefacts == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.ARTEFACT_PERK] = true
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.ARTEFACT_STAT] = true
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.PELT] = true
+	elseif exemption_artefacts == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.ARTEFACT_PERK] = true
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.ARTEFACT_STAT] = true
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.PELT] = true
+	end
+	if exemption_device == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.UPGRADED] = true
+	elseif exemption_device == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.UPGRADED] = true
+	end
+	if exemption_kit == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.KIT] = true
+	elseif exemption_kit == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.KIT] = true
+	end
+	if exemption_tools == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.TOOL] = true
+	elseif exemption_tools == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.TOOL] = true
+	end
+	if exemption_explosives == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.EXPLOSIVE] = true
+	elseif exemption_explosives == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.EXPLOSIVE] = true
+	end
+	if dwimg_main.config.exemption_ammo == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.AMMO] = true
+	elseif dwimg_main.config.exemption_ammo == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.AMMO] = true
+	end
+	if dwimg_main.config.exemption_medics == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.MEDICAL] = true
+	elseif dwimg_main.config.exemption_medics == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.MEDICAL] = true
+	end
+	if dwimg_main.config.exemption_misc == 1 then
+		dwimg_main.rule_a_prot[dwimg_lists.item_type.MISC] = true
+	elseif dwimg_main.config.exemption_misc == 2 then
+		dwimg_main.rule_b_prot[dwimg_lists.item_type.MISC] = true
+	end
+end
+
 -- ==============================================================
 -- PRESETS
 -- ==============================================================
@@ -295,4 +363,6 @@ function load_settings()
 
     dwimg_main.config.display_issue = dwimg_mcm.get_config("debug/display_issue")
     dwimg_main.config.use_dwimglog = dwimg_mcm.get_config("debug/use_dwimglog")
+
+	init_protections()
 end

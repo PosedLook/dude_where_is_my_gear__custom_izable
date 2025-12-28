@@ -55,7 +55,7 @@ function print_dbg(text, ...)
 end
 
 function issue(dbg_msg)
-	if dwimg_main.dwimg_main.config.display_issue then
+	if dwimg_main.config.display_issue then
 		actor_menu.set_msg(1, strformat("Dude where is my gear ran into an issue! Please save the log for further investigation! (You can keep playing)", text), 10)
         print_dbg("dwimg_issue: " .. dbg_msg)
     end
@@ -100,28 +100,28 @@ end
 function init_ignore()
 	local ignore_items = {}
 	for i = 1, dwimg_main.config.ignore_pda do
-		ignore_items[dwimg_utils.check_all_lists("list_ignore_pda",i)] = true
+		ignore_items[check_all_lists("list_ignore_pda",i)] = true
 	end
 	for i = 1, dwimg_main.config.ignore_backpack do
-		ignore_items[dwimg_utils.check_all_lists("list_ignore_backpack",i)] = true
+		ignore_items[check_all_lists("list_ignore_backpack",i)] = true
 	end
 	for i = 1, dwimg_main.config.ignore_detector do
-		ignore_items[dwimg_utils.check_all_lists("list_ignore_detector",i)] = true
+		ignore_items[check_all_lists("list_ignore_detector",i)] = true
 	end	
 	for i = 1, dwimg_main.config.ignore_torch_nvg do
-		ignore_items[dwimg_utils.check_all_lists("list_ignore_torch_nvg",i)] = true
+		ignore_items[check_all_lists("list_ignore_torch_nvg",i)] = true
 	end	
 	for i = 1, dwimg_main.config.ignore_knife do
-		ignore_items[dwimg_utils.check_all_lists("list_ignore_knife",i)] = true
+		ignore_items[check_all_lists("list_ignore_knife",i)] = true
 	end	
 	if dwimg_main.config.ignore_axe then
 		for i = 1, #dwimg_lists.all_lists["list_ignore_axe"] do
-			ignore_items[dwimg_utils.check_all_lists("list_ignore_axe",i)] = true
+			ignore_items[check_all_lists("list_ignore_axe",i)] = true
 		end
 	end
 	if dwimg_main.config.ignore_special_equipment then
 		for i = 1, #dwimg_lists.all_lists["list_ignore_special_equipment"] do
-			ignore_items[dwimg_utils.check_all_lists("list_ignore_special_equipment",i)] = true
+			ignore_items[check_all_lists("list_ignore_special_equipment",i)] = true
 		end
 	end
 	if dwimg_main.config.ignore_binoculars then
@@ -142,11 +142,11 @@ function get_item_type(item, dbg_info)
 		r_type = dwimg_lists.item_type.MEDICAL
 	elseif IsWeapon(item) and not (IsGrenade(item) or IsMelee(item)) then
 		r_type = dwimg_lists.item_type.GUN
-	elseif dwimg_utils.check_all_lists("devices",section) ~= nil then
+	elseif check_all_lists("devices",section) ~= nil then
 		r_type = dwimg_lists.item_type.UPGRADED
-	elseif dwimg_utils.check_all_lists("tools_list",section) then
+	elseif check_all_lists("tools_list",section) then
 		r_type = dwimg_lists.item_type.TOOL
-	elseif dwimg_utils.check_all_lists("kits_list",section) then
+	elseif check_all_lists("kits_list",section) then
 		r_type = dwimg_lists.item_type.KIT
 	elseif IsOutfit(item) or IsHeadgear(item) then
 		r_type = dwimg_lists.item_type.ARMOR
@@ -166,7 +166,7 @@ function get_item_type(item, dbg_info)
 		r_type = dwimg_lists.item_type.QUEST
 	end
 	
-	dwimg_utils.print_dbg("Item type of <" .. tostring(item:section()) .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
+	print_dbg("Item type of <" .. tostring(item:section()) .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
 	return r_type
 end
 
@@ -210,7 +210,6 @@ function detach_suppressor_dwimg(weapon)
 			local supSection = utils_item.get_param(weapon:section(), weapon:id(), "silencer_name", "string")
 			local sil_info = {id = weapon:id(), section = supSection}
 			weapon:weapon_addon_detach(sil_info.section, true)
-			--dwimg_utils.print_dbg("Detached suppressor")
 			return true
 		end
 	end
@@ -223,9 +222,140 @@ function detach_gl_dwimg(weapon)
 			local supSection = utils_item.get_wpn_param(obj, weapon:section(), "grenade_launcher_name")
 			local gl_info = {id = weapon:id(), section = supSection}
 			weapon:weapon_addon_detach(gl_info.section, true)
-			--dwimg_utils.print_dbg("Detached gl")
 			return true		
 		end
 	end
 	return false
+end
+
+-- --------------------------------------------------------------
+-- GET VALUES BY ITEM CATEGORY
+-- --------------------------------------------------------------
+
+function get_chances(item, section, item_id)
+	local iType = get_item_type(item, "drop&loss chance")
+	
+	if iType == dwimg_lists.item_type.GUN then
+		print_dbg("IsWeapon")
+		print_dbg("guns_chance")
+		return {dwimg_main.config.chance_of_losing_guns, dwimg_main.config.keep_guns_chance, false, dwimg_main.config.chance_of_losing_guns_anti, dwimg_main.config.keep_guns_chance_anti }
+		
+	elseif iType == dwimg_lists.item_type.UPGRADED then
+		print_dbg("IsInDevices")
+		print_dbg("upgraded_chance")
+		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_anti, dwimg_main.config.keep_device_chance_anti }
+		
+	elseif iType == dwimg_lists.item_type.TOOL then
+		print_dbg("IsInTool_list")
+		print_dbg("tools_chance")
+		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_anti, dwimg_main.config.keep_device_chance_anti }
+		
+	elseif iType == dwimg_lists.item_type.KIT then
+		print_dbg("IsInKits_list")
+		print_dbg("kits_chance")
+		return {dwimg_main.config.chance_of_losing_kits, dwimg_main.config.keep_kits_chance, false, dwimg_main.config.chance_of_losing_kits_anti, dwimg_main.config.keep_kits_chance_anti }
+		
+	elseif iType == dwimg_lists.item_type.MEDICAL then
+		print_dbg("IsMedicalKind")
+		print_dbg("medics_chance")
+		return {dwimg_main.config.chance_of_losing_medics, dwimg_main.config.keep_medics_chance, false, dwimg_main.config.chance_of_losing_medics_anti, dwimg_main.config.keep_medics_chance_anti }	
+
+	elseif iType == dwimg_lists.item_type.ARMOR then
+		print_dbg("IsOutfit")
+		print_dbg("outfits_chance")
+		return {dwimg_main.config.chance_of_losing_outfits, dwimg_main.config.keep_outfit_chance, false, dwimg_main.config.chance_of_losing_outfits_anti, dwimg_main.config.keep_outfit_chance_anti }	
+		
+	elseif iType == dwimg_lists.item_type.ARTEFACT_PERK or iType == dwimg_lists.item_type.ARTEFACT_STAT or iType == dwimg_lists.item_type.PELT then
+		print_dbg("IsArtefact not i_attach")
+		print_dbg("artefact_chance")
+		return {dwimg_main.config.chance_of_losing_artefacts, dwimg_main.config.keep_artefact_chance, false, dwimg_main.config.chance_of_losing_artefacts_anti, dwimg_main.config.keep_artefact_chance_anti }
+		
+	elseif iType == dwimg_lists.item_type.ATTACHEMENT_WPN then
+		print_dbg("IsWpnAttachment")
+		print_dbg("gun_attachment_chance")
+		return {dwimg_main.config.chance_of_losing_gun_attachments, dwimg_main.config.keep_gun_attachment_chance, false, dwimg_main.config.chance_of_losing_gun_attachments_anti, dwimg_main.config.keep_gun_attachment_chance_anti }
+		
+	elseif iType == dwimg_lists.item_type.EXPLOSIVE then
+		print_dbg("IsExplosivesKind")
+		print_dbg("explosives_chance")
+		return {dwimg_main.config.chance_of_losing_explosives, dwimg_main.config.keep_explosives_chance, false, dwimg_main.config.chance_of_losing_explosives_anti, dwimg_main.config.keep_explosives_chance_anti }
+		
+	elseif iType == dwimg_lists.item_type.AMMO then
+		print_dbg("IsAmmo")
+		print_dbg("ammo_chance")	
+		if string.match(item:section(), "^mag_") then
+			local is_carried_mag = magazine_binder and magazine_binder.is_carried_mag
+			local toggle_carried_mag = magazine_binder and magazine_binder.toggle_carried_mag
+			local is_magazine = magazine_binder and magazine_binder.is_magazine
+			if is_magazine(section) and is_carried_mag(item_id) then
+				toggle_carried_mag(item_id)
+			end		
+		end	
+		return {dwimg_main.config.chance_of_losing_ammo, dwimg_main.config.keep_ammo_chance, false, dwimg_main.config.chance_of_losing_ammo_anti, dwimg_main.config.keep_ammo_chance_anti }
+	else
+		print_dbg("misc_chance")
+		if section == "bolt" or section == "bolt_bullet" then
+			return {dwimg_main.config.chance_of_losing_items, 100, false, dwimg_main.config.chance_of_losing_items_anti, dwimg_main.config.keep_misc_items_chance_anti}	
+		else
+			return {dwimg_main.config.chance_of_losing_items, dwimg_main.config.keep_misc_items_chance, false, dwimg_main.config.chance_of_losing_items_anti, dwimg_main.config.keep_misc_items_chance_anti }
+		end
+	end
+end
+
+local function get_exemption(item, section)
+	local sleep = get_sleep_state()	
+	local i_type =  get_item_type(item, "exemption")
+	local rule_a = false
+	local rule_b = false
+	
+	-- Separate conditions for rule_a
+	local max_rank_exemption_a = dwimg_main.config.max_rank_exemption > db.actor:character_rank()
+	local gained_rank_enabled_a = dwimg_main.config.gained_rank_exemption > 0
+	local gained_rank_exemption_a = gained_rank_enabled_a and (db.actor:character_rank() - sleep.rank < dwimg_main.config.gained_rank_exemption)
+	local passed_time_exemption_a = dwimg_main.config.passed_time_exemption > (get_game_seconds() - (sleep.time+skipped_time))/3600
+	local max_time_exemption_a = dwimg_main.config.max_time_exemption > (get_game_seconds()-skipped_time)/3600
+	
+	rule_a = max_rank_exemption_a or gained_rank_exemption_a or passed_time_exemption_a or max_time_exemption_a
+	
+	-- Separate conditions for rule_b
+	local max_rank_exemption_b = dwimg_main.config.max_rank_exemption2 > db.actor:character_rank()
+	local gained_rank_enabled_b = dwimg_main.config.gained_rank_exemption2 > 0
+	local gained_rank_exemption_b = gained_rank_enabled_b and (db.actor:character_rank() - sleep.rank < dwimg_main.config.gained_rank_exemption2)
+	local passed_time_exemption_b = dwimg_main.config.passed_time_exemption2 > (get_game_seconds()-(skipped_time+sleep.time))/3600
+	local max_time_exemption_b = dwimg_main.config.max_time_exemption2 > (get_game_seconds()-skipped_time)/3600
+	
+	rule_b = max_rank_exemption_b or gained_rank_exemption_b or passed_time_exemption_b or max_time_exemption_b
+	
+	-- Print true conditions if any exemption applies
+	if rule_a or rule_b then
+		local true_conditions = {}
+		if rule_a then
+			if max_rank_exemption_a then table.insert(true_conditions, "max_rank_exemption_a") end
+			if gained_rank_exemption_a then table.insert(true_conditions, "gained_rank_exemption_a") end
+			if passed_time_exemption_a then table.insert(true_conditions, "passed_time_exemption_a") end
+			if max_time_exemption_a then table.insert(true_conditions, "max_time_exemption_a") end
+		end
+		if rule_b then
+			if max_rank_exemption_b then table.insert(true_conditions, "max_rank_exemption_b") end
+			if gained_rank_exemption_b then table.insert(true_conditions, "gained_rank_exemption_b") end
+			if passed_time_exemption_b then table.insert(true_conditions, "passed_time_exemption_b") end
+			if max_time_exemption_b then table.insert(true_conditions, "max_time_exemption_b") end
+		end
+		print_dbg("Exemption conditions met: " .. table.concat(true_conditions, ", "))
+	end
+	
+	--print_dbg("Current time " .. tostring(get_game_seconds()/3600) .. " without skipped time " .. tostring(skipped_time/3600) .. " is " .. tostring((get_game_seconds()-skipped_time)/3600) )
+	if (rule_a == false) and (rule_b == false) then
+		return false
+	end
+	
+	if (dwimg_main.config.exemption_everything == 1 and rule_a) or (dwimg_main.config.exemption_everything == 2 and rule_b) then
+		return true
+	end
+	
+	if (rule_a and rule_a_prot[i_type]) or (rule_b and rule_b_prot[i_type]) then
+		return true
+	else
+		return false
+	end
 end

@@ -319,7 +319,7 @@ end
 	
 
 function load_def_preset(preset_name)
-	local loading_preset = def_presets.default_presets[tostring(preset_name)]
+	local loading_preset = dwimg_def_presets.default_presets[tostring(preset_name)]
 	dwimg_utils.print_dbg("Load def preset " .. tostring(preset_name))
 	if loading_preset then
 		for id, value in pairs(loading_preset) do

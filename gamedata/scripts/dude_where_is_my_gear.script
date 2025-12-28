@@ -279,6 +279,11 @@ local function get_sleep_state()
 	return alife_storage_manager.get_state().dude_where_is_my_gear
 end
 
+function print_dbg(text, ...)
+    if true then
+        printf("DUD: | %s |  " .. text, time_global(), ...)
+    end
+end
 
 local function issue()
 	if config.display_issue then
@@ -797,12 +802,6 @@ function actor_on_first_update()
 	end
 end
 
-function print_dbg(text, ...)
-    if true then
-        printf("DUD: | %s |  " .. text, time_global(), ...)
-    end
-end
-
 function actor_on_before_death(who, flags)
 
 	do_item_dropping = true -- Drop items by default
@@ -979,11 +978,6 @@ function init_ignore()
 	return ignore_items
 end
 
-local by_gun_mod = 1
-local condition_mod = 1
-local by_beast_mod = 1
-local general_mod = 1
-
 local function lose_rank_goodwill()
 
 	db.actor:set_character_rank(db.actor:character_rank() * (1-(config.rank_loss/100)))
@@ -1045,8 +1039,7 @@ local function lose_money()
 			value = 1
 		}}
 		local current_money = db.actor:money()
-		local money_to_lose = math.random(math.floor(current_money * config.min_money_percentage), math.floor(current_money * config.max_money_percentage / by_gun_mod)) *
-								  by_beast_mod
+		local money_to_lose = math.random(math.floor(current_money * config.min_money_percentage), math.floor(current_money * config.max_money_percentage))
 		if money_to_lose > config.max_lost_money + db.actor:character_rank() * config.money_y_rank then
 			money_to_lose = config.max_lost_money + db.actor:character_rank() * config.money_y_rank
 		end
@@ -1064,13 +1057,12 @@ local function lose_money()
 				money_to_lose = current_money - config.min_money_to_keep_inventory
 			end
 		end
-		-- Drop money into dropped stash. by_gun_mod reduces by half amount of money to get back on stash. drop_all_money
 		local money_left = 0
 
 			db.actor:give_money(-money_to_lose)
 			current_money = db.actor:money()
 			money_left = math.floor(math.random((db.actor:money() * config.min_money_to_drop_percentage),
-				(db.actor:money() * config.max_money_to_drop_percentage)) * by_gun_mod)
+				(db.actor:money() * config.max_money_to_drop_percentage)))
 				
 			if (current_money - money_left) < config.min_money_to_keep_inventory then
 				if (config.min_money_to_keep_inventory >= current_money) then
@@ -1447,7 +1439,7 @@ local function itr_inv(temp, item)
 				local condition = item:condition()
 				-- if killed by elemental damage increase condition lose of equipped items
 				local condition_reduction =
-					(math.random(config.min_condition_lose, config.max_condition_lose) / condition_mod / general_mod) / 100
+					(math.random(config.min_condition_lose, config.max_condition_lose)) / 100
 				if ((config.min_armor_condition / 100) < condition ) then
 					condition = condition - condition_reduction
 					if ((config.min_armor_condition / 100) > condition) then

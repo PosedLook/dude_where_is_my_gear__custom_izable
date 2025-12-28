@@ -128,3 +128,29 @@ item_type = {
 	QUEST = "quest",
 	MISC = "misc"
 }
+
+-- --------------------------------------------------------------
+-- DEFAULT SLEEP STATE
+-- --------------------------------------------------------------
+
+blank_sleep_state = {
+	level = false,
+	position = false,
+	level_vert = false,
+	game_vert = false,
+	dead = false,
+	stash_created = false,
+	sleep_created = false,
+	last_death_time = 0,
+	stash_save = {},
+	dropped_stashes = {},
+	last_dropped_item_list = {},
+	last_lost_item_list = {},
+	health_status_msg = "",
+	wounds_status_msg = "",
+	dead = false,
+	bleeding = 0,
+	healing = 1,
+	rank = 0,
+	time = 0,
+}

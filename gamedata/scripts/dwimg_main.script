@@ -195,8 +195,6 @@ function detach_gl_dwimg(weapon)
 	return false
 end
 
--- End of Utils
-
 local function load_settings_money()
 	config.min_money_percentage = dwimg_mcm.get_config("money/min_money_percentage")
 	config.max_money_percentage = dwimg_mcm.get_config("money/max_money_percentage")

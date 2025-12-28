@@ -23,10 +23,6 @@ local time_item_calc = nil
 
 local ignore_items = nil
 
-rule_a_prot = {}
-rule_b_prot = {}
-
-
 local function add_to_dropped_item_list(item, status, stash_id)
     local sleep = dwimg_utils.get_sleep_state()
     local item_name = ui_item.get_sec_name(item:section()) or 'unknown'

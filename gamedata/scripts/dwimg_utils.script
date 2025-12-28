@@ -302,6 +302,8 @@ function get_chances(item, section, item_id)
 	end
 end
 
+rule_a_prot = {}
+rule_b_prot = {}
 function get_exemption(item, section)
 	local sleep = get_sleep_state()	
 	local i_type =  get_item_type(item, "exemption")
@@ -312,8 +314,8 @@ function get_exemption(item, section)
 	local max_rank_exemption_a = dwimg_main.config.max_rank_exemption > db.actor:character_rank()
 	local gained_rank_enabled_a = dwimg_main.config.gained_rank_exemption > 0
 	local gained_rank_exemption_a = gained_rank_enabled_a and (db.actor:character_rank() - sleep.rank < dwimg_main.config.gained_rank_exemption)
-	local passed_time_exemption_a = dwimg_main.config.passed_time_exemption > (get_game_seconds() - (sleep.time+dwimg_main.skipped:time))/3600
-	local max_time_exemption_a = dwimg_main.config.max_time_exemption > (get_game_seconds()-dwimg_main.skipped:time)/3600
+	local passed_time_exemption_a = dwimg_main.config.passed_time_exemption > (get_game_seconds() - (sleep.time+dwimg_main.skipped_time))/3600
+	local max_time_exemption_a = dwimg_main.config.max_time_exemption > (get_game_seconds()-dwimg_main.skipped_time)/3600
 	
 	rule_a = max_rank_exemption_a or gained_rank_exemption_a or passed_time_exemption_a or max_time_exemption_a
 	
@@ -321,8 +323,8 @@ function get_exemption(item, section)
 	local max_rank_exemption_b = dwimg_main.config.max_rank_exemption2 > db.actor:character_rank()
 	local gained_rank_enabled_b = dwimg_main.config.gained_rank_exemption2 > 0
 	local gained_rank_exemption_b = gained_rank_enabled_b and (db.actor:character_rank() - sleep.rank < dwimg_main.config.gained_rank_exemption2)
-	local passed_time_exemption_b = dwimg_main.config.passed_time_exemption2 > (get_game_seconds()-(dwimg_main.skipped:time+sleep.time))/3600
-	local max_time_exemption_b = dwimg_main.config.max_time_exemption2 > (get_game_seconds()-dwimg_main.skipped:time)/3600
+	local passed_time_exemption_b = dwimg_main.config.passed_time_exemption2 > (get_game_seconds()-(dwimg_main.skipped_time+sleep.time))/3600
+	local max_time_exemption_b = dwimg_main.config.max_time_exemption2 > (get_game_seconds()-dwimg_main.skipped_time)/3600
 	
 	rule_b = max_rank_exemption_b or gained_rank_exemption_b or passed_time_exemption_b or max_time_exemption_b
 	
@@ -344,7 +346,7 @@ function get_exemption(item, section)
 		print_dbg("Exemption conditions met: " .. table.concat(true_conditions, ", "))
 	end
 	
-	--print_dbg("Current time " .. tostring(get_game_seconds()/3600) .. " without skipped time " .. tostring(dwimg_main.skipped:time/3600) .. " is " .. tostring((get_game_seconds()-dwimg_main.skipped:time)/3600) )
+	--print_dbg("Current time " .. tostring(get_game_seconds()/3600) .. " without skipped time " .. tostring(dwimg_main.skipped_time/3600) .. " is " .. tostring((get_game_seconds()-dwimg_main.skipped_time)/3600) )
 	if (rule_a == false) and (rule_b == false) then
 		return false
 	end

@@ -348,131 +348,6 @@ local function lose_money()
 	end
 end
 
-function get_chances(item, section, item_id)
-	local iType = dwimg_utils.get_item_type(item, "drop&loss chance")
-	
-	if iType == dwimg_lists.item_type.GUN then
-		dwimg_utils.print_dbg("IsWeapon")
-		dwimg_utils.print_dbg("guns_chance")
-		return {config.chance_of_losing_guns, config.keep_guns_chance, false, config.chance_of_losing_guns_anti, config.keep_guns_chance_anti }
-		
-	elseif iType == dwimg_lists.item_type.UPGRADED then
-		dwimg_utils.print_dbg("IsInDevices")
-		dwimg_utils.print_dbg("upgraded_chance")
-		return {config.chance_of_losing_devices, config.keep_device_chance, false, config.chance_of_losing_devices_anti, config.keep_device_chance_anti }
-		
-	elseif iType == dwimg_lists.item_type.TOOL then
-		dwimg_utils.print_dbg("IsInTool_list")
-		dwimg_utils.print_dbg("tools_chance")
-		return {config.chance_of_losing_devices, config.keep_device_chance, false, config.chance_of_losing_devices_anti, config.keep_device_chance_anti }
-		
-	elseif iType == dwimg_lists.item_type.KIT then
-		dwimg_utils.print_dbg("IsInKits_list")
-		dwimg_utils.print_dbg("kits_chance")
-		return {config.chance_of_losing_kits, config.keep_kits_chance, false, config.chance_of_losing_kits_anti, config.keep_kits_chance_anti }
-		
-	elseif iType == dwimg_lists.item_type.MEDICAL then
-		dwimg_utils.print_dbg("IsMedicalKind")
-		dwimg_utils.print_dbg("medics_chance")
-		return {config.chance_of_losing_medics, config.keep_medics_chance, false, config.chance_of_losing_medics_anti, config.keep_medics_chance_anti }	
-
-	elseif iType == dwimg_lists.item_type.ARMOR then
-		dwimg_utils.print_dbg("IsOutfit")
-		dwimg_utils.print_dbg("outfits_chance")
-		return {config.chance_of_losing_outfits, config.keep_outfit_chance, false, config.chance_of_losing_outfits_anti, config.keep_outfit_chance_anti }	
-		
-	elseif iType == dwimg_lists.item_type.ARTEFACT_PERK or iType == dwimg_lists.item_type.ARTEFACT_STAT or iType == dwimg_lists.item_type.PELT then
-		dwimg_utils.print_dbg("IsArtefact not i_attach")
-		dwimg_utils.print_dbg("artefact_chance")
-		return {config.chance_of_losing_artefacts, config.keep_artefact_chance, false, config.chance_of_losing_artefacts_anti, config.keep_artefact_chance_anti }
-		
-	elseif iType == dwimg_lists.item_type.ATTACHEMENT_WPN then
-		dwimg_utils.print_dbg("IsWpnAttachment")
-		dwimg_utils.print_dbg("gun_attachment_chance")
-		return {config.chance_of_losing_gun_attachments, config.keep_gun_attachment_chance, false, config.chance_of_losing_gun_attachments_anti, config.keep_gun_attachment_chance_anti }
-		
-	elseif iType == dwimg_lists.item_type.EXPLOSIVE then
-		dwimg_utils.print_dbg("IsExplosivesKind")
-		dwimg_utils.print_dbg("explosives_chance")
-		return {config.chance_of_losing_explosives, config.keep_explosives_chance, false, config.chance_of_losing_explosives_anti, config.keep_explosives_chance_anti }
-		
-	elseif iType == dwimg_lists.item_type.AMMO then
-		dwimg_utils.print_dbg("IsAmmo")
-		dwimg_utils.print_dbg("ammo_chance")	
-		if string.match(item:section(), "^mag_") then
-			local is_carried_mag = magazine_binder and magazine_binder.is_carried_mag
-			local toggle_carried_mag = magazine_binder and magazine_binder.toggle_carried_mag
-			local is_magazine = magazine_binder and magazine_binder.is_magazine
-			if is_magazine(section) and is_carried_mag(item_id) then
-				toggle_carried_mag(item_id)
-			end		
-		end	
-		return {config.chance_of_losing_ammo, config.keep_ammo_chance, false, config.chance_of_losing_ammo_anti, config.keep_ammo_chance_anti }
-	else
-		dwimg_utils.print_dbg("misc_chance")
-		if section == "bolt" or section == "bolt_bullet" then
-			return {config.chance_of_losing_items, 100, false, config.chance_of_losing_items_anti, config.keep_misc_items_chance_anti}	
-		else
-			return {config.chance_of_losing_items, config.keep_misc_items_chance, false, config.chance_of_losing_items_anti, config.keep_misc_items_chance_anti }
-		end
-	end
-end
-
-local function get_exemption(item, section)
-	local sleep = dwimg_utils.get_sleep_state()	
-	local i_type =  dwimg_utils.get_item_type(item, "exemption")
-	local rule_a = false
-	local rule_b = false
-	
-	-- Separate conditions for rule_a
-	local max_rank_exemption_a = config.max_rank_exemption > db.actor:character_rank()
-	local gained_rank_enabled_a = config.gained_rank_exemption > 0
-	local gained_rank_exemption_a = gained_rank_enabled_a and (db.actor:character_rank() - sleep.rank < config.gained_rank_exemption)
-	local passed_time_exemption_a = config.passed_time_exemption > (dwimg_utils.get_game_seconds() - (sleep.time+skipped_time))/3600
-	local max_time_exemption_a = config.max_time_exemption > (dwimg_utils.get_game_seconds()-skipped_time)/3600
-	
-	rule_a = max_rank_exemption_a or gained_rank_exemption_a or passed_time_exemption_a or max_time_exemption_a
-	
-	-- Separate conditions for rule_b
-	local max_rank_exemption_b = config.max_rank_exemption2 > db.actor:character_rank()
-	local gained_rank_enabled_b = config.gained_rank_exemption2 > 0
-	local gained_rank_exemption_b = gained_rank_enabled_b and (db.actor:character_rank() - sleep.rank < config.gained_rank_exemption2)
-	local passed_time_exemption_b = config.passed_time_exemption2 > (dwimg_utils.get_game_seconds()-(skipped_time+sleep.time))/3600
-	local max_time_exemption_b = config.max_time_exemption2 > (dwimg_utils.get_game_seconds()-skipped_time)/3600
-	
-	rule_b = max_rank_exemption_b or gained_rank_exemption_b or passed_time_exemption_b or max_time_exemption_b
-	
-	-- Print true conditions if any exemption applies
-	if rule_a or rule_b then
-		local true_conditions = {}
-		if max_rank_exemption_a then table.insert(true_conditions, "max_rank_exemption_a") end
-		if gained_rank_exemption_a then table.insert(true_conditions, "gained_rank_exemption_a") end
-		if passed_time_exemption_a then table.insert(true_conditions, "passed_time_exemption_a") end
-		if max_time_exemption_a then table.insert(true_conditions, "max_time_exemption_a") end
-		if max_rank_exemption_b then table.insert(true_conditions, "max_rank_exemption_b") end
-		if gained_rank_exemption_b then table.insert(true_conditions, "gained_rank_exemption_b") end
-		if passed_time_exemption_b then table.insert(true_conditions, "passed_time_exemption_b") end
-		if max_time_exemption_b then table.insert(true_conditions, "max_time_exemption_b") end
-		dwimg_utils.print_dbg("Exemption conditions met: " .. table.concat(true_conditions, ", "))
-	end
-	
-	--dwimg_utils.print_dbg("Current time " .. tostring(dwimg_utils.get_game_seconds()/3600) .. " without skipped time " .. tostring(skipped_time/3600) .. " is " .. tostring((dwimg_utils.get_game_seconds()-skipped_time)/3600) )
-	if (rule_a == false) and (rule_b == false) then
-		return false
-	end
-	
-	if (config.exemption_everything == 1 and rule_a) or (config.exemption_everything == 2 and rule_b) then
-		return true
-	end
-	
-	if (rule_a and rule_a_prot[i_type]) or (rule_b and rule_b_prot[i_type]) then
-		return true
-	else
-		return false
-	end
-
-end
-
 local function disassemble(section, spw_target)
 	local ind = 1
 	local ini = ini_file("items\\settings\\craft.ltx")
@@ -657,7 +532,7 @@ local function itr_inv(temp, item)
 		return
 	end
 	
-	if get_exemption(item, section) then
+	if dwimg_utils.get_exemption(item, section) then
 		dwimg_utils.print_dbg("Exemption: " .. item_id)						
 		return
 	end
@@ -852,7 +727,7 @@ local function itr_inv(temp, item)
 		end
 	end
 
-	local chances = scaled_chances(get_chances(item, section, item_id), item, section)
+	local chances = scaled_chances(dwimg_utils.get_chances(item, section, item_id), item, section)
 	
 	local loss_roll = math.random(1, 100)
 	local loss_chance = chances[1]

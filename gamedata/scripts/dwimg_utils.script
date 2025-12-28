@@ -1,6 +1,6 @@
---
--- -- MATH AND LOGICAL UTILS
---
+-- ==============================================================
+-- MATH AND LOGICAL UTILS
+-- ==============================================================
 
 function clamp(x, min_val, max_val)
     return math.max(min_val, math.min(x, max_val))
@@ -24,14 +24,138 @@ function shuffle_table(tbl)
     return tbl
 end
 
---
--- -- GAME UTILS
---
+-- ==============================================================
+-- GAME UTILS
+-- ==============================================================
 
 function get_game_seconds()
     return math.floor(game.get_game_time():diffSec(level.get_start_time()))
 end
 
---
--- -- DWIMG UTILS
---
+-- ==============================================================
+-- DWIMG GENERAL UTILS
+-- ==============================================================
+
+function print_dbg(text, ...)
+    if true then
+        printf("DUD: | %s |  " .. text, time_global(), ...)
+    end
+end
+
+function issue(dbg_msg)
+	if dwimg_main.dwimg_main.config.display_issue then
+		actor_menu.set_msg(1, strformat("Dude where is my gear ran into an issue! Please save the log for further investigation! (You can keep playing)", text), 10)
+        print_dbg("dwimg_issue: " .. dbg_msg)
+    end
+end
+
+function get_sleep_state()
+	if not alife_storage_manager.get_state().dude_where_is_my_gear then
+		alife_storage_manager.get_state().dude_where_is_my_gear = {
+			level = false,
+			position = false,
+			level_vert = false,
+			game_vert = false,
+			dead = false,
+			stash_created = false,
+			sleep_created = false,
+			last_death_time = 0,
+			stash_save = {},
+			dropped_stashes = {},
+			last_dropped_item_list = {},
+			last_lost_item_list = {},
+			health_status_msg = "",
+			wounds_status_msg = "",
+			dead = nil,
+			bleeding = nil,
+			healing = nil,
+			rank = nil,
+		}
+	end
+	return alife_storage_manager.get_state().dude_where_is_my_gear
+end
+
+-- ==============================================================
+-- DWIMG SPECIFIC UTILS
+-- ==============================================================
+
+-- --------------------------------------------------------------
+-- HANDLING ALL LISTS
+-- --------------------------------------------------------------
+
+function check_all_lists(list, i)
+	return dwimg_lists.all_lists[list][i]
+end
+
+function init_ignore()
+	local ignore_items = {}
+	for i = 1, dwimg_main.config.ignore_pda do
+		ignore_items[dwimg_utils.check_all_lists("list_ignore_pda",i)] = true
+	end
+	for i = 1, dwimg_main.config.ignore_backpack do
+		ignore_items[dwimg_utils.check_all_lists("list_ignore_backpack",i)] = true
+	end
+	for i = 1, dwimg_main.config.ignore_detector do
+		ignore_items[dwimg_utils.check_all_lists("list_ignore_detector",i)] = true
+	end	
+	for i = 1, dwimg_main.config.ignore_torch_nvg do
+		ignore_items[dwimg_utils.check_all_lists("list_ignore_torch_nvg",i)] = true
+	end	
+	for i = 1, dwimg_main.config.ignore_knife do
+		ignore_items[dwimg_utils.check_all_lists("list_ignore_knife",i)] = true
+	end	
+	if dwimg_main.config.ignore_axe then
+		for i = 1, #dwimg_lists.all_lists["list_ignore_axe"] do
+			ignore_items[dwimg_utils.check_all_lists("list_ignore_axe",i)] = true
+		end
+	end
+	if dwimg_main.config.ignore_special_equipment then
+		for i = 1, #dwimg_lists.all_lists["list_ignore_special_equipment"] do
+			ignore_items[dwimg_utils.check_all_lists("list_ignore_special_equipment",i)] = true
+		end
+	end
+	if dwimg_main.config.ignore_binoculars then
+		ignore_items["wpn_binoc_inv"] = true
+	end
+	return ignore_items
+end
+
+-- --------------------------------------------------------------
+-- HANDLING ITEM TYPES
+-- --------------------------------------------------------------
+
+function get_item_type(item, dbg_info)
+	local r_type = dwimg_lists.item_type.MISC
+	local g_type = (ini_sys:r_string_ex(item:section(), "kind"))
+	
+	if g_type == "i_medical" then
+		r_type = dwimg_lists.item_type.MEDICAL
+	elseif IsWeapon(item) and not (IsGrenade(item) or IsMelee(item)) then
+		r_type = dwimg_lists.item_type.GUN
+	elseif dwimg_utils.check_all_lists("devices",section) ~= nil then
+		r_type = dwimg_lists.item_type.UPGRADED
+	elseif dwimg_utils.check_all_lists("tools_list",section) then
+		r_type = dwimg_lists.item_type.TOOL
+	elseif dwimg_utils.check_all_lists("kits_list",section) then
+		r_type = dwimg_lists.item_type.KIT
+	elseif IsOutfit(item) or IsHeadgear(item) then
+		r_type = dwimg_lists.item_type.ARMOR
+	elseif g_type == "w_ammo" or string.match(item:section(), "^mag_") or IsAmmo(item) then
+		r_type = dwimg_lists.item_type.AMMO
+	elseif g_type == "w_explosive" then
+		r_type = dwimg_lists.item_type.EXPLOSIVE
+	elseif g_type == "i_arty_junk" then
+		r_type = dwimg_lists.item_type.ARTEFACT_PERK
+	elseif g_type == "i_arty" then
+		r_type = dwimg_lists.item_type.ARTEFACT_STAT
+	elseif g_type == "i_mutant_belt" then
+		r_type = dwimg_lists.item_type.PELT
+	elseif (ini_sys:r_string_ex(item:section(), "kind") == "w_misc") and not (item:section() == "bolt_bullet" or item:section() == "bolt" or item:section() == "wpn_binoc_inv") then
+		r_type = dwimg_lists.item_type.ATTACHEMENT_WPN
+	elseif g_type == "i_quest" then
+		r_type = dwimg_lists.item_type.QUEST
+	end
+	
+	dwimg_utils.print_dbg("Item type of <" .. tostring(item:section()) .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
+	return r_type
+end

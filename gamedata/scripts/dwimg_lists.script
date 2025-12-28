@@ -1,0 +1,130 @@
+-- --------------------------------------------------------------
+-- ALL LISTS
+-- --------------------------------------------------------------
+all_lists = {
+	list_ignore_pda = {
+		"device_pda_1",
+		"device_pda_2",
+		"device_pda_3"
+	},
+	ignored_levels = {
+		["jupiter_underground"]   = true,
+		["labx8"]                 = true,
+		["l03u_agr_underground"]  = false,
+		["l04u_labx18"]           = true,
+		["l08u_brainlab"]         = true,
+		["l10u_bunker"]           = true,
+		["l12u_control_monolith"] = true,
+		["l12u_sarcofag"]         = true,
+		["l13u_warlab"]           = true,
+	},
+	list_ignore_backpack = {
+		"itm_backpack",
+		"equ_tourist_pack",
+		"equ_small_pack",
+		"equ_military_pack",
+		"equ_small_military_pack"
+	},
+	list_ignore_detector = {
+		"detector_simple",
+		"detector_advanced",
+		"detector_grizzly",
+		"detector_scientific"
+	},
+	list_ignore_torch_nvg = {
+		"device_flashlight",
+		"device_torch_dummy",
+		"device_torch_nv_1",
+		"device_torch_nv_2",
+		"device_torch_nv_3"
+	},
+	list_ignore_knife = {
+		"wpn_knife",
+		"wpn_knife2",
+		"wpn_knife3",
+		"wpn_knife4",
+		"wpn_knife5",
+		"wpn_knife6",
+		"wpn_knife7",
+		"wpn_knife8",
+		"wpn_knife9"
+	},
+	list_ignore_axe = {
+		"wpn_axe",
+		"wpn_axe2",
+		"wpn_axe3"
+	},
+	list_ignore_special_equipment = {
+		"itm_actor_backpack",
+		"detector_radio",
+		"detector_geiger",
+		"kit_hunt",
+		"fieldcooker",
+		"detector_anomaly"
+	},
+	anti_keepers = {
+		["bolt"] = true,
+		["device_flashlight"] = true,
+		["device_torch_dummy"] = true,
+	},
+	devices = {
+		["detector_advanced"] = "detector_simple",
+		["detector_grizzly"] = "detector_advanced",
+		["detector_scientific"] = "detector_grizzly",
+		["device_torch_nv_1"] = "device_torch_dummy",
+		["device_torch_nv_2"] = "device_torch_nv_1",
+		["device_torch_nv_3"] = "device_torch_nv_2",
+		["exo_power_supply"] = "batteries_exo",
+		["exo_power_supply_proto"] = "exo_power_supply_military",
+		["exo_power_supply_sprint"] = "exo_power_supply_military",
+		["exo_power_supply_tank"] = "exo_power_supply_military",
+		["af_camelback_up"] = "af_camelback",
+		["af_cooler_up"] = "af_cooler",
+		["af_freon_up"] = "af_freon",
+		["af_frames_up"] = "af_frames",
+		["af_grid_up"] = "af_grid",
+		["af_surge_up"] = "af_surge",
+		["af_kevlar_up"] = "af_kevlar",
+		["af_plates"] = "af_kevlar_up",
+		["af_plates_up"] = "af_plates",
+		["device_pda_2"] = "device_pda_1",
+		["device_pda_3"] = "device_pda_2",
+		["equ_small_pack"] = "itm_backpack",
+		["equ_small_military_pack"] = "equ_small_pack",
+		["equ_military_pack"] = "equ_small_military_pack",
+		["equ_tourist_pack"] = "equ_military_pack",
+	},
+	tools_list = {
+		["itm_basickit"] = true,
+		["itm_advancedkit"] = true,
+		["itm_expertkit"] = true,
+	},
+	kits_list = {
+		["itm_drugkit"] = true,
+		["itm_ammokit"] = true,
+		["itm_gunsmith_toolkit"] = true,
+		["itm_artefactskit"] = true,
+		["kit_hunt"] = true,
+	},
+}
+
+-- --------------------------------------------------------------
+-- ITEM TYPE
+-- --------------------------------------------------------------
+
+item_type = {
+    MEDICAL = "medical",
+    GUN   = "gun",
+    UPGRADED = "upgraded",
+	TOOL = "tool",
+	KIT = "kit",
+	ARMOR = "armor",
+	AMMO = "ammo",
+	EXPLOSIVE = "explosive",
+	ARTEFACT_PERK = "artefact_perk",
+	ARTEFACT_STAT = "artefact_stat",
+	PELT = "pelt",
+	ATTACHEMENT_WPN = "attachement_weapon",
+	QUEST = "quest",
+	MISC = "misc"
+}

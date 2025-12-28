@@ -309,7 +309,7 @@ function get_config(key)
 		--printf("dudmcm for " .. tostring(key) .. " with " .. tostring(ui_mcm.get(mcd_id .. "/" .. key)) .. "\n")
 		return ui_mcm.get(mcd_id .. "/" .. key)
 	else 
-		return defaults[key] --"dude_where_is_my_gear/"..
+		return defaults[key] --"dwimg_main/"..
 	end 
 end
 
@@ -320,12 +320,12 @@ end
 
 function load_def_preset(preset_name)
 	local loading_preset = def_presets.default_presets[tostring(preset_name)]
-	dude_where_is_my_gear.print_dbg("Load def preset " .. tostring(preset_name))
+	dwimg_utils.print_dbg("Load def preset " .. tostring(preset_name))
 	if loading_preset then
 		for id, value in pairs(loading_preset) do
 			set_config(id, value)
 		end
-		dude_where_is_my_gear.print_dbg("Loaded def preset " .. tostring(preset_name))
+		dwimg_utils.print_dbg("Loaded def preset " .. tostring(preset_name))
 	end
 		
 end
@@ -357,20 +357,20 @@ function handle_preset(preset_id, status, curr_setting_table, curr_setting_strin
 	local dwimg_presets_ltx = ini_file_ex("dwimg_presets.ltx",true)
 	local _curr_setting_string = curr_setting_string
 	local _filtered = filtered
-	dude_where_is_my_gear.print_dbg("Started handle preset curr_string " .. curr_setting_string)
+	dwimg_utils.print_dbg("Started handle preset curr_string " .. curr_setting_string)
 	if  curr_setting_table["gr"] then
 		if _curr_setting_string == "" and filter[curr_setting_table["id"]] == nil then
 			_filtered = true
-			dude_where_is_my_gear.print_dbg("Filtered " .. curr_setting_table["id"])
+			dwimg_utils.print_dbg("Filtered " .. curr_setting_table["id"])
 		end
 		_curr_setting_string = _curr_setting_string .. curr_setting_table["id"] .. "/"
-		dude_where_is_my_gear.print_dbg("Recursion curr_string " .. _curr_setting_string)
+		dwimg_utils.print_dbg("Recursion curr_string " .. _curr_setting_string)
 		handle_preset(preset_id, status, curr_setting_table["gr"], _curr_setting_string, filter, _filtered)
 	else
 		if curr_setting_table["id"] and curr_setting_table["type"] ~= "desc" then
 			_curr_setting_string = _curr_setting_string .. curr_setting_table["id"]
 			if status == 's' then
-				dude_where_is_my_gear.print_dbg("Save curr_string " .. _curr_setting_string)
+				dwimg_utils.print_dbg("Save curr_string " .. _curr_setting_string)
 				if filtered == true then
 					dwimg_presets_ltx:w_value(tostring(preset_id), _curr_setting_string, nil)
 					dwimg_presets_ltx:save()
@@ -384,17 +384,17 @@ function handle_preset(preset_id, status, curr_setting_table, curr_setting_strin
 				end
 			elseif status == 'l' then
 				if dwimg_presets_ltx:r_value(tostring(preset_id), _curr_setting_string) and dwimg_presets_ltx:r_value(tostring(preset_id), _curr_setting_string) ~= nil and filtered == false then
-					dude_where_is_my_gear.print_dbg("Load curr_string " .. _curr_setting_string)
+					dwimg_utils.print_dbg("Load curr_string " .. _curr_setting_string)
 					set_config(_curr_setting_string, dwimg_presets_ltx:r_value(tostring(preset_id), _curr_setting_string))
 				end
 				if not dwimg_presets_ltx:r_value(tostring(preset_id), _curr_setting_string) then
-					dude_where_is_my_gear.print_dbg("Not defined " .. _curr_setting_string .. " inside of " .. tostring(preset_id))
+					dwimg_utils.print_dbg("Not defined " .. _curr_setting_string .. " inside of " .. tostring(preset_id))
 				end
 		
 			end
 		else
 			for i=1, #curr_setting_table do
-				dude_where_is_my_gear.print_dbg("Recursion curr_string " .. _curr_setting_string)
+				dwimg_utils.print_dbg("Recursion curr_string " .. _curr_setting_string)
 				handle_preset(preset_id, status, curr_setting_table[i], _curr_setting_string, filter, _filtered)				
 				i = i+1
 			end

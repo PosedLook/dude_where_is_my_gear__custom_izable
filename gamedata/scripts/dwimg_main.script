@@ -6,7 +6,7 @@ You'll lose a % of money and also equipped items will lose condition when you dr
 --]] 
 
 -- Configuration table to avoid 200 local variable limit
-local config = {}
+config = {}
 local death_init = false
 local dropped_stash
 local do_item_dropping -- disable item dropping if in underground labs
@@ -22,169 +22,7 @@ local skipped_time = 0
 local time_item_calc = nil
 local actor_last_health = 1
 
-all_lists ={
-	list_ignore_pda = {
-		"device_pda_1",
-		"device_pda_2",
-		"device_pda_3"
-	},
-	ignored_levels = {
-		["jupiter_underground"]   = true,
-		["labx8"]                 = true,
-		["l03u_agr_underground"]  = false,
-		["l04u_labx18"]           = true,
-		["l08u_brainlab"]         = true,
-		["l10u_bunker"]           = true,
-		["l12u_control_monolith"] = true,
-		["l12u_sarcofag"]         = true,
-		["l13u_warlab"]           = true,
-	},
-	list_ignore_backpack = {
-		"itm_backpack",
-		"equ_tourist_pack",
-		"equ_small_pack",
-		"equ_military_pack",
-		"equ_small_military_pack"
-	},
-	list_ignore_detector = {
-		"detector_simple",
-		"detector_advanced",
-		"detector_grizzly",
-		"detector_scientific"
-	},
-	list_ignore_torch_nvg = {
-		"device_flashlight",
-		"device_torch_dummy",
-		"device_torch_nv_1",
-		"device_torch_nv_2",
-		"device_torch_nv_3"
-	},
-	list_ignore_knife = {
-		"wpn_knife",
-		"wpn_knife2",
-		"wpn_knife3",
-		"wpn_knife4",
-		"wpn_knife5",
-		"wpn_knife6",
-		"wpn_knife7",
-		"wpn_knife8",
-		"wpn_knife9"
-	},
-	list_ignore_axe = {
-		"wpn_axe",
-		"wpn_axe2",
-		"wpn_axe3"
-	},
-	list_ignore_special_equipment = {
-		"itm_actor_backpack",
-		"detector_radio",
-		"detector_geiger",
-		"kit_hunt",
-		"fieldcooker",
-		"detector_anomaly"
-	},
-	anti_keepers = {
-		["bolt"] = true,
-		["device_flashlight"] = true,
-		["device_torch_dummy"] = true,
-	},
-	devices = {
-		["detector_advanced"] = "detector_simple",
-		["detector_grizzly"] = "detector_advanced",
-		["detector_scientific"] = "detector_grizzly",
-		["device_torch_nv_1"] = "device_torch_dummy",
-		["device_torch_nv_2"] = "device_torch_nv_1",
-		["device_torch_nv_3"] = "device_torch_nv_2",
-		["exo_power_supply"] = "batteries_exo",
-		["exo_power_supply_proto"] = "exo_power_supply_military",
-		["exo_power_supply_sprint"] = "exo_power_supply_military",
-		["exo_power_supply_tank"] = "exo_power_supply_military",
-		["af_camelback_up"] = "af_camelback",
-		["af_cooler_up"] = "af_cooler",
-		["af_freon_up"] = "af_freon",
-		["af_frames_up"] = "af_frames",
-		["af_grid_up"] = "af_grid",
-		["af_surge_up"] = "af_surge",
-		["af_kevlar_up"] = "af_kevlar",
-		["af_plates"] = "af_kevlar_up",
-		["af_plates_up"] = "af_plates",
-		["device_pda_2"] = "device_pda_1",
-		["device_pda_3"] = "device_pda_2",
-		["equ_small_pack"] = "itm_backpack",
-		["equ_small_military_pack"] = "equ_small_pack",
-		["equ_military_pack"] = "equ_small_military_pack",
-		["equ_tourist_pack"] = "equ_military_pack",
-	},
-	tools_list = {
-		["itm_basickit"] = true,
-		["itm_advancedkit"] = true,
-		["itm_expertkit"] = true,
-	},
-	kits_list = {
-		["itm_drugkit"] = true,
-		["itm_ammokit"] = true,
-		["itm_gunsmith_toolkit"] = true,
-		["itm_artefactskit"] = true,
-		["kit_hunt"] = true,
-	},
-}
-
-local function check_all_lists(list, i)
-	return all_lists[list][i]
-end
-
-local item_type = {
-    MEDICAL = "medical",
-    GUN   = "gun",
-    UPGRADED = "upgraded",
-	TOOL = "tool",
-	KIT = "kit",
-	ARMOR = "armor",
-	AMMO = "ammo",
-	EXPLOSIVE = "explosive",
-	ARTEFACT_PERK = "artefact_perk",
-	ARTEFACT_STAT = "artefact_stat",
-	PELT = "pelt",
-	ATTACHEMENT_WPN = "attachement_weapon",
-	QUEST = "quest",
-	MISC = "misc"
-}
-
-local function getItemType(item, dbg_info)
-	local r_type = item_type.MISC
-	local g_type = (ini_sys:r_string_ex(item:section(), "kind"))
-	
-	if g_type == "i_medical" then
-		r_type = item_type.MEDICAL
-	elseif IsWeapon(item) and not (IsGrenade(item) or IsMelee(item)) then
-		r_type = item_type.GUN
-	elseif check_all_lists("devices",section) ~= nil then
-		r_type = item_type.UPGRADED
-	elseif check_all_lists("tools_list",section) then
-		r_type = item_type.TOOL
-	elseif check_all_lists("kits_list",section) then
-		r_type = item_type.KIT
-	elseif IsOutfit(item) or IsHeadgear(item) then
-		r_type = item_type.ARMOR
-	elseif g_type == "w_ammo" or string.match(item:section(), "^mag_") or IsAmmo(item) then
-		r_type = item_type.AMMO
-	elseif g_type == "w_explosive" then
-		r_type = item_type.EXPLOSIVE
-	elseif g_type == "i_arty_junk" then
-		r_type = item_type.ARTEFACT_PERK
-	elseif g_type == "i_arty" then
-		r_type = item_type.ARTEFACT_STAT
-	elseif g_type == "i_mutant_belt" then
-		r_type = item_type.PELT
-	elseif (ini_sys:r_string_ex(item:section(), "kind") == "w_misc") and not (item:section() == "bolt_bullet" or item:section() == "bolt" or item:section() == "wpn_binoc_inv") then
-		r_type = item_type.ATTACHEMENT_WPN
-	elseif g_type == "i_quest" then
-		r_type = item_type.QUEST
-	end
-	
-	print_dbg("Item type of <" .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
-	return r_type
-end
+local ignore_items = nil
 
 local rule_a_prot = {}
 local rule_b_prot = {}
@@ -192,118 +30,79 @@ local function init_protections()
 	rule_a_prot = {}
 	rule_b_prot = {}
 	if config.exemption_guns == 1 then
-		rule_a_prot[item_type.GUN] = true
+		rule_a_prot[dwimg_lists.item_type.GUN] = true
 	elseif config.exemption_guns == 2 then
-		rule_b_prot[item_type.GUN] = true
+		rule_b_prot[dwimg_lists.item_type.GUN] = true
 	end
 	if exemption_gun_attachements == 1 then
-		rule_a_prot[item_type.ATTACHEMENT_WPN] = true
+		rule_a_prot[dwimg_lists.item_type.ATTACHEMENT_WPN] = true
 	elseif exemption_gun_attachements == 2 then
-		rule_b_prot[item_type.ATTACHEMENT_WPN] = true
+		rule_b_prot[dwimg_lists.item_type.ATTACHEMENT_WPN] = true
 	end
 	if config.exemption_outfits == 1 then
-		rule_a_prot[item_type.ARMOR] = true
+		rule_a_prot[dwimg_lists.item_type.ARMOR] = true
 	elseif config.exemption_outfits == 2 then
-		rule_b_prot[item_type.ARMOR] = true
+		rule_b_prot[dwimg_lists.item_type.ARMOR] = true
 	end
 	if exemption_artefacts == 1 then
-		rule_a_prot[item_type.ARTEFACT_PERK] = true
-		rule_a_prot[item_type.ARTEFACT_STAT] = true
-		rule_a_prot[item_type.PELT] = true
+		rule_a_prot[dwimg_lists.item_type.ARTEFACT_PERK] = true
+		rule_a_prot[dwimg_lists.item_type.ARTEFACT_STAT] = true
+		rule_a_prot[dwimg_lists.item_type.PELT] = true
 	elseif exemption_artefacts == 2 then
-		rule_a_prot[item_type.ARTEFACT_PERK] = true
-		rule_a_prot[item_type.ARTEFACT_STAT] = true
-		rule_a_prot[item_type.PELT] = true
+		rule_a_prot[dwimg_lists.item_type.ARTEFACT_PERK] = true
+		rule_a_prot[dwimg_lists.item_type.ARTEFACT_STAT] = true
+		rule_a_prot[dwimg_lists.item_type.PELT] = true
 	end
 	if exemption_device == 1 then
-		rule_a_prot[item_type.UPGRADED] = true
+		rule_a_prot[dwimg_lists.item_type.UPGRADED] = true
 	elseif exemption_device == 2 then
-		rule_b_prot[item_type.UPGRADED] = true
+		rule_b_prot[dwimg_lists.item_type.UPGRADED] = true
 	end
 	if exemption_kit == 1 then
-		rule_a_prot[item_type.KIT] = true
+		rule_a_prot[dwimg_lists.item_type.KIT] = true
 	elseif exemption_kit == 2 then
-		rule_b_prot[item_type.KIT] = true
+		rule_b_prot[dwimg_lists.item_type.KIT] = true
 	end
 	if exemption_tools == 1 then
-		rule_a_prot[item_type.TOOL] = true
+		rule_a_prot[dwimg_lists.item_type.TOOL] = true
 	elseif exemption_tools == 2 then
-		rule_b_prot[item_type.TOOL] = true
+		rule_b_prot[dwimg_lists.item_type.TOOL] = true
 	end
 	if exemption_explosives == 1 then
-		rule_a_prot[item_type.EXPLOSIVE] = true
+		rule_a_prot[dwimg_lists.item_type.EXPLOSIVE] = true
 	elseif exemption_explosives == 2 then
-		rule_b_prot[item_type.EXPLOSIVE] = true
+		rule_b_prot[dwimg_lists.item_type.EXPLOSIVE] = true
 	end
 	if config.exemption_ammo == 1 then
-		rule_a_prot[item_type.AMMO] = true
+		rule_a_prot[dwimg_lists.item_type.AMMO] = true
 	elseif config.exemption_ammo == 2 then
-		rule_b_prot[item_type.AMMO] = true
+		rule_b_prot[dwimg_lists.item_type.AMMO] = true
 	end
 	if config.exemption_medics == 1 then
-		rule_a_prot[item_type.MEDICAL] = true
+		rule_a_prot[dwimg_lists.item_type.MEDICAL] = true
 	elseif config.exemption_medics == 2 then
-		rule_b_prot[item_type.MEDICAL] = true
+		rule_b_prot[dwimg_lists.item_type.MEDICAL] = true
 	end
 	if config.exemption_misc == 1 then
-		rule_a_prot[item_type.MISC] = true
+		rule_a_prot[dwimg_lists.item_type.MISC] = true
 	elseif config.exemption_misc == 2 then
-		rule_b_prot[item_type.MISC] = true
-	end
-end
-
--- Utils
-local function get_sleep_state()
-	if not alife_storage_manager.get_state().dude_where_is_my_gear then
-		alife_storage_manager.get_state().dude_where_is_my_gear = {
-			level = false,
-			position = false,
-			level_vert = false,
-			game_vert = false,
-			dead = false,
-			stash_created = false,
-			sleep_created = false,
-			last_death_time = 0,
-			stash_save = {},
-			dropped_stashes = {},
-			last_dropped_item_list = {},
-			last_lost_item_list = {},
-			health_status_msg = "",
-			wounds_status_msg = "",
-			dead = nil,
-			bleeding = nil,
-			healing = nil,
-			rank = nil,
-		}
-	end
-	return alife_storage_manager.get_state().dude_where_is_my_gear
-end
-
-function print_dbg(text, ...)
-    if true then
-        printf("DUD: | %s |  " .. text, time_global(), ...)
-    end
-end
-
-local function issue()
-	if config.display_issue then
-		actor_menu.set_msg(1, strformat("Dude where is my gear ran into an issue! Please save the log for further investigation! (You can keep playing)", text), 10)
+		rule_b_prot[dwimg_lists.item_type.MISC] = true
 	end
 end
 
 local function add_to_dropped_item_list(item, status, stash_id)
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
     local item_name = ui_item.get_sec_name(item:section()) or 'unknown'
     local drop_stash = sleep.dropped_stashes[stash_id]
     if status == "d" then
-        print_dbg("Dropped item: " .. item_name)
+        dwimg_utils.print_dbg("Dropped item: " .. item_name)
         if drop_stash.last_dropped_item_list[item_name] == nil then
             drop_stash.last_dropped_item_list[item_name] = 1
         else
             drop_stash.last_dropped_item_list[item_name] = drop_stash.last_dropped_item_list[item_name] + 1
         end
     elseif status == "l" then
-        print_dbg("Lost item: " .. item_name)
+        dwimg_utils.print_dbg("Lost item: " .. item_name)
         if drop_stash.last_lost_item_list[item_name] == nil then
             drop_stash.last_lost_item_list[item_name] = 1
         else
@@ -314,19 +113,19 @@ end
 
 local function create_report_msg_string(list_lost_only, stash_id)
     list_lost_only = list_lost_only or false
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
     local stash_items = sleep.dropped_stashes[stash_id] or nil
     local msg = ""
     if not list_lost_only and stash_items then
         for item_name, count in pairs(stash_items.last_dropped_item_list) do
             msg = msg .. "- " .. item_name .. " x" .. count .. " \\n"
-            -- print_dbg("Dropped item: " .. item_name .. " x" .. count)
+            -- dwimg_utils.print_dbg("Dropped item: " .. item_name .. " x" .. count)
         end
     end
     if stash_items then
         for item_name, count in pairs(stash_items.last_lost_item_list) do
             msg = msg .. "- " .. item_name .. " x" .. count .. " \\n"
-            -- print_dbg("Lost item: " .. item_name .. " x" .. count)
+            -- dwimg_utils.print_dbg("Lost item: " .. item_name .. " x" .. count)
         end
     end
     return msg
@@ -376,7 +175,7 @@ function detach_suppressor_dwimg(weapon)
 			local supSection = utils_item.get_param(weapon:section(), weapon:id(), "silencer_name", "string")
 			local sil_info = {id = weapon:id(), section = supSection}
 			weapon:weapon_addon_detach(sil_info.section, true)
-			--print_dbg("Detached suppressor")
+			--dwimg_utils.print_dbg("Detached suppressor")
 			return true
 		end
 	end
@@ -389,7 +188,7 @@ function detach_gl_dwimg(weapon)
 			local supSection = utils_item.get_wpn_param(obj, weapon:section(), "grenade_launcher_name")
 			local gl_info = {id = weapon:id(), section = supSection}
 			weapon:weapon_addon_detach(gl_info.section, true)
-			--print_dbg("Detached gl")
+			--dwimg_utils.print_dbg("Detached gl")
 			return true		
 		end
 	end
@@ -399,14 +198,14 @@ end
 -- End of Utils
 
 local function load_settings_money()
-	config.min_money_percentage = Dude_where_is_my_gear_mcm.get_config("money/min_money_percentage")
-	config.max_money_percentage = Dude_where_is_my_gear_mcm.get_config("money/max_money_percentage")
-	config.min_money_to_drop_percentage = Dude_where_is_my_gear_mcm.get_config("money/min_money_to_drop_percentage")
-	config.max_money_to_drop_percentage = Dude_where_is_my_gear_mcm.get_config("money/max_money_to_drop_percentage")
-	config.min_money_to_keep_inventory = Dude_where_is_my_gear_mcm.get_config("money/min_money_to_keep_inventory")
-	config.min_money_to_keep_general = Dude_where_is_my_gear_mcm.get_config("money/min_money_to_keep_general")	
-	config.max_lost_money = Dude_where_is_my_gear_mcm.get_config("money/max_lost_money")
-	config.money_y_rank = Dude_where_is_my_gear_mcm.get_config("money/money_y_rank")
+	config.min_money_percentage = dwimg_mcm.get_config("money/min_money_percentage")
+	config.max_money_percentage = dwimg_mcm.get_config("money/max_money_percentage")
+	config.min_money_to_drop_percentage = dwimg_mcm.get_config("money/min_money_to_drop_percentage")
+	config.max_money_to_drop_percentage = dwimg_mcm.get_config("money/max_money_to_drop_percentage")
+	config.min_money_to_keep_inventory = dwimg_mcm.get_config("money/min_money_to_keep_inventory")
+	config.min_money_to_keep_general = dwimg_mcm.get_config("money/min_money_to_keep_general")	
+	config.max_lost_money = dwimg_mcm.get_config("money/max_lost_money")
+	config.money_y_rank = dwimg_mcm.get_config("money/money_y_rank")
 	
 	if config.max_money_percentage < config.min_money_percentage then
 		config.max_money_percentage = config.min_money_percentage
@@ -420,20 +219,20 @@ local function load_settings_money()
 end
 local function load_settings_condition()
 	--condition_ga
-    config.min_condition_lose = Dude_where_is_my_gear_mcm.get_config("condition/condition_ga/min_condition_lose")
-    config.max_condition_lose = Dude_where_is_my_gear_mcm.get_config("condition/condition_ga/max_condition_lose")
-	config.part_break_chance = Dude_where_is_my_gear_mcm.get_config("condition/condition_ga/part_break_chance")
-	config.min_weapon_condition = Dude_where_is_my_gear_mcm.get_config("condition/condition_ga/min_weapon_condition")
-	config.min_armor_condition = Dude_where_is_my_gear_mcm.get_config("condition/condition_ga/min_armor_condition")
-	config.condition_unequipped = Dude_where_is_my_gear_mcm.get_config("condition/condition_ga/condition_unequipped")
-	config.spread_weapon_condition = Dude_where_is_my_gear_mcm.get_config("condition/condition_ga/spread_weapon_condition")
+    config.min_condition_lose = dwimg_mcm.get_config("condition/condition_ga/min_condition_lose")
+    config.max_condition_lose = dwimg_mcm.get_config("condition/condition_ga/max_condition_lose")
+	config.part_break_chance = dwimg_mcm.get_config("condition/condition_ga/part_break_chance")
+	config.min_weapon_condition = dwimg_mcm.get_config("condition/condition_ga/min_weapon_condition")
+	config.min_armor_condition = dwimg_mcm.get_config("condition/condition_ga/min_armor_condition")
+	config.condition_unequipped = dwimg_mcm.get_config("condition/condition_ga/condition_unequipped")
+	config.spread_weapon_condition = dwimg_mcm.get_config("condition/condition_ga/spread_weapon_condition")
 	--condition_o
-    config.min_condition_lose2 = Dude_where_is_my_gear_mcm.get_config("condition/condition_o/min_condition_lose2")
-    config.max_condition_lose2 = Dude_where_is_my_gear_mcm.get_config("condition/condition_o/max_condition_lose2")
-    config.condition_melee = Dude_where_is_my_gear_mcm.get_config("condition/condition_o/condition_melee")	
-	config.condition_perk_artefact = Dude_where_is_my_gear_mcm.get_config("condition/condition_o/condition_perk_artefact")
-	config.condition_stat_artefact = Dude_where_is_my_gear_mcm.get_config("condition/condition_o/condition_stat_artefact")
-	config.condition_pelt = Dude_where_is_my_gear_mcm.get_config("condition/condition_o/condition_pelt")
+    config.min_condition_lose2 = dwimg_mcm.get_config("condition/condition_o/min_condition_lose2")
+    config.max_condition_lose2 = dwimg_mcm.get_config("condition/condition_o/max_condition_lose2")
+    config.condition_melee = dwimg_mcm.get_config("condition/condition_o/condition_melee")	
+	config.condition_perk_artefact = dwimg_mcm.get_config("condition/condition_o/condition_perk_artefact")
+	config.condition_stat_artefact = dwimg_mcm.get_config("condition/condition_o/condition_stat_artefact")
+	config.condition_pelt = dwimg_mcm.get_config("condition/condition_o/condition_pelt")
 
 	if config.max_condition_lose < config.min_condition_lose then
 		config.max_condition_lose = config.min_condition_lose
@@ -444,64 +243,64 @@ local function load_settings_condition()
 end
 local function load_settings_item_loss()
 	--lose_keep
-	config.chance_of_losing_guns = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_guns")
-	config.chance_of_losing_guns_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_guns_anti")
-    config.keep_guns_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_guns_chance")
-    config.keep_guns_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_guns_chance_anti")
-	config.chance_of_losing_gun_attachments = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_gun_attachments")
-	config.chance_of_losing_gun_attachments_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_gun_attachments_anti")
-    config.keep_gun_attachment_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_gun_attachment_chance")
-    config.keep_gun_attachment_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_gun_attachment_chance_anti")
-	config.chance_of_losing_outfits = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_outfits")
-	config.chance_of_losing_outfits_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_outfits_anti")
-    config.keep_outfit_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_outfit_chance")
-    config.keep_outfit_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_outfit_chance_anti")
-	config.chance_of_losing_artefacts = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_artefacts")
-	config.chance_of_losing_artefacts_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_artefacts_anti")
-	config.keep_artefact_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_artefact_chance")
-	config.keep_artefact_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_artefact_chance_anti")
-	config.chance_of_losing_devices = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_devices")
-	config.chance_of_losing_devices_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_devices_anti")
-	config.keep_device_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_device_chance")
-	config.keep_device_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_device_chance_anti")
-	config.chance_of_losing_kits = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_kits")
-	config.chance_of_losing_kits_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_kits_anti")
-	config.keep_kits_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_kits_chance")
-	config.keep_kits_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_kits_chance_anti")
-	config.chance_of_losing_tools = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_tools")
-	config.chance_of_losing_tools_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_tools_anti")
-	config.keep_tools_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_tools_chance")
-	config.keep_tools_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_tools_chance_anti")
-	config.chance_of_losing_explosives = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_explosives")
-	config.chance_of_losing_explosives_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_explosives_anti")
-    config.keep_explosives_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_explosives_chance")
-    config.keep_explosives_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_explosives_chance_anti")
-	config.chance_of_losing_ammo = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_ammo")
-	config.chance_of_losing_ammo_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_ammo_anti")
-    config.keep_ammo_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_ammo_chance")
-    config.keep_ammo_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_ammo_chance_anti")
-	config.chance_of_losing_medics = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_medics")
-	config.chance_of_losing_medics_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_medics_anti")
-	config.keep_medics_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_medics_chance")
-	config.keep_medics_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_medics_chance_anti")
-	config.chance_of_losing_items = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_items")
-	config.chance_of_losing_items_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/chance_of_losing_items_anti")
-    config.keep_misc_items_chance = 100 - Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_misc_items_chance")
-    config.keep_misc_items_chance_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/lose_keep/keep_misc_items_chance_anti")
+	config.chance_of_losing_guns = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_guns")
+	config.chance_of_losing_guns_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_guns_anti")
+    config.keep_guns_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_guns_chance")
+    config.keep_guns_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_guns_chance_anti")
+	config.chance_of_losing_gun_attachments = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_gun_attachments")
+	config.chance_of_losing_gun_attachments_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_gun_attachments_anti")
+    config.keep_gun_attachment_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_gun_attachment_chance")
+    config.keep_gun_attachment_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_gun_attachment_chance_anti")
+	config.chance_of_losing_outfits = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_outfits")
+	config.chance_of_losing_outfits_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_outfits_anti")
+    config.keep_outfit_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_outfit_chance")
+    config.keep_outfit_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_outfit_chance_anti")
+	config.chance_of_losing_artefacts = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_artefacts")
+	config.chance_of_losing_artefacts_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_artefacts_anti")
+	config.keep_artefact_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_artefact_chance")
+	config.keep_artefact_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_artefact_chance_anti")
+	config.chance_of_losing_devices = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_devices")
+	config.chance_of_losing_devices_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_devices_anti")
+	config.keep_device_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_device_chance")
+	config.keep_device_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_device_chance_anti")
+	config.chance_of_losing_kits = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_kits")
+	config.chance_of_losing_kits_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_kits_anti")
+	config.keep_kits_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_kits_chance")
+	config.keep_kits_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_kits_chance_anti")
+	config.chance_of_losing_tools = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_tools")
+	config.chance_of_losing_tools_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_tools_anti")
+	config.keep_tools_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_tools_chance")
+	config.keep_tools_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_tools_chance_anti")
+	config.chance_of_losing_explosives = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_explosives")
+	config.chance_of_losing_explosives_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_explosives_anti")
+    config.keep_explosives_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_explosives_chance")
+    config.keep_explosives_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_explosives_chance_anti")
+	config.chance_of_losing_ammo = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_ammo")
+	config.chance_of_losing_ammo_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_ammo_anti")
+    config.keep_ammo_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_ammo_chance")
+    config.keep_ammo_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_ammo_chance_anti")
+	config.chance_of_losing_medics = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_medics")
+	config.chance_of_losing_medics_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_medics_anti")
+	config.keep_medics_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_medics_chance")
+	config.keep_medics_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_medics_chance_anti")
+	config.chance_of_losing_items = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_items")
+	config.chance_of_losing_items_anti = dwimg_mcm.get_config("item_loss/lose_keep/chance_of_losing_items_anti")
+    config.keep_misc_items_chance = 100 - dwimg_mcm.get_config("item_loss/lose_keep/keep_misc_items_chance")
+    config.keep_misc_items_chance_anti = dwimg_mcm.get_config("item_loss/lose_keep/keep_misc_items_chance_anti")
 	--loss_scaling
-	config.enable_scale = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/enable_scale")
-	config.scaling_exponent = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/scaling_exponent")
-	config.rank_scale_from = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_scale_from")
-	config.rank_scale_until = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_scale_until")
-	config.rank_loss_multiplier = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier")
-	config.rank_loss_multiplier_anti = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti")
-	config.rank_loss_multiplier_anti_override = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti_override")
-	config.rank_scale_from2 = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_scale_from2")
-	config.rank_scale_until2 = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_scale_until2")
-	config.rank_loss_multiplier2 = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier2")
-	config.rank_loss_multiplier_anti2 = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti2")
-	config.rank_loss_multiplier_anti2_override = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti2_override")
-	config.exemption_scale = Dude_where_is_my_gear_mcm.get_config("item_loss/loss_scaling/exemption_scale")
+	config.enable_scale = dwimg_mcm.get_config("item_loss/loss_scaling/enable_scale")
+	config.scaling_exponent = dwimg_mcm.get_config("item_loss/loss_scaling/scaling_exponent")
+	config.rank_scale_from = dwimg_mcm.get_config("item_loss/loss_scaling/rank_scale_from")
+	config.rank_scale_until = dwimg_mcm.get_config("item_loss/loss_scaling/rank_scale_until")
+	config.rank_loss_multiplier = dwimg_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier")
+	config.rank_loss_multiplier_anti = dwimg_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti")
+	config.rank_loss_multiplier_anti_override = dwimg_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti_override")
+	config.rank_scale_from2 = dwimg_mcm.get_config("item_loss/loss_scaling/rank_scale_from2")
+	config.rank_scale_until2 = dwimg_mcm.get_config("item_loss/loss_scaling/rank_scale_until2")
+	config.rank_loss_multiplier2 = dwimg_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier2")
+	config.rank_loss_multiplier_anti2 = dwimg_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti2")
+	config.rank_loss_multiplier_anti2_override = dwimg_mcm.get_config("item_loss/loss_scaling/rank_loss_multiplier_anti2_override")
+	config.exemption_scale = dwimg_mcm.get_config("item_loss/loss_scaling/exemption_scale")
 
 	if config.rank_scale_until <= config.rank_scale_from then
 		config.rank_scale_until = config.rank_scale_from + 1
@@ -511,80 +310,80 @@ local function load_settings_item_loss()
 	end		
 end
 local function load_settings_ignore()
-	config.ignore_pda = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_pda")
-	config.ignore_backpack = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_backpack")
-	config.ignore_detector = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_detector")
-	config.ignore_torch_nvg = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_torch_nvg")
-	config.ignore_knife = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_knife")
-	config.ignore_axe = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_axe")
-	config.ignore_binoculars = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_binoculars")
-	config.ignore_special_equipment = Dude_where_is_my_gear_mcm.get_config("ignore/ignore_special_equipment")
+	config.ignore_pda = dwimg_mcm.get_config("ignore/ignore_pda")
+	config.ignore_backpack = dwimg_mcm.get_config("ignore/ignore_backpack")
+	config.ignore_detector = dwimg_mcm.get_config("ignore/ignore_detector")
+	config.ignore_torch_nvg = dwimg_mcm.get_config("ignore/ignore_torch_nvg")
+	config.ignore_knife = dwimg_mcm.get_config("ignore/ignore_knife")
+	config.ignore_axe = dwimg_mcm.get_config("ignore/ignore_axe")
+	config.ignore_binoculars = dwimg_mcm.get_config("ignore/ignore_binoculars")
+	config.ignore_special_equipment = dwimg_mcm.get_config("ignore/ignore_special_equipment")
 end
 local function load_settings_protection()
-	config.max_rank_exemption = Dude_where_is_my_gear_mcm.get_config("protection/max_rank_exemption")
-	config.gained_rank_exemption = Dude_where_is_my_gear_mcm.get_config("protection/gained_rank_exemption")
-	config.max_time_exemption = Dude_where_is_my_gear_mcm.get_config("protection/max_time_exemption")
-	config.passed_time_exemption = Dude_where_is_my_gear_mcm.get_config("protection/passed_time_exemption")
-	config.max_rank_exemption2 = Dude_where_is_my_gear_mcm.get_config("protection/max_rank_exemption2")
-	config.gained_rank_exemption2 = Dude_where_is_my_gear_mcm.get_config("protection/gained_rank_exemption2")
-	config.max_time_exemption2 = Dude_where_is_my_gear_mcm.get_config("protection/max_time_exemption2")
-	config.passed_time_exemption2 = Dude_where_is_my_gear_mcm.get_config("protection/passed_time_exemption2")
-	config.exemption_everything = Dude_where_is_my_gear_mcm.get_config("protection/exemption_everything")	
-	config.exemption_money = Dude_where_is_my_gear_mcm.get_config("protection/exemption_money")
-	config.exemption_guns = Dude_where_is_my_gear_mcm.get_config("protection/exemption_guns")
-	exemption_gun_attachements = Dude_where_is_my_gear_mcm.get_config("protection/exemption_gun_attachements")
-	config.exemption_outfits = Dude_where_is_my_gear_mcm.get_config("protection/exemption_outfits")
-	exemption_artefacts = Dude_where_is_my_gear_mcm.get_config("protection/exemption_artefacts")
-	exemption_device = Dude_where_is_my_gear_mcm.get_config("protection/exemption_device")
-	exemption_kit = Dude_where_is_my_gear_mcm.get_config("protection/exemption_kit")
-	exemption_tools = Dude_where_is_my_gear_mcm.get_config("protection/exemption_tools")
-	exemption_explosives = Dude_where_is_my_gear_mcm.get_config("protection/exemption_explosives")
-	config.exemption_ammo = Dude_where_is_my_gear_mcm.get_config("protection/exemption_ammo")
-	config.exemption_medics = Dude_where_is_my_gear_mcm.get_config("protection/exemption_medics")
-	config.exemption_misc = Dude_where_is_my_gear_mcm.get_config("protection/exemption_misc")
+	config.max_rank_exemption = dwimg_mcm.get_config("protection/max_rank_exemption")
+	config.gained_rank_exemption = dwimg_mcm.get_config("protection/gained_rank_exemption")
+	config.max_time_exemption = dwimg_mcm.get_config("protection/max_time_exemption")
+	config.passed_time_exemption = dwimg_mcm.get_config("protection/passed_time_exemption")
+	config.max_rank_exemption2 = dwimg_mcm.get_config("protection/max_rank_exemption2")
+	config.gained_rank_exemption2 = dwimg_mcm.get_config("protection/gained_rank_exemption2")
+	config.max_time_exemption2 = dwimg_mcm.get_config("protection/max_time_exemption2")
+	config.passed_time_exemption2 = dwimg_mcm.get_config("protection/passed_time_exemption2")
+	config.exemption_everything = dwimg_mcm.get_config("protection/exemption_everything")	
+	config.exemption_money = dwimg_mcm.get_config("protection/exemption_money")
+	config.exemption_guns = dwimg_mcm.get_config("protection/exemption_guns")
+	exemption_gun_attachements = dwimg_mcm.get_config("protection/exemption_gun_attachements")
+	config.exemption_outfits = dwimg_mcm.get_config("protection/exemption_outfits")
+	exemption_artefacts = dwimg_mcm.get_config("protection/exemption_artefacts")
+	exemption_device = dwimg_mcm.get_config("protection/exemption_device")
+	exemption_kit = dwimg_mcm.get_config("protection/exemption_kit")
+	exemption_tools = dwimg_mcm.get_config("protection/exemption_tools")
+	exemption_explosives = dwimg_mcm.get_config("protection/exemption_explosives")
+	config.exemption_ammo = dwimg_mcm.get_config("protection/exemption_ammo")
+	config.exemption_medics = dwimg_mcm.get_config("protection/exemption_medics")
+	config.exemption_misc = dwimg_mcm.get_config("protection/exemption_misc")
 end
 local function load_settings_item_punish()
 	--item_break
-	config.broken_gun_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/item_break/broken_gun_chance")
-	config.broken_armor_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/item_break/broken_armor_chance")
-	config.keep_gun_armor_parts_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/item_break/keep_gun_armor_parts_chance")
-	config.keep_upgrade_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/item_break/keep_upgrade_chance")
-	config.broken_device_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/item_break/broken_device_chance")
-	config.keep_device_part_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/item_break/keep_device_part_chance")
+	config.broken_gun_chance = dwimg_mcm.get_config("item_punish/item_break/broken_gun_chance")
+	config.broken_armor_chance = dwimg_mcm.get_config("item_punish/item_break/broken_armor_chance")
+	config.keep_gun_armor_parts_chance = dwimg_mcm.get_config("item_punish/item_break/keep_gun_armor_parts_chance")
+	config.keep_upgrade_chance = dwimg_mcm.get_config("item_punish/item_break/keep_upgrade_chance")
+	config.broken_device_chance = dwimg_mcm.get_config("item_punish/item_break/broken_device_chance")
+	config.keep_device_part_chance = dwimg_mcm.get_config("item_punish/item_break/keep_device_part_chance")
 	--break_o
-	config.remove_upgrade_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/break_o/remove_upgrade_chance")
-	config.downgrade_chance = Dude_where_is_my_gear_mcm.get_config("item_punish/break_o/downgrade_chance")
+	config.remove_upgrade_chance = dwimg_mcm.get_config("item_punish/break_o/remove_upgrade_chance")
+	config.downgrade_chance = dwimg_mcm.get_config("item_punish/break_o/downgrade_chance")
 end
 local function load_settings_character()
-	config.quest_fail_chance = Dude_where_is_my_gear_mcm.get_config("character/quest_fail_chance")
-	config.rank_loss = Dude_where_is_my_gear_mcm.get_config("character/rank_loss")
-	config.goodwill_loss_flat = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_flat")
-	config.goodwill_loss_percent = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_percent")
-	config.min_goodwill = Dude_where_is_my_gear_mcm.get_config("character/min_goodwill")
-	config.goodwill_friends = Dude_where_is_my_gear_mcm.get_config("character/goodwill_friends")
-	config.goodwill_loss_flat_f = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_flat_f") 		
-	config.goodwill_loss_percent_f = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_percent_f")	
-	config.min_goodwill_f = Dude_where_is_my_gear_mcm.get_config("character/min_goodwill_f")
-	config.goodwill_neutrals = Dude_where_is_my_gear_mcm.get_config("character/goodwill_neutrals")
-	config.goodwill_loss_flat_n = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_flat_n") 		
-	config.goodwill_loss_percent_n = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_percent_n")	
-	config.min_goodwill_n = Dude_where_is_my_gear_mcm.get_config("character/min_goodwill_n")
-	config.goodwill_enemies = Dude_where_is_my_gear_mcm.get_config("character/goodwill_enemies")
-	config.goodwill_loss_flat_e = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_flat_e") 		
-	config.goodwill_loss_percent_e = Dude_where_is_my_gear_mcm.get_config("character/goodwill_loss_percent_e")	
-	config.min_goodwill_e = Dude_where_is_my_gear_mcm.get_config("character/min_goodwill_e")
+	config.quest_fail_chance = dwimg_mcm.get_config("character/quest_fail_chance")
+	config.rank_loss = dwimg_mcm.get_config("character/rank_loss")
+	config.goodwill_loss_flat = dwimg_mcm.get_config("character/goodwill_loss_flat")
+	config.goodwill_loss_percent = dwimg_mcm.get_config("character/goodwill_loss_percent")
+	config.min_goodwill = dwimg_mcm.get_config("character/min_goodwill")
+	config.goodwill_friends = dwimg_mcm.get_config("character/goodwill_friends")
+	config.goodwill_loss_flat_f = dwimg_mcm.get_config("character/goodwill_loss_flat_f") 		
+	config.goodwill_loss_percent_f = dwimg_mcm.get_config("character/goodwill_loss_percent_f")	
+	config.min_goodwill_f = dwimg_mcm.get_config("character/min_goodwill_f")
+	config.goodwill_neutrals = dwimg_mcm.get_config("character/goodwill_neutrals")
+	config.goodwill_loss_flat_n = dwimg_mcm.get_config("character/goodwill_loss_flat_n") 		
+	config.goodwill_loss_percent_n = dwimg_mcm.get_config("character/goodwill_loss_percent_n")	
+	config.min_goodwill_n = dwimg_mcm.get_config("character/min_goodwill_n")
+	config.goodwill_enemies = dwimg_mcm.get_config("character/goodwill_enemies")
+	config.goodwill_loss_flat_e = dwimg_mcm.get_config("character/goodwill_loss_flat_e") 		
+	config.goodwill_loss_percent_e = dwimg_mcm.get_config("character/goodwill_loss_percent_e")	
+	config.min_goodwill_e = dwimg_mcm.get_config("character/min_goodwill_e")
 end
 local function load_settings_day_time()
 	--time_skip
-    config.min_time_skip = Dude_where_is_my_gear_mcm.get_config("day_time/time_skip/min_time_skip")
-    config.max_time_skip = Dude_where_is_my_gear_mcm.get_config("day_time/time_skip/max_time_skip")
-    config.enable_wake_hours = Dude_where_is_my_gear_mcm.get_config("day_time/time_skip/enable_wake_hours")
-    config.min_wake_hour = Dude_where_is_my_gear_mcm.get_config("day_time/time_skip/min_wake_hour")
-    config.max_wake_hour = Dude_where_is_my_gear_mcm.get_config("day_time/time_skip/max_wake_hour")
+    config.min_time_skip = dwimg_mcm.get_config("day_time/time_skip/min_time_skip")
+    config.max_time_skip = dwimg_mcm.get_config("day_time/time_skip/max_time_skip")
+    config.enable_wake_hours = dwimg_mcm.get_config("day_time/time_skip/enable_wake_hours")
+    config.min_wake_hour = dwimg_mcm.get_config("day_time/time_skip/min_wake_hour")
+    config.max_wake_hour = dwimg_mcm.get_config("day_time/time_skip/max_wake_hour")
 	--sat_thirst
-    config.satiety_loss_per_hour = Dude_where_is_my_gear_mcm.get_config("day_time/sat_thirst/satiety_loss_per_hour")
-	config.min_satiety = Dude_where_is_my_gear_mcm.get_config("day_time/sat_thirst/min_satiety")
-	config.min_thirst = Dude_where_is_my_gear_mcm.get_config("day_time/sat_thirst/min_thirst")
+    config.satiety_loss_per_hour = dwimg_mcm.get_config("day_time/sat_thirst/satiety_loss_per_hour")
+	config.min_satiety = dwimg_mcm.get_config("day_time/sat_thirst/min_satiety")
+	config.min_thirst = dwimg_mcm.get_config("day_time/sat_thirst/min_thirst")
 	
 	if config.max_time_skip < config.min_time_skip then
 		config.max_time_skip = config.min_time_skip
@@ -596,14 +395,14 @@ local function load_settings_day_time()
 	end
 end
 local function load_settings_old_stuff()
-    config.min_health = Dude_where_is_my_gear_mcm.get_config("old_stuff/min_health")
-    config.max_health = Dude_where_is_my_gear_mcm.get_config("old_stuff/max_health")
-    config.full_heal_chance = Dude_where_is_my_gear_mcm.get_config("old_stuff/full_heal_chance")
-    config.full_satiety_chance = Dude_where_is_my_gear_mcm.get_config("old_stuff/full_satiety_chance")
-    config.remove_previous_stash = Dude_where_is_my_gear_mcm.get_config("old_stuff/remove_previous_stash")
-    config.use_campfire_respawn = Dude_where_is_my_gear_mcm.get_config("old_stuff/use_campfire_respawn")
-    config.use_stash_respawn = Dude_where_is_my_gear_mcm.get_config("old_stuff/use_stash_respawn")
-    config.use_sleep_respawn = Dude_where_is_my_gear_mcm.get_config("old_stuff/use_sleep_respawn")
+    config.min_health = dwimg_mcm.get_config("old_stuff/min_health")
+    config.max_health = dwimg_mcm.get_config("old_stuff/max_health")
+    config.full_heal_chance = dwimg_mcm.get_config("old_stuff/full_heal_chance")
+    config.full_satiety_chance = dwimg_mcm.get_config("old_stuff/full_satiety_chance")
+    config.remove_previous_stash = dwimg_mcm.get_config("old_stuff/remove_previous_stash")
+    config.use_campfire_respawn = dwimg_mcm.get_config("old_stuff/use_campfire_respawn")
+    config.use_stash_respawn = dwimg_mcm.get_config("old_stuff/use_stash_respawn")
+    config.use_sleep_respawn = dwimg_mcm.get_config("old_stuff/use_sleep_respawn")
 
 	if config.max_health < config.min_health then
 		config.max_health = config.min_health
@@ -614,9 +413,9 @@ function init_preset_filter()
 	local filter_list = {}
 	local to_filter = {"money", "condition", "item_loss", "ignore", "protection", "item_punish", "character", "day_time", "old_stuff"}
 	for i=1, #to_filter do
-		if Dude_where_is_my_gear_mcm.get_config("presets/custom_presets/cst_preset_" .. to_filter[i]) == true then
+		if dwimg_mcm.get_config("presets/custom_presets/cst_preset_" .. to_filter[i]) == true then
 			filter_list[to_filter[i]] = true
-			print_dbg("Added to filter list " .. to_filter[i])
+			dwimg_utils.print_dbg("Added to filter list " .. to_filter[i])
 		end	
 		i = i+1
 	end
@@ -624,36 +423,36 @@ function init_preset_filter()
 end
 
 function check_presets()
-	Dude_where_is_my_gear_mcm.preset_backup()
+	dwimg_mcm.preset_backup()
 	
 	--custom presets load
-	if Dude_where_is_my_gear_mcm.get_config("presets/custom_presets/load_preset") then  
-		Dude_where_is_my_gear_mcm.handle_preset(Dude_where_is_my_gear_mcm.get_config("presets/custom_presets/chosen_preset"), 'l', dude_where_is_my_gear_mcm.on_mcm_load()["gr"], "", init_preset_filter(), false)
+	if dwimg_mcm.get_config("presets/custom_presets/load_preset") then  
+		dwimg_mcm.handle_preset(dwimg_mcm.get_config("presets/custom_presets/chosen_preset"), 'l', dwimg_mcm.on_mcm_load()["gr"], "", init_preset_filter(), false)
 	end	
 	
 	--default presets
 	local def_presets = {"money", "condition", "item_loss_basic", "item_loss_core", "item_loss_scaling", "item_punish", "ignore", "protection", "character"}
 	for i=1, #def_presets do
-		curr_preset_val =  Dude_where_is_my_gear_mcm.get_config("presets/default_presets/def_preset_" .. def_presets[i])
+		curr_preset_val =  dwimg_mcm.get_config("presets/default_presets/def_preset_" .. def_presets[i])
 		if curr_preset_val ~= "n" then
-			Dude_where_is_my_gear_mcm.load_def_preset(curr_preset_val)
+			dwimg_mcm.load_def_preset(curr_preset_val)
 		end
 		i = i+1
 	end
 	
 	--custom presetssave
-	if Dude_where_is_my_gear_mcm.get_config("presets/custom_presets/save_preset") then
-		Dude_where_is_my_gear_mcm.handle_preset(Dude_where_is_my_gear_mcm.get_config("presets/custom_presets/chosen_preset"), 's', dude_where_is_my_gear_mcm.on_mcm_load()["gr"], "", init_preset_filter(), false)
+	if dwimg_mcm.get_config("presets/custom_presets/save_preset") then
+		dwimg_mcm.handle_preset(dwimg_mcm.get_config("presets/custom_presets/chosen_preset"), 's', dwimg_mcm.on_mcm_load()["gr"], "", init_preset_filter(), false)
 	end
-	Dude_where_is_my_gear_mcm.set_config("presets/custom_presets/save_preset", false)
-	Dude_where_is_my_gear_mcm.set_config("presets/custom_presets/load_preset", false)
+	dwimg_mcm.set_config("presets/custom_presets/save_preset", false)
+	dwimg_mcm.set_config("presets/custom_presets/load_preset", false)
 end
 
 function load_settings()
 	check_presets()
 
-	if Dude_where_is_my_gear_mcm.get_config("debug/print_preset") then
-		print_dbg("Start of preset copy paste")
+	if dwimg_mcm.get_config("debug/print_preset") then
+		dwimg_utils.print_dbg("Start of preset copy paste")
 	end
 	load_settings_money()
 	load_settings_condition()
@@ -664,12 +463,12 @@ function load_settings()
 	load_settings_character()
 	load_settings_day_time()
 	load_settings_old_stuff()
-	if Dude_where_is_my_gear_mcm.get_config("debug/print_preset") then
-		print_dbg("End of preset copy paste")
+	if dwimg_mcm.get_config("debug/print_preset") then
+		dwimg_utils.print_dbg("End of preset copy paste")
 	end
 
-    config.display_issue = Dude_where_is_my_gear_mcm.get_config("debug/display_issue")
-    config.use_dwimglog = Dude_where_is_my_gear_mcm.get_config("debug/use_dwimglog")
+    config.display_issue = dwimg_mcm.get_config("debug/display_issue")
+    config.use_dwimglog = dwimg_mcm.get_config("debug/use_dwimglog")
 
 	init_protections()
 
@@ -691,7 +490,7 @@ function on_game_start()
 	RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
 	RegisterScriptCallback("actor_on_first_update",actor_on_first_update)
     options_vol = ui_options.get("sound/general/master_volume")
-	print_dbg("V-3-1-p10")
+	dwimg_utils.print_dbg("V-3-1-p10")
 end
 
 function on_game_load()
@@ -699,7 +498,7 @@ function on_game_load()
     RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
     exec_console_cmd("snd_volume_eff " .. options_vol)
     -- Make sure older versions are updated:
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
 	if not sleep.last_dropped_item_list then
         sleep.last_dropped_item_list = {}
         sleep.last_lost_item_list = {}
@@ -708,7 +507,7 @@ function on_game_load()
 end
 
 local function handle_stashes()
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
 	if config.remove_previous_stash == 0 then
 		return
 	end
@@ -717,24 +516,24 @@ local function handle_stashes()
 		local oldest_stash_id = nil
 		local oldest_stash_time = nil
 		for stash_id, _ in pairs(sleep.dropped_stashes) do
-			print_dbg("Loop: " .. tostring(stash_id) .. " with time " .. tostring(sleep.dropped_stashes[stash_id]["time"]))
+			dwimg_utils.print_dbg("Loop: " .. tostring(stash_id) .. " with time " .. tostring(sleep.dropped_stashes[stash_id]["time"]))
 			list_length = list_length + 1
 			if oldest_stash_time == nil or oldest_stash_time > sleep.dropped_stashes[stash_id]["time"] then
 				oldest_stash_time = sleep.dropped_stashes[stash_id]["time"]
 				oldest_stash_id = stash_id
-				print_dbg("New oldest stash: " .. tostring(oldest_stash_id))
+				dwimg_utils.print_dbg("New oldest stash: " .. tostring(oldest_stash_id))
 			end
 		end
 		if list_length <= config.remove_previous_stash then
-			print_dbg("Not enough stashes: " .. tostring(list_length) .. " / " .. tostring(config.remove_previous_stash))
+			dwimg_utils.print_dbg("Not enough stashes: " .. tostring(list_length) .. " / " .. tostring(config.remove_previous_stash))
 			return
 		end
 		if oldest_stash_id == nil then
-			print_dbg("oldest stash is nil")
+			dwimg_utils.print_dbg("oldest stash is nil")
 			return			
 		end
-		print_dbg("Too many stashes: " .. tostring(list_length) .. " / " .. tostring(config.remove_previous_stash))
-		print_dbg("Delete oldest stash(id): " .. tostring(oldest_stash_id) .. " of " .. tostring(list_length) .. " in total.")
+		dwimg_utils.print_dbg("Too many stashes: " .. tostring(list_length) .. " / " .. tostring(config.remove_previous_stash))
+		dwimg_utils.print_dbg("Delete oldest stash(id): " .. tostring(oldest_stash_id) .. " of " .. tostring(list_length) .. " in total.")
 		sleep.dropped_stashes[oldest_stash_id] = nil
 		level.map_remove_object_spot(oldest_stash_id, "treasure")
 		alife_release_id(oldest_stash_id)
@@ -742,17 +541,17 @@ local function handle_stashes()
 end
 
 function actor_on_first_update()
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
 	if sleep.dead then
         sleep.dead = false
 		if db.actor.bleeding > 0 then
-			print_dbg("Leftover bleeding " .. db.actor.bleeding)
+			dwimg_utils.print_dbg("Leftover bleeding " .. db.actor.bleeding)
 		elseif sleep.bleed > 0 then
-			print_dbg("Denied bleeding " .. sleep.bleed)
+			dwimg_utils.print_dbg("Denied bleeding " .. sleep.bleed)
 		else
-			print_dbg("Never bleeded " .. db.actor.bleeding)
+			dwimg_utils.print_dbg("Never bleeded " .. db.actor.bleeding)
 		end
-		print_dbg("No longer an undead first update")
+		dwimg_utils.print_dbg("No longer an undead first update")
 		db.actor.bleeding = 1
 		db.actor.health = sleep.healing
 		db.actor.psy_health = 1
@@ -764,7 +563,7 @@ function actor_on_first_update()
 		end
 		
 		if not ((db.actor:character_rank() - sleep.rank < config.gained_rank_exemption) or (config.passed_time_exemption > (dwimg_utils.get_game_seconds() - sleep.time)/3600)) then
-			print_dbg("New grace period")
+			dwimg_utils.print_dbg("New grace period")
 			sleep.rank = db.actor:character_rank()
 			sleep.time = dwimg_utils.get_game_seconds()
 		end
@@ -781,12 +580,12 @@ function actor_on_before_death(who, flags)
 	do_item_dropping = true -- Drop items by default
 	if has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") then
 		return
-	elseif check_all_lists("ignored_levels", level.name()) then
+	elseif dwimg_utils.check_all_lists("ignored_levels", level.name()) then
 		do_item_dropping = false -- Don't drop items in labs
 	end
 
-	print_dbg("Is undead")
-    local sleep = get_sleep_state()
+	dwimg_utils.print_dbg("Is undead")
+    local sleep = dwimg_utils.get_sleep_state()
 	sleep.dead = true
 	bind_stalker_ext.invulnerable_time = time_global() + 10000
     local current_time = time_global()
@@ -799,13 +598,13 @@ function actor_on_before_death(who, flags)
         respawn_done = true
         db.actor:set_health_ex(1)
         if not currently_respawning then
-            print_dbg("currently_respawning if NOT %s", currently_respawning)
+            dwimg_utils.print_dbg("currently_respawning if NOT %s", currently_respawning)
 			apply_punishments()
             currently_respawning = 1
         end
 
         if currently_respawning == 1 then
-            print_dbg("currently_respawning if 1 %s", currently_respawning)
+            dwimg_utils.print_dbg("currently_respawning if 1 %s", currently_respawning)
             options_vol = ui_options.get("sound/general/master_volume")
 			
             --get_console():execute("hud_draw off")
@@ -815,7 +614,7 @@ function actor_on_before_death(who, flags)
             -- level.add_pp_effector("concussion_bhs.ppe", 99123, false)
             exec_console_cmd("snd_volume_eff " .. 0.01)
 			time_item_calc = time_global()
-            level.add_cam_effector("camera_effects\\surge_02.anm", 444, false, "dude_where_is_my_gear.on_tutor_gameover_respawn")
+            level.add_cam_effector("camera_effects\\surge_02.anm", 444, false, "dwimg_main.on_tutor_gameover_respawn")
             level.add_pp_effector("actor_death.ppe", 445, false)
             level.add_pp_effector("rcom_actor_death_quick.ppe", 446, false)
 
@@ -878,7 +677,7 @@ function actor_on_before_death(who, flags)
 			end
         end
 			
-		print_dbg("currently_respawning if 2 %s", currently_respawning)
+		dwimg_utils.print_dbg("currently_respawning if 2 %s", currently_respawning)
         sleep.health_status_msg = "You have been out of action for a while"
         if config.enable_time_forward or config.enable_wake_hours then
             --xr_effects.forward_game_time(nil, nil, p)
@@ -918,39 +717,6 @@ end
 
 local no_sec_dwg = {}
 local no_sec = {}
-
-function init_ignore()
-	local ignore_items = {}
-	for i = 1, config.ignore_pda do
-		ignore_items[check_all_lists("list_ignore_pda",i)] = true
-	end
-	for i = 1, config.ignore_backpack do
-		ignore_items[check_all_lists("list_ignore_backpack",i)] = true
-	end
-	for i = 1, config.ignore_detector do
-		ignore_items[check_all_lists("list_ignore_detector",i)] = true
-	end	
-	for i = 1, config.ignore_torch_nvg do
-		ignore_items[check_all_lists("list_ignore_torch_nvg",i)] = true
-	end	
-	for i = 1, config.ignore_knife do
-		ignore_items[check_all_lists("list_ignore_knife",i)] = true
-	end	
-	if config.ignore_axe then
-		for i = 1, #all_lists["list_ignore_axe"] do
-			ignore_items[check_all_lists("list_ignore_axe",i)] = true
-		end
-	end
-	if config.ignore_special_equipment then
-		for i = 1, #all_lists["list_ignore_special_equipment"] do
-			ignore_items[check_all_lists("list_ignore_special_equipment",i)] = true
-		end
-	end
-	if config.ignore_binoculars then
-		ignore_items["wpn_binoc_inv"] = true
-	end
-	return ignore_items
-end
 
 local function lose_rank_goodwill()
 
@@ -1054,61 +820,61 @@ local function lose_money()
 				alife_create_item(denom.name, dropped_stash)
 			end
 		end
-		print_dbg("Total money to lose: " .. money_to_lose)
+		dwimg_utils.print_dbg("Total money to lose: " .. money_to_lose)
 	end
 end
 
 function get_chances(item, section, item_id)
-	local iType = getItemType(item, "drop&loss chance")
+	local iType = dwimg_utils.get_item_type(item, "drop&loss chance")
 	
-	if iType == item_type.GUN then
-		print_dbg("IsWeapon")
-		print_dbg("guns_chance")
+	if iType == dwimg_lists.item_type.GUN then
+		dwimg_utils.print_dbg("IsWeapon")
+		dwimg_utils.print_dbg("guns_chance")
 		return {config.chance_of_losing_guns, config.keep_guns_chance, false, config.chance_of_losing_guns_anti, config.keep_guns_chance_anti }
 		
-	elseif iType == item_type.UPGRADED then
-		print_dbg("IsInDevices")
-		print_dbg("upgraded_chance")
+	elseif iType == dwimg_lists.item_type.UPGRADED then
+		dwimg_utils.print_dbg("IsInDevices")
+		dwimg_utils.print_dbg("upgraded_chance")
 		return {config.chance_of_losing_devices, config.keep_device_chance, false, config.chance_of_losing_devices_anti, config.keep_device_chance_anti }
 		
-	elseif iType == item_type.TOOL then
-		print_dbg("IsInTool_list")
-		print_dbg("tools_chance")
+	elseif iType == dwimg_lists.item_type.TOOL then
+		dwimg_utils.print_dbg("IsInTool_list")
+		dwimg_utils.print_dbg("tools_chance")
 		return {config.chance_of_losing_devices, config.keep_device_chance, false, config.chance_of_losing_devices_anti, config.keep_device_chance_anti }
 		
-	elseif iType == item_type.KIT then
-		print_dbg("IsInKits_list")
-		print_dbg("kits_chance")
+	elseif iType == dwimg_lists.item_type.KIT then
+		dwimg_utils.print_dbg("IsInKits_list")
+		dwimg_utils.print_dbg("kits_chance")
 		return {config.chance_of_losing_kits, config.keep_kits_chance, false, config.chance_of_losing_kits_anti, config.keep_kits_chance_anti }
 		
-	elseif iType == item_type.MEDICAL then
-		print_dbg("IsMedicalKind")
-		print_dbg("medics_chance")
+	elseif iType == dwimg_lists.item_type.MEDICAL then
+		dwimg_utils.print_dbg("IsMedicalKind")
+		dwimg_utils.print_dbg("medics_chance")
 		return {config.chance_of_losing_medics, config.keep_medics_chance, false, config.chance_of_losing_medics_anti, config.keep_medics_chance_anti }	
 
-	elseif iType == item_type.ARMOR then
-		print_dbg("IsOutfit")
-		print_dbg("outfits_chance")
+	elseif iType == dwimg_lists.item_type.ARMOR then
+		dwimg_utils.print_dbg("IsOutfit")
+		dwimg_utils.print_dbg("outfits_chance")
 		return {config.chance_of_losing_outfits, config.keep_outfit_chance, false, config.chance_of_losing_outfits_anti, config.keep_outfit_chance_anti }	
 		
-	elseif iType == item_type.ARTEFACT_PERK or iType == item_type.ARTEFACT_STAT or iType == item_type.PELT then
-		print_dbg("IsArtefact not i_attach")
-		print_dbg("artefact_chance")
+	elseif iType == dwimg_lists.item_type.ARTEFACT_PERK or iType == dwimg_lists.item_type.ARTEFACT_STAT or iType == dwimg_lists.item_type.PELT then
+		dwimg_utils.print_dbg("IsArtefact not i_attach")
+		dwimg_utils.print_dbg("artefact_chance")
 		return {config.chance_of_losing_artefacts, config.keep_artefact_chance, false, config.chance_of_losing_artefacts_anti, config.keep_artefact_chance_anti }
 		
-	elseif iType == item_type.ATTACHEMENT_WPN then
-		print_dbg("IsWpnAttachment")
-		print_dbg("gun_attachment_chance")
+	elseif iType == dwimg_lists.item_type.ATTACHEMENT_WPN then
+		dwimg_utils.print_dbg("IsWpnAttachment")
+		dwimg_utils.print_dbg("gun_attachment_chance")
 		return {config.chance_of_losing_gun_attachments, config.keep_gun_attachment_chance, false, config.chance_of_losing_gun_attachments_anti, config.keep_gun_attachment_chance_anti }
 		
-	elseif iType == item_type.EXPLOSIVE then
-		print_dbg("IsExplosivesKind")
-		print_dbg("explosives_chance")
+	elseif iType == dwimg_lists.item_type.EXPLOSIVE then
+		dwimg_utils.print_dbg("IsExplosivesKind")
+		dwimg_utils.print_dbg("explosives_chance")
 		return {config.chance_of_losing_explosives, config.keep_explosives_chance, false, config.chance_of_losing_explosives_anti, config.keep_explosives_chance_anti }
 		
-	elseif iType == item_type.AMMO then
-		print_dbg("IsAmmo")
-		print_dbg("ammo_chance")	
+	elseif iType == dwimg_lists.item_type.AMMO then
+		dwimg_utils.print_dbg("IsAmmo")
+		dwimg_utils.print_dbg("ammo_chance")	
 		if string.match(item:section(), "^mag_") then
 			local is_carried_mag = magazine_binder and magazine_binder.is_carried_mag
 			local toggle_carried_mag = magazine_binder and magazine_binder.toggle_carried_mag
@@ -1119,7 +885,7 @@ function get_chances(item, section, item_id)
 		end	
 		return {config.chance_of_losing_ammo, config.keep_ammo_chance, false, config.chance_of_losing_ammo_anti, config.keep_ammo_chance_anti }
 	else
-		print_dbg("misc_chance")
+		dwimg_utils.print_dbg("misc_chance")
 		if section == "bolt" or section == "bolt_bullet" then
 			return {config.chance_of_losing_items, 100, false, config.chance_of_losing_items_anti, config.keep_misc_items_chance_anti}	
 		else
@@ -1129,12 +895,12 @@ function get_chances(item, section, item_id)
 end
 
 local function get_exemption(item, section)
-	local sleep = get_sleep_state()	
+	local sleep = dwimg_utils.get_sleep_state()	
 	if not sleep.rank then
 		sleep.rank = 0
 		sleep.time = 0
 	end
-	local i_type =  getItemType(item, "exemption")
+	local i_type =  dwimg_utils.get_item_type(item, "exemption")
 	local rule_a = false
 	local rule_b = false
 	
@@ -1167,10 +933,10 @@ local function get_exemption(item, section)
 		if gained_rank_exemption_b then table.insert(true_conditions, "gained_rank_exemption_b") end
 		if passed_time_exemption_b then table.insert(true_conditions, "passed_time_exemption_b") end
 		if max_time_exemption_b then table.insert(true_conditions, "max_time_exemption_b") end
-		print_dbg("Exemption conditions met: " .. table.concat(true_conditions, ", "))
+		dwimg_utils.print_dbg("Exemption conditions met: " .. table.concat(true_conditions, ", "))
 	end
 	
-	--print_dbg("Current time " .. tostring(dwimg_utils.get_game_seconds()/3600) .. " without skipped time " .. tostring(skipped_time/3600) .. " is " .. tostring((dwimg_utils.get_game_seconds()-skipped_time)/3600) )
+	--dwimg_utils.print_dbg("Current time " .. tostring(dwimg_utils.get_game_seconds()/3600) .. " without skipped time " .. tostring(skipped_time/3600) .. " is " .. tostring((dwimg_utils.get_game_seconds()-skipped_time)/3600) )
 	if (rule_a == false) and (rule_b == false) then
 		return false
 	end
@@ -1203,7 +969,7 @@ local function disassemble(section, spw_target)
 	ind = ind + 1
 	end
 	local t = str_explode(value,",")
-	if check_all_lists("devices",t[3]) ~= nil then
+	if dwimg_utils.check_all_lists("devices",t[3]) ~= nil then
 		disassemble(t[3], spw_target)
 	end
 	for i = 5, #t - 1, 2 do
@@ -1218,7 +984,7 @@ local function disassemble(section, spw_target)
 end
 
 local function main_disassemble(item, drop, obj, item_id, section)
-	if (IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) and math.random(1,100) <= config.broken_gun_chance) or ((IsOutfit(item) or IsHeadgear(item)) and math.random(1,100) <= config.broken_armor_chance) or (check_all_lists("devices",section) ~= nil and math.random(1,100) <= config.broken_device_chance)  then
+	if (IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) and math.random(1,100) <= config.broken_gun_chance) or ((IsOutfit(item) or IsHeadgear(item)) and math.random(1,100) <= config.broken_armor_chance) or (dwimg_utils.check_all_lists("devices",section) ~= nil and math.random(1,100) <= config.broken_device_chance)  then
 		local spw_target = db.actor
 		if drop then
 			spw_target = obj
@@ -1238,7 +1004,7 @@ local function main_disassemble(item, drop, obj, item_id, section)
 							no_sec[tostring(spw_prt.id)] = true
 							CreateTimeEvent("Wait_for_spawn", spw_prt.id, 0, function(id, con)
 								if level.object_by_id(id) then
-									--print_dbg("Condition: " .. con)
+									--dwimg_utils.print_dbg("Condition: " .. con)
 									level.object_by_id(id):set_condition(con/100)
 									return true
 								else
@@ -1246,14 +1012,12 @@ local function main_disassemble(item, drop, obj, item_id, section)
 								end
 							end, spw_prt.id, parts[k])
 						else
-							print_dbg("DUDISSUE no spw_prt spawned for " .. section)
-							issue()
+							dwimg_utils.issue("No spw_prt spawned for "  .. section)
 						end
 					end
 				end
 			else
-				print_dbg("DUDISSUE with main disassemble")
-				issue()
+				dwimg_utils.issue("Couldn't find parts of item during main disassemble")
 			end
 			
 			local installed_upgrades = utils_item.get_upgrades_installed(item)
@@ -1279,12 +1043,12 @@ end
 
 function scaled_chances(chances, item, section)
 	if chances[3] == true or config.enable_scale == false then
-		print_dbg("Case 1")
+		dwimg_utils.print_dbg("Case 1")
 		return chances
 	else
 		local actor_rank = db.actor:character_rank()
-		if ((IsWeapon(item) and not (IsGrenade(item) or IsMelee(item))) or IsOutfit(item) or IsHeadgear(item) or (IsArtefact(item) and not (ini_sys:r_string_ex(item:section(), "kind") == "i_attach")) or check_all_lists("devices",section) ~= nil ) and config.exemption_scale then
-			--print_dbg("Case 2")
+		if ((IsWeapon(item) and not (IsGrenade(item) or IsMelee(item))) or IsOutfit(item) or IsHeadgear(item) or (IsArtefact(item) and not (ini_sys:r_string_ex(item:section(), "kind") == "i_attach")) or dwimg_utils.check_all_lists("devices",section) ~= nil ) and config.exemption_scale then
+			--dwimg_utils.print_dbg("Case 2")
 			return chances
 		end
 
@@ -1295,15 +1059,15 @@ function scaled_chances(chances, item, section)
 		]]
 		local effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from, config.rank_scale_until)
 		local rank_mult = math.pow((effective_rank - config.rank_scale_from) / (config.rank_scale_until - config.rank_scale_from), config.scaling_exponent)
-		print_dbg("Loss: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from .. " until: " .. config.rank_scale_until .. " = " .. rank_mult)
+		dwimg_utils.print_dbg("Loss: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from .. " until: " .. config.rank_scale_until .. " = " .. rank_mult)
 
 		-- category override
 		local multiplier_anti
 		if config.rank_loss_multiplier_anti_override then
-			print_dbg("Loss multiplier override: " .. chances[4])
+			dwimg_utils.print_dbg("Loss multiplier override: " .. chances[4])
 			multiplier_anti = chances[4] 
 		else
-			print_dbg("Loss multiplier override: disabled")
+			dwimg_utils.print_dbg("Loss multiplier override: disabled")
 			multiplier_anti = config.rank_loss_multiplier_anti
 		end
 
@@ -1311,70 +1075,70 @@ function scaled_chances(chances, item, section)
 		chances[1] = chances[1] + (((100-chances[1]) * ((multiplier_anti/100)) * rank_mult))
 
 		if not(section == "bolt" or section == "bolt_bullet") then 
-			--print_dbg("Case 3*")
+			--dwimg_utils.print_dbg("Case 3*")
 			effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from2, config.rank_scale_until2)
 			rank_mult = math.pow((effective_rank - config.rank_scale_from2) / (config.rank_scale_until2 - config.rank_scale_from2), config.scaling_exponent)
-			print_dbg("Drop: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from2 .. " until: " .. config.rank_scale_until2 .. " = " .. rank_mult)
+			dwimg_utils.print_dbg("Drop: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from2 .. " until: " .. config.rank_scale_until2 .. " = " .. rank_mult)
 
 			-- category override
 			local multiplier_anti2
 			if config.rank_loss_multiplier_anti2_override then
-				print_dbg("Drop multiplier override: " .. chances[5])
+				dwimg_utils.print_dbg("Drop multiplier override: " .. chances[5])
 				multiplier_anti2 = chances[5]
 			else
-				print_dbg("Drop multiplier override: disabled")
+				dwimg_utils.print_dbg("Drop multiplier override: disabled")
 				multiplier_anti2 = config.rank_loss_multiplier_anti2
 			end
 			chances[2] = chances[2] - ((100-chances[2]) * ((config.rank_loss_multiplier2/100)* rank_mult))
 			chances[2] = chances[2] - (chances[2] * (((multiplier_anti2/100)) * rank_mult))
 		end
-		--print_dbg("Case 3")
+		--dwimg_utils.print_dbg("Case 3")
 		return chances
 	end
 end
 
 local function itr_inv(temp, item)
-	print_dbg("item: " .. item:section() .. " [" .. item:id() .. "]")
-	print_dbg(ini_sys:r_string_ex(item:section(), "kind"))
+	dwimg_utils.print_dbg("item: " .. item:section() .. " [" .. item:id() .. "]")
+	dwimg_utils.print_dbg(ini_sys:r_string_ex(item:section(), "kind"))
 	local section = item:section()
 	local item_id = item:id()
 	time_item_calc = time_global()
 	--if ini_sys:r_float_ex(section,"cost") ~= nil and ini_sys:r_float_ex(section,"cost") ~= 0 then 
-	--	print_dbg("Cost of " .. item_id .. " is " .. ini_sys:r_float_ex(section,"cost"))
+	--	dwimg_utils.print_dbg("Cost of " .. item_id .. " is " .. ini_sys:r_float_ex(section,"cost"))
 	--end
 	
 	if ignore_items[section] then
-		print_dbg("Stopped for ignore: " .. item_id)
+		dwimg_utils.print_dbg("Stopped for ignore: " .. item_id)
 	   return
 	end
 	
-	if getItemType(item, "Quest item stop itr_inv") == item_type.QUEST then
-		print_dbg("Stopped for QuestKind: " .. item_id)
+	if dwimg_utils.get_item_type(item, "Quest item stop itr_inv") == dwimg_lists.item_type.QUEST then
+		dwimg_utils.print_dbg("Stopped for QuestKind: " .. item_id)
 		return
 	end
 	
 	if item_id == b_id then
-		print_dbg("Stopped for b_id: " .. item_id)
+		dwimg_utils.print_dbg("Stopped for b_id: " .. item_id)
 		return
 	end
 	
-	if keep_items[section] ~= nil and not(check_all_lists("anti_keepers",section)) then
-		print_dbg("Stopped for keep_items: " .. item_id)
+	if keep_items[section] ~= nil and not(dwimg_utils.check_all_lists("anti_keepers",section)) then
+		dwimg_utils.print_dbg("Stopped for keep_items: " .. item_id)
 		return
 	end
 						
 	if ini_sys:r_bool_ex(section, "quest_item", false) then
-		print_dbg("Stopped for quest_item: " .. item_id)
+		dwimg_utils.print_dbg("Stopped for quest_item: " .. item_id)
 		return
 	end
 
 	if no_sec[tostring(item_id)] then
-		print_dbg("Stopped for no spawn hook: " .. item_id)
+		dwimg_utils.print_dbg("Stopped for no spawn hook: " .. item_id)
 		return
 	end
 	
 	if get_exemption(item, section) then
-		print_dbg("Exemption: " .. item_id)						
+		dwimg_utils.print_dbg("Exemption: " .. item_id)						
 		return
 	end
 	
@@ -1435,7 +1199,7 @@ local function itr_inv(temp, item)
 					parts[k] = 1
 				end
 				sum = sum + parts[k]
-				print_dbg("summed " .. parts[k] .. " - " .. tostring(k))
+				dwimg_utils.print_dbg("summed " .. parts[k] .. " - " .. tostring(k))
 				cnt = cnt + 1
 			end
 		end
@@ -1452,7 +1216,7 @@ local function itr_inv(temp, item)
 		local scope = detach_scope_dwimg(item)
 		if scope ~= nil then
 			--CreateTimeEvent("Wait_for_scope", scope["spw_att"].id, 0, function(id1, id2)
-			--  print_dbg("Wait for scope " .. id1 .. " and weapon " .. id2)
+			--  dwimg_utils.print_dbg("Wait for scope " .. id1 .. " and weapon " .. id2)
 			--  if level.object_by_id(id1) and level.object_by_id(id2) then
 			--	itr_inv(nil, level.object_by_id(id2))
 			--	itr_inv(nil, level.object_by_id(id1))
@@ -1462,7 +1226,7 @@ local function itr_inv(temp, item)
 			--  end
 			--end, scope["spw_att"].id, scope["spw_wpn"].id)
 			
-			print_dbg("Cancelled for scope: " .. item_id)
+			dwimg_utils.print_dbg("Cancelled for scope: " .. item_id)
 			return
 		end
 		detach_suppressor_dwimg(item)
@@ -1479,7 +1243,7 @@ local function itr_inv(temp, item)
 			local new_bat = alife_create_item("batteries_exo", db.actor)
 			no_sec[tostring(new_bat.id)] = true
 			CreateTimeEvent("Wait_for_spawn", new_bat.id, 0, function(id, charge)
-			print_dbg("Wait for " .. id)
+			dwimg_utils.print_dbg("Wait for " .. id)
 			if level.object_by_id(id) then
 				level.object_by_id(id):set_condition(charge/100)
 				return true
@@ -1506,7 +1270,7 @@ local function itr_inv(temp, item)
 				item:unload_magazine(false)
 			end
 			alife_release(item)
-			print_dbg("Wait for " .. clo_itm.id)
+			dwimg_utils.print_dbg("Wait for " .. clo_itm.id)
 			CreateTimeEvent("Wait_for_spawn", clo_itm.id, 0, function(id, to_keep, found_upgrades)
 				if level.object_by_id(id) then
 					if IsWeapon(level.object_by_id(id)) then	
@@ -1522,7 +1286,7 @@ local function itr_inv(temp, item)
 						if not rnd_upgr then
 							return true
 						end
-						print_dbg("try upgrade: " .. rnd_upgr .. " for " .. id .. " with " .. to_keep .. " missing")
+						dwimg_utils.print_dbg("try upgrade: " .. rnd_upgr .. " for " .. id .. " with " .. to_keep .. " missing")
 						if not utils_item.has_this_upgrade(level.object_by_id(id), section, rnd_upgr) then
 							inventory_upgrades.force_upgrade = true
 							level.object_by_id(id):install_upgrade(rnd_upgr)
@@ -1543,19 +1307,19 @@ local function itr_inv(temp, item)
 					return false
 				end
 			end, clo_itm.id, to_keep, found_upgrades)
-			print_dbg("Cancelled for upgrades: " .. item_id)
+			dwimg_utils.print_dbg("Cancelled for upgrades: " .. item_id)
 			return
 		end
 	end
 	
 	--downgrade
-	if not(no_sec_dwg[tostring(item_id)]) and check_all_lists("devices",section) ~= nil and math.random(1, 100) <= config.downgrade_chance then
-		print_dbg("Downgrade: " .. section .. " to " .. check_all_lists("devices",section))
+	if not(no_sec_dwg[tostring(item_id)]) and dwimg_utils.check_all_lists("devices",section) ~= nil and math.random(1, 100) <= config.downgrade_chance then
+		dwimg_utils.print_dbg("Downgrade: " .. section .. " to " .. dwimg_utils.check_all_lists("devices",section))
 		alife_release(item)
-		local spw_itm = alife_create_item(check_all_lists("devices",section), db.actor)
+		local spw_itm = alife_create_item(dwimg_utils.check_all_lists("devices",section), db.actor)
 		no_sec_dwg[tostring(spw_itm.id)] = true
 		--CreateTimeEvent("Wait_for_spawn", spw_itm.id, 0, function(id)
-		--  print_dbg("Wait for " .. id)
+		--  dwimg_utils.print_dbg("Wait for " .. id)
 		--  if level.object_by_id(id) then
 		--	no_sec_dwg[tostring(id)] = true
 		--	itr_inv(nil, level.object_by_id(id))
@@ -1564,7 +1328,7 @@ local function itr_inv(temp, item)
 		--	return false
 		--  end
 		--end, spw_itm.id)
-		print_dbg("Cancelled: " .. item_id)
+		dwimg_utils.print_dbg("Cancelled: " .. item_id)
 		return
 	end
 
@@ -1574,7 +1338,7 @@ local function itr_inv(temp, item)
 
 	--other condition loss
 	if (config.max_condition_lose2 > 0) then
-		if (IsMelee(item) and config.condition_melee) or (getItemType(item, "condition loss 2") == item_type.ARTEFACT_PERK and config.condition_perk_artefact) or (getItemType(item, "condition loss 2") == item_type.ARTEFACT_STAT and config.condition_stat_artefact) or (getItemType(item, "condition loss 2") == item_type.PELT and config.condition_pelt) then
+		if (IsMelee(item) and config.condition_melee) or (dwimg_utils.get_item_type(item, "condition loss 2") == dwimg_lists.item_type.ARTEFACT_PERK and config.condition_perk_artefact) or (dwimg_utils.get_item_type(item, "condition loss 2") == dwimg_lists.item_type.ARTEFACT_STAT and config.condition_stat_artefact) or (dwimg_utils.get_item_type(item, "condition loss 2") == dwimg_lists.item_type.PELT and config.condition_pelt) then
 			item:set_condition(dwimg_utils.clamp(item:condition()-math.random(config.min_condition_lose2, config.max_condition_lose2)/100,0.01,1))
 		end
 	end
@@ -1589,12 +1353,12 @@ local function itr_inv(temp, item)
 	local drop_chance = 100 - chances[2]
 	local drop = drop_roll <= drop_chance
 
-	print_dbg("    #Fate said for " .. item_id .. " | lose = " .. tostring(lose) ..  " (" .. loss_roll .. "/" .. loss_chance .. ") | drop = " ..  tostring(drop) .. " (" .. drop_roll .. "/" .. drop_chance .. ")")
+	dwimg_utils.print_dbg("    #Fate said for " .. item_id .. " | lose = " .. tostring(lose) ..  " (" .. loss_roll .. "/" .. loss_chance .. ") | drop = " ..  tostring(drop) .. " (" .. drop_roll .. "/" .. drop_chance .. ")")
 	--disassemble
 	if not(lose) then
 		if main_disassemble(item, drop, r_obj, item_id, section) then
 			alife_release(item)	
-			print_dbg("Cancelled for disassemble " .. item_id)
+			dwimg_utils.print_dbg("Cancelled for disassemble " .. item_id)
 			return
 		end
 	end
@@ -1607,7 +1371,7 @@ local function itr_inv(temp, item)
 			alife_release(item)
 			add_to_dropped_item_list(item, 'l', dropped_stash.id)
 		else
-			print_dbg("Ignoring bolt loss " .. item_id)
+			dwimg_utils.print_dbg("Ignoring bolt loss " .. item_id)
 		end
 	elseif drop and do_item_dropping then
 		db.actor:transfer_item(item, r_obj)
@@ -1619,12 +1383,12 @@ local function itr_inv(temp, item)
 end
 
 function actor_on_item_take(obj)
-	local sleep = get_sleep_state()
+	local sleep = dwimg_utils.get_sleep_state()
 	if obj and sleep.dead then
 		time_item_calc = time_global()
-		print_dbg("item spawn hook: [" .. obj:id() .. "]")
+		dwimg_utils.print_dbg("item spawn hook: [" .. obj:id() .. "]")
 		CreateTimeEvent("Wait_for_death_inits", 0, 0, function(obj)
-			print_dbg("Wait for " .. obj:id())
+			dwimg_utils.print_dbg("Wait for " .. obj:id())
 			if death_init then
 				itr_inv(nil, obj)
 				return true
@@ -1675,9 +1439,9 @@ end
 function apply_punishments()
 	dropped_stash = nil
 	r_obj = nil
-	print_dbg("Dropping stash")
+	dwimg_utils.print_dbg("Dropping stash")
     dropped_stash = alife_create("inv_backpack", db.actor:position(), db.actor:level_vertex_id(), db.actor:game_vertex_id())
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
 	
 			if not sleep.dropped_stashes then
 				sleep.dropped_stashes = {}
@@ -1692,7 +1456,7 @@ function apply_punishments()
 			lose_money()
 			fail_quests()
 
-			ignore_items = init_ignore()
+			ignore_items = dwimg_utils.init_ignore()
 			no_sec_dwg = {}
 			no_sec = {}	
 
@@ -1711,11 +1475,11 @@ function apply_punishments()
 				local function transfer_items(id, dwg_sec_check)
 					r_obj = level.object_by_id(id)
 					if (r_obj) then
-						print_dbg("Dropped stash %s", dropped_stash.id)
+						dwimg_utils.print_dbg("Dropped stash %s", dropped_stash.id)
 						death_init = true
 						db.actor:iterate_inventory(itr_inv)
 						send_items_report_news_msg(false, dropped_stash.id)
-						print_dbg("Finished loss and drop")
+						dwimg_utils.print_dbg("Finished loss and drop")
 						inventory_upgrades.force_upgrade = false
 						return true
 					end
@@ -1726,9 +1490,9 @@ function apply_punishments()
 end
 
 function save_position(stash_data)
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
     pos = db.actor:position()
-    print_dbg("SAVE POSITION %s| %s %s %s |", level.name(), pos.x, pos.y, pos.z)
+    dwimg_utils.print_dbg("SAVE POSITION %s| %s %s %s |", level.name(), pos.x, pos.y, pos.z)
     if stash_data then
         sleep.stash_save = {}
         sleep.stash_created = true
@@ -1760,26 +1524,26 @@ function save_position(stash_data)
 end
 
 function actor_on_sleep()
-    if not config.use_sleep_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or check_all_lists("ignored_levels", level.name()) then
+    if not config.use_sleep_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
 		return
 	end
-	local sleep = get_sleep_state()
-	print_dbg("SET POSITION on SLEEP " .. tostring(config.use_sleep_respawn))
+	local sleep = dwimg_utils.get_sleep_state()
+	dwimg_utils.print_dbg("SET POSITION on SLEEP " .. tostring(config.use_sleep_respawn))
 	sleep.sleep_created = true
 	save_position()
 end
 
 function actor_on_stash_create(stash_data)
-    if not(config.use_stash_respawn) or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or check_all_lists("ignored_levels", level.name()) then
+    if not(config.use_stash_respawn) or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
 		return
 	end
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
     sleep.stash_created = true
     save_position(stash_data)
 end
 
 function actor_on_stash_remove(stash_data)
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
     if sleep.stash_save and (stash_data.stash_id == sleep.stash_save.stash_id) then
         sleep.stash_created = false;
         sleep.stash_save = nil
@@ -1792,21 +1556,21 @@ function actor_on_stash_remove(stash_data)
 end
 
 function on_before_save_input(flags, typ_, text)
-	if not config.use_campfire_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or check_all_lists("ignored_levels", level.name()) then
+	if not config.use_campfire_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
 		return
 	end
-    local sleep = get_sleep_state()
+    local sleep = dwimg_utils.get_sleep_state()
     local nearby_campfire = bind_campfire.get_nearby_campfire(10, true)
     if not nearby_campfire then
         return
     end
-	print_dbg("SET POSITION on CAMPFIRE " .. tostring(config.use_campfire_respawn))
+	dwimg_utils.print_dbg("SET POSITION on CAMPFIRE " .. tostring(config.use_campfire_respawn))
 	sleep.sleep_created = true
 	save_position()
 end
 
 local function delete_empty_stash()
-	local sleep = get_sleep_state()
+	local sleep = dwimg_utils.get_sleep_state()
 	currently_respawning = nil
 	local empty_stash = true
 	r_obj:iterate_inventory_box( function(owner,itm)
@@ -1816,30 +1580,30 @@ local function delete_empty_stash()
 		sleep.dropped_stashes[r_obj.id] = nil
 		level.map_remove_object_spot(r_obj.id, "treasure")
 		alife_release(r_obj)
-		print_dbg("Empty stash detected and deleted!")
+		dwimg_utils.print_dbg("Empty stash detected and deleted!")
 	end
 end
 
 local function set_player_stats()
-	local sleep = get_sleep_state()
+	local sleep = dwimg_utils.get_sleep_state()
 	sleep.bleed = db.actor.bleeding
 	sleep.healing = global_healing
 	db.actor.bleeding = 1
 	db.actor.radiation = 0
 	db.actor.health = global_healing
-	print_dbg("dudsat" .. global_satiety .. " - " .. global_thirst)
+	dwimg_utils.print_dbg("dudsat" .. global_satiety .. " - " .. global_thirst)
 	db.actor.satiety = (global_satiety*0.9)+0.1
 	actor_status_thirst.load_state({drink = {last_drink = 8000*(0.99-global_thirst), chk_drink = nil}})
 	actor_status_thirst.actor_on_update()
 end
 
 local function respawn_teleport()
-	local sleep = get_sleep_state()
+	local sleep = dwimg_utils.get_sleep_state()
 	
 	if sleep and (sleep.posX and sleep.level and (sleep.level ~= level.name())) or
 		(sleep.stash_save and sleep.stash_save.posX and sleep.stash_save.level and
 			(sleep.stash_save.level ~= level.name())) then
-		print_dbg("SAME LEVEL TELEPORT")
+		dwimg_utils.print_dbg("SAME LEVEL TELEPORT")
 		if sleep.stash_created and config.use_stash_respawn then
 			ChangeLevel(vector():set(sleep.stash_save.posX, sleep.stash_save.posY, sleep.stash_save.posZ), sleep.stash_save.level_vert,
 				sleep.stash_save.game_vert, VEC_ZERO, false)
@@ -1850,7 +1614,7 @@ local function respawn_teleport()
 	elseif sleep and (sleep.posX or sleep.stash_save and sleep.stash_save.posX) then
 		local player_lvid = db.actor:level_vertex_id()
 		local player_gvid = db.actor:game_vertex_id()
-		print_dbg("DIFFERENT LEVEL TELEPORT")
+		dwimg_utils.print_dbg("DIFFERENT LEVEL TELEPORT")
 		if sleep.stash_created and config.use_stash_respawn then
 			xr_effects.change_level_now(vector():set(sleep.stash_save.posX,  sleep.stash_save.posY, sleep.stash_save.posZ), player_lvid,
 				player_gvid, VEC_ZERO, false)
@@ -1859,7 +1623,7 @@ local function respawn_teleport()
 				player_gvid, VEC_ZERO, false)
 		end
 	elseif db.actor:character_community() == "actor_stalker" then -- if loner >>
-		print_dbg("LONER TELEPORT")
+		dwimg_utils.print_dbg("LONER TELEPORT")
 		xr_effects.change_level_now(vector():set(-246.0744, -24.8076, -136.0753), 14372, 372, VEC_ZERO, true) -- sidorovich's bunker
 	elseif db.actor:character_community() == "actor_army" then -- if military >>
 		xr_effects.change_level_now(vector():set(-123.26, -28.4, -379.96), 133511, 450, VEC_ZERO, true) -- southern checkpoint
@@ -1890,10 +1654,10 @@ end
 function on_tutor_gameover_respawn()
 	CreateTimeEvent("Wait_for_item_calc", time_item_calc, 0, function() 
 		if time_item_calc + 1000 > time_global() then
-			--print_dbg("Waiting for respawn " .. tostring(time_global()) .. " / " .. tostring(time_item_calc+1000))
+			--dwimg_utils.print_dbg("Waiting for respawn " .. tostring(time_global()) .. " / " .. tostring(time_item_calc+1000))
 			return false
 		else
-			print_dbg("Finished waiting for item calcs and time skip")
+			dwimg_utils.print_dbg("Finished waiting for item calcs and time skip")
 			delete_empty_stash()
 			set_player_stats()
 			respawn_teleport()

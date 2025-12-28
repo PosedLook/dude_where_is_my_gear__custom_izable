@@ -18,7 +18,7 @@ local global_healing = 1
 local global_satiety = 1
 local global_thirst = -10000
 local options_vol = 1
-local skipped_time = 0
+skipped_time = 0
 local time_item_calc = nil
 
 local ignore_items = nil

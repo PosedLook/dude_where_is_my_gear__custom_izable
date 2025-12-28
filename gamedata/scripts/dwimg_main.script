@@ -20,7 +20,6 @@ local global_thirst = -10000
 local options_vol = 1
 local skipped_time = 0
 local time_item_calc = nil
-local actor_last_health = 1
 
 local ignore_items = nil
 
@@ -89,7 +88,6 @@ function on_game_start()
     RegisterScriptCallback("on_before_save_input", on_before_save_input)
     --RegisterScriptCallback("on_key_press", on_key_press)
 	RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
-	RegisterScriptCallback("actor_on_first_update",actor_on_first_update)
     options_vol = ui_options.get("sound/general/master_volume")
 	dwimg_utils.print_dbg("V-3-1-p10")
 end
@@ -99,76 +97,6 @@ function on_game_load()
     RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
     exec_console_cmd("snd_volume_eff " .. options_vol)
 	death_init = false
-end
-
-local function handle_stashes()
-    local sleep = dwimg_utils.get_sleep_state()
-	if config.remove_previous_stash == 0 then
-		return
-	end
-	while true do
-		local list_length = 0
-		local oldest_stash_id = nil
-		local oldest_stash_time = nil
-		for stash_id, _ in pairs(sleep.dropped_stashes) do
-			dwimg_utils.print_dbg("Loop: " .. tostring(stash_id) .. " with time " .. tostring(sleep.dropped_stashes[stash_id]["time"]))
-			list_length = list_length + 1
-			if oldest_stash_time == nil or oldest_stash_time > sleep.dropped_stashes[stash_id]["time"] then
-				oldest_stash_time = sleep.dropped_stashes[stash_id]["time"]
-				oldest_stash_id = stash_id
-				dwimg_utils.print_dbg("New oldest stash: " .. tostring(oldest_stash_id))
-			end
-		end
-		if list_length <= config.remove_previous_stash then
-			dwimg_utils.print_dbg("Not enough stashes: " .. tostring(list_length) .. " / " .. tostring(config.remove_previous_stash))
-			return
-		end
-		if oldest_stash_id == nil then
-			dwimg_utils.print_dbg("oldest stash is nil")
-			return			
-		end
-		dwimg_utils.print_dbg("Too many stashes: " .. tostring(list_length) .. " / " .. tostring(config.remove_previous_stash))
-		dwimg_utils.print_dbg("Delete oldest stash(id): " .. tostring(oldest_stash_id) .. " of " .. tostring(list_length) .. " in total.")
-		sleep.dropped_stashes[oldest_stash_id] = nil
-		level.map_remove_object_spot(oldest_stash_id, "treasure")
-		alife_release_id(oldest_stash_id)
-	end
-end
-
-function actor_on_first_update()
-    local sleep = dwimg_utils.get_sleep_state()
-	if sleep.dead then
-		if db.actor.bleeding > 0 then
-			dwimg_utils.print_dbg("Leftover bleeding " .. db.actor.bleeding)
-		elseif sleep.bleed > 0 then
-			dwimg_utils.print_dbg("Denied bleeding " .. sleep.bleed)
-		else
-			dwimg_utils.print_dbg("Never bleeded " .. db.actor.bleeding)
-		end
-		dwimg_utils.print_dbg("No longer an undead first update")
-		db.actor.bleeding = 1
-		db.actor.health = sleep.healing
-		db.actor.psy_health = 1
-		db.actor.power = 1
-		bind_stalker_ext.invulnerable_time = time_global() - 1
-		
-		if sleep.health_status_msg and sleep.wounds_status_msg then
-			db.actor:give_game_news("Recovery", sleep.wounds_status_msg .. sleep.health_status_msg, "ui_inGame2_neutral_2_mask", 0, 20000)
-		end
-		
-		if not ((db.actor:character_rank() - sleep.rank < config.gained_rank_exemption) or (config.passed_time_exemption > (dwimg_utils.get_game_seconds() - sleep.time)/3600)) then
-			dwimg_utils.print_dbg("New grace period")
-			sleep.rank = db.actor:character_rank()
-			sleep.time = dwimg_utils.get_game_seconds()
-		end
-		
-		handle_stashes()
-        -- db.actor:give_game_news("Severe Injured", sleep.health_status_msg, "ui_inGame2_neutral_2_mask", 5000, 20000)			
-
-		--get_console():execute("hud_draw on")
-		sleep.dead = false
-		print_dbg("No longer undead")
-	end
 end
 
 function actor_on_before_death(who, flags)

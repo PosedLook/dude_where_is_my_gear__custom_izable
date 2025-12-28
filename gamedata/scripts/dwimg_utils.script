@@ -71,14 +71,14 @@ end
 function on_game_start()
 	local state = alife_storage_manager.get_state().dude_where_is_my_gear
 	if not state then
-		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(dwimg_lists.blank_sleep_state)
+		state = deep_copy_table(dwimg_lists.blank_sleep_state)
 	else
 		for i, v in pairs(dwimg_lists.blank_sleep_state) do
             if state[i] == nil then
 				if type(v) == "table" then
-					alife_storage_manager.get_state().dude_where_is_my_gear[i] = deep_copy_table(v)
+					state[i] = deep_copy_table(v)
 				else
-					alife_storage_manager.get_state().dude_where_is_my_gear[i] = v
+					state[i] = v
 				end
 			end
 		end

@@ -250,6 +250,10 @@ local function check_all_lists(list, i)
 	return all_lists[list][i]
 end
 
+function get_game_seconds()
+    return math.floor(game.get_game_time():diffSec(level.get_start_time()))
+end
+
 function math.clamp(x, min_val, max_val)
     return math.max(min_val, math.min(x, max_val))
 end

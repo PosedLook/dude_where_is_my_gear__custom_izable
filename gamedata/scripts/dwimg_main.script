@@ -320,62 +320,6 @@ local function main_disassemble(item, drop, obj, item_id, section)
 	end
 end
 
-function scaled_chances(chances, item, section)
-	if chances[3] == true or config.enable_scale == false then
-		dwimg_utils.print_dbg("Case 1")
-		return chances
-	else
-		local actor_rank = db.actor:character_rank()
-		if ((IsWeapon(item) and not (IsGrenade(item) or IsMelee(item))) or IsOutfit(item) or IsHeadgear(item) or (IsArtefact(item) and not (ini_sys:r_string_ex(item:section(), "kind") == "i_attach")) or dwimg_utils.check_all_lists("devices",section) ~= nil ) and config.exemption_scale then
-			--dwimg_utils.print_dbg("Case 2")
-			return chances
-		end
-
-		--[[
-					( effective_rank - config.rank_scale_from       ) ^config.scaling_exponent
-			mult  = ( -------------------------------------- )					
-					( config.rank_scale_until - config.rank_scale_from     )
-		]]
-		local effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from, config.rank_scale_until)
-		local rank_mult = math.pow((effective_rank - config.rank_scale_from) / (config.rank_scale_until - config.rank_scale_from), config.scaling_exponent)
-		dwimg_utils.print_dbg("Loss: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from .. " until: " .. config.rank_scale_until .. " = " .. rank_mult)
-
-		-- category override
-		local multiplier_anti
-		if config.rank_loss_multiplier_anti_override then
-			dwimg_utils.print_dbg("Loss multiplier override: " .. chances[4])
-			multiplier_anti = chances[4] 
-		else
-			dwimg_utils.print_dbg("Loss multiplier override: disabled")
-			multiplier_anti = config.rank_loss_multiplier_anti
-		end
-
-		chances[1] = chances[1] * (1 + ((config.rank_loss_multiplier/100) * rank_mult))
-		chances[1] = chances[1] + (((100-chances[1]) * ((multiplier_anti/100)) * rank_mult))
-
-		if not(section == "bolt" or section == "bolt_bullet") then 
-			--dwimg_utils.print_dbg("Case 3*")
-			effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from2, config.rank_scale_until2)
-			rank_mult = math.pow((effective_rank - config.rank_scale_from2) / (config.rank_scale_until2 - config.rank_scale_from2), config.scaling_exponent)
-			dwimg_utils.print_dbg("Drop: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from2 .. " until: " .. config.rank_scale_until2 .. " = " .. rank_mult)
-
-			-- category override
-			local multiplier_anti2
-			if config.rank_loss_multiplier_anti2_override then
-				dwimg_utils.print_dbg("Drop multiplier override: " .. chances[5])
-				multiplier_anti2 = chances[5]
-			else
-				dwimg_utils.print_dbg("Drop multiplier override: disabled")
-				multiplier_anti2 = config.rank_loss_multiplier_anti2
-			end
-			chances[2] = chances[2] - ((100-chances[2]) * ((config.rank_loss_multiplier2/100)* rank_mult))
-			chances[2] = chances[2] - (chances[2] * (((multiplier_anti2/100)) * rank_mult))
-		end
-		--dwimg_utils.print_dbg("Case 3")
-		return chances
-	end
-end
-
 local function itr_inv(temp, item)
 	dwimg_utils.print_dbg("item: " .. item:section() .. " [" .. item:id() .. "]")
 	dwimg_utils.print_dbg(ini_sys:r_string_ex(item:section(), "kind"))
@@ -611,7 +555,7 @@ local function itr_inv(temp, item)
 		end
 	end
 
-	local chances = scaled_chances(dwimg_utils.get_chances(item, section, item_id), item, section)
+	local chances = dwimg_utils.scaled_chances(dwimg_utils.get_chances(item, section, item_id), item, section)
 	
 	local loss_roll = math.random(1, 100)
 	local loss_chance = chances[1]

@@ -403,7 +403,7 @@ function itr_inv(temp, item)
 	local lose = loss_roll <= loss_chance
 
 	local drop_roll = math.random(1, 100)
-	local drop_chance = 100 - chances[2]
+	local drop_chance = chances[2]
 	local drop = drop_roll <= drop_chance
 
 	dwimg_utils.print_dbg("    #Fate said for " .. item_id .. " | lose = " .. tostring(lose) ..  " (" .. loss_roll .. "/" .. loss_chance .. ") | drop = " ..  tostring(drop) .. " (" .. drop_roll .. "/" .. drop_chance .. ")")

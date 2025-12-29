@@ -148,7 +148,6 @@ blank_sleep_state = {
 	last_lost_item_list = {},
 	health_status_msg = "",
 	wounds_status_msg = "",
-	dead = false,
 	bleeding = 0,
 	healing = 1,
 	rank = 0,

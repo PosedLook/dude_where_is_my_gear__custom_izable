@@ -445,7 +445,7 @@ function actor_on_item_take(obj)
 		dwimg_main.time_item_calc = time_global()
 		dwimg_utils.print_dbg("item spawn hook: [" .. obj:id() .. "]")
 		CreateTimeEvent("Wait_for_dead_item_spawns", 0, 0, function(obj)
-			if death_init then
+			if dwimg_main.death_init then
 				itr_inv(nil, obj)
 				return true
 			else

@@ -5,7 +5,6 @@ still you'll have the opportunity of getting some of your gear back if you retur
 You'll lose a % of money and also equipped items will lose condition when you drop them.
 --]] 
 
-local death_init = false
 local do_item_dropping -- disable item dropping if in underground labs
 local currently_respawning = nil
 local last_death_time = 0
@@ -15,13 +14,17 @@ local global_satiety = 1
 local global_thirst = -10000
 local options_vol = 1
 
+death_init = false
 skipped_time = 0
 time_item_calc = nil
 dropped_stash = nil
 r_obj = nil
 
--- Configuration table to avoid 200 local variable limit
-config = {}
+config = {} -- Configuration table to avoid 200 local variable limit
+
+-- ==============================================================
+-- ITEM LOSS MESSAGE
+-- ==============================================================
 
 function add_to_dropped_item_list(item, status, stash_id)
     local sleep = dwimg_utils.get_sleep_state()
@@ -72,19 +75,9 @@ local function send_items_report_news_msg(list_lost, stash_id)
         20000)
 end
 
-function on_game_start()
-    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
-    RegisterScriptCallback("on_game_load", on_game_load)
-    options_vol = ui_options.get("sound/general/master_volume")
-	dwimg_utils.print_dbg("V-3-1-p11")
-end
-
-function on_game_load()
-	UnregisterScriptCallback("actor_on_before_death", actor_on_before_death)
-    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
-    exec_console_cmd("snd_volume_eff " .. options_vol)
-	death_init = false
-end
+-- ==============================================================
+-- CATCH DEATH
+-- ==============================================================
 
 function actor_on_before_death(who, flags)
 
@@ -226,6 +219,10 @@ function actor_on_before_death(who, flags)
     flags.ret_value = false
 end
 
+-- ==============================================================
+-- INIT AND CALL PUNISHMENT CALCULATIONS
+-- ==============================================================
+
 function apply_punishments()
 	dropped_stash = nil
 	r_obj = nil
@@ -277,6 +274,10 @@ function apply_punishments()
 	end
 end
 
+-- ==============================================================
+-- PREPARE AFTER DEATH RESPAWN
+-- ==============================================================
+
 local function delete_empty_stash()
 	local sleep = dwimg_utils.get_sleep_state()
 	currently_respawning = nil
@@ -312,10 +313,28 @@ function on_tutor_gameover_respawn()
 			return false
 		else
 			dwimg_utils.print_dbg("Finished waiting for item calcs and time skip")
+			death_init = false
 			delete_empty_stash()
 			set_player_stats()
 			dwimg_respawn.respawn_teleport()
 			return true
 		end
 	end)	
+end
+
+-- ==============================================================
+-- INIT SCRIPT CALLBACKS
+-- ==============================================================
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
+    RegisterScriptCallback("on_game_load", on_game_load)
+    options_vol = ui_options.get("sound/general/master_volume")
+	dwimg_utils.print_dbg("V-3-1-p11")
+end
+
+function on_game_load()
+	UnregisterScriptCallback("actor_on_before_death", actor_on_before_death)
+    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
+    exec_console_cmd("snd_volume_eff " .. options_vol)
 end

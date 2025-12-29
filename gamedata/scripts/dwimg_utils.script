@@ -62,13 +62,6 @@ function issue(dbg_msg)
 end
 
 function get_sleep_state()
-	if not alife_storage_manager.get_state().dude_where_is_my_gear then
-		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(dwimg_lists.blank_sleep_state)
-	end
-	return alife_storage_manager.get_state().dude_where_is_my_gear
-end
-
-function on_game_start()
 	local state = alife_storage_manager.get_state().dude_where_is_my_gear
 	if not state then
 		state = deep_copy_table(dwimg_lists.blank_sleep_state)
@@ -83,6 +76,8 @@ function on_game_start()
 			end
 		end
 	end
+
+	return alife_storage_manager.get_state().dude_where_is_my_gear
 end
 
 -- ==============================================================
@@ -168,173 +163,4 @@ function get_item_type(item, dbg_info)
 	
 	print_dbg("Item type of <" .. tostring(item:section()) .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
 	return r_type
-end
-
--- --------------------------------------------------------------
--- GET VALUES BY ITEM CATEGORY
--- --------------------------------------------------------------
-
-function scaled_chances(chances, item, section)
-	if chances[3] == true or dwimg_main.config.enable_scale == false then
-		return chances
-	else
-		local actor_rank = db.actor:character_rank()
-
-		--[[
-					( effective_rank - dwimg_main.config.rank_scale_from       ) ^dwimg_main.config.scaling_exponent
-			mult  = ( -------------------------------------- )					
-					( dwimg_main.config.rank_scale_until - dwimg_main.config.rank_scale_from     )
-		]]
-
-		local effective_rank = clamp(actor_rank, dwimg_main.config.rank_scale_from, dwimg_main.config.rank_scale_until)
-		local rank_mult = math.pow((effective_rank - dwimg_main.config.rank_scale_from) / (dwimg_main.config.rank_scale_until - dwimg_main.config.rank_scale_from), dwimg_main.config.scaling_exponent)
-		--print_dbg("Loss: Pow^" .. dwimg_main.config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. dwimg_main.config.rank_scale_from .. " until: " .. dwimg_main.config.rank_scale_until .. " = " .. rank_mult)
-
-
-		if chances[4] > chances[1] then
-			chances[1] = chances[1] + (rank_mult * (chances[4] - chances[1]))
-		end
-
-		if not(section == "bolt" or section == "bolt_bullet") then 
-			effective_rank = clamp(actor_rank, dwimg_main.config.rank_scale_from2, dwimg_main.config.rank_scale_until2)
-			rank_mult = math.pow((effective_rank - dwimg_main.config.rank_scale_from2) / (dwimg_main.config.rank_scale_until2 - dwimg_main.config.rank_scale_from2), dwimg_main.config.scaling_exponent)
-			--print_dbg("Drop: Pow^" .. dwimg_main.config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. dwimg_main.config.rank_scale_from2 .. " until: " .. dwimg_main.config.rank_scale_until2 .. " = " .. rank_mult)
-
-			if chances[5] > chances[2] then
-				chances[2] = chances[2] + (rank_mult * (chances[5] - chances[2]))
-			end
-		end
-
-		return chances
-	end
-end
-
-function get_chances(item, section, item_id)
-	local iType = get_item_type(item, "drop&loss chance")
-	
-	if iType == dwimg_lists.item_type.GUN then
-		print_dbg("IsWeapon")
-		print_dbg("guns_chance")
-		return {dwimg_main.config.chance_of_losing_guns, dwimg_main.config.keep_guns_chance, false, dwimg_main.config.chance_of_losing_guns_scaled, dwimg_main.config.keep_guns_chance_scaled }
-		
-	elseif iType == dwimg_lists.item_type.UPGRADED then
-		print_dbg("IsInDevices")
-		print_dbg("upgraded_chance")
-		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_scaled, dwimg_main.config.keep_device_chance_scaled }
-		
-	elseif iType == dwimg_lists.item_type.TOOL then
-		print_dbg("IsInTool_list")
-		print_dbg("tools_chance")
-		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_scaled, dwimg_main.config.keep_device_chance_scaled }
-		
-	elseif iType == dwimg_lists.item_type.KIT then
-		print_dbg("IsInKits_list")
-		print_dbg("kits_chance")
-		return {dwimg_main.config.chance_of_losing_kits, dwimg_main.config.keep_kits_chance, false, dwimg_main.config.chance_of_losing_kits_scaled, dwimg_main.config.keep_kits_chance_scaled }
-		
-	elseif iType == dwimg_lists.item_type.MEDICAL then
-		print_dbg("IsMedicalKind")
-		print_dbg("medics_chance")
-		return {dwimg_main.config.chance_of_losing_medics, dwimg_main.config.keep_medics_chance, false, dwimg_main.config.chance_of_losing_medics_scaled, dwimg_main.config.keep_medics_chance_scaled }	
-
-	elseif iType == dwimg_lists.item_type.ARMOR then
-		print_dbg("IsOutfit")
-		print_dbg("outfits_chance")
-		return {dwimg_main.config.chance_of_losing_outfits, dwimg_main.config.keep_outfit_chance, false, dwimg_main.config.chance_of_losing_outfits_scaled, dwimg_main.config.keep_outfit_chance_scaled }	
-		
-	elseif iType == dwimg_lists.item_type.ARTEFACT_PERK or iType == dwimg_lists.item_type.ARTEFACT_STAT or iType == dwimg_lists.item_type.PELT then
-		print_dbg("IsArtefact not i_attach")
-		print_dbg("artefact_chance")
-		return {dwimg_main.config.chance_of_losing_artefacts, dwimg_main.config.keep_artefact_chance, false, dwimg_main.config.chance_of_losing_artefacts_scaled, dwimg_main.config.keep_artefact_chance_scaled }
-		
-	elseif iType == dwimg_lists.item_type.ATTACHEMENT_WPN then
-		print_dbg("IsWpnAttachment")
-		print_dbg("gun_attachment_chance")
-		return {dwimg_main.config.chance_of_losing_gun_attachments, dwimg_main.config.keep_gun_attachment_chance, false, dwimg_main.config.chance_of_losing_gun_attachments_scaled, dwimg_main.config.keep_gun_attachment_chance_scaled }
-		
-	elseif iType == dwimg_lists.item_type.EXPLOSIVE then
-		print_dbg("IsExplosivesKind")
-		print_dbg("explosives_chance")
-		return {dwimg_main.config.chance_of_losing_explosives, dwimg_main.config.keep_explosives_chance, false, dwimg_main.config.chance_of_losing_explosives_scaled, dwimg_main.config.keep_explosives_chance_scaled }
-		
-	elseif iType == dwimg_lists.item_type.AMMO then
-		print_dbg("IsAmmo")
-		print_dbg("ammo_chance")	
-		if string.match(item:section(), "^mag_") then
-			local is_carried_mag = magazine_binder and magazine_binder.is_carried_mag
-			local toggle_carried_mag = magazine_binder and magazine_binder.toggle_carried_mag
-			local is_magazine = magazine_binder and magazine_binder.is_magazine
-			if is_magazine(section) and is_carried_mag(item_id) then
-				toggle_carried_mag(item_id)
-			end		
-		end	
-		return {dwimg_main.config.chance_of_losing_ammo, dwimg_main.config.keep_ammo_chance, false, dwimg_main.config.chance_of_losing_ammo_scaled, dwimg_main.config.keep_ammo_chance_scaled }
-	else
-		print_dbg("misc_chance")
-		if section == "bolt" or section == "bolt_bullet" then
-			return {dwimg_main.config.chance_of_losing_items, 100, false, dwimg_main.config.chance_of_losing_items_scaled, dwimg_main.config.keep_misc_items_chance_scaled}	
-		else
-			return {dwimg_main.config.chance_of_losing_items, dwimg_main.config.keep_misc_items_chance, false, dwimg_main.config.chance_of_losing_items_scaled, dwimg_main.config.keep_misc_items_chance_scaled }
-		end
-	end
-end
-
-rule_a_prot = {}
-rule_b_prot = {}
-function get_exemption(item, section)
-	local sleep = get_sleep_state()	
-	local i_type =  get_item_type(item, "exemption")
-	local rule_a = false
-	local rule_b = false
-	
-	-- Separate conditions for rule_a
-	local max_rank_exemption_a = dwimg_main.config.max_rank_exemption > db.actor:character_rank()
-	local gained_rank_enabled_a = dwimg_main.config.gained_rank_exemption > 0
-	local gained_rank_exemption_a = gained_rank_enabled_a and (db.actor:character_rank() - sleep.rank < dwimg_main.config.gained_rank_exemption)
-	local passed_time_exemption_a = dwimg_main.config.passed_time_exemption > (get_game_seconds() - (sleep.time+dwimg_main.skipped_time))/3600
-	local max_time_exemption_a = dwimg_main.config.max_time_exemption > (get_game_seconds()-dwimg_main.skipped_time)/3600
-	
-	rule_a = max_rank_exemption_a or gained_rank_exemption_a or passed_time_exemption_a or max_time_exemption_a
-	
-	-- Separate conditions for rule_b
-	local max_rank_exemption_b = dwimg_main.config.max_rank_exemption2 > db.actor:character_rank()
-	local gained_rank_enabled_b = dwimg_main.config.gained_rank_exemption2 > 0
-	local gained_rank_exemption_b = gained_rank_enabled_b and (db.actor:character_rank() - sleep.rank < dwimg_main.config.gained_rank_exemption2)
-	local passed_time_exemption_b = dwimg_main.config.passed_time_exemption2 > (get_game_seconds()-(dwimg_main.skipped_time+sleep.time))/3600
-	local max_time_exemption_b = dwimg_main.config.max_time_exemption2 > (get_game_seconds()-dwimg_main.skipped_time)/3600
-	
-	rule_b = max_rank_exemption_b or gained_rank_exemption_b or passed_time_exemption_b or max_time_exemption_b
-	
-	-- Print true conditions if any exemption applies
-	if rule_a or rule_b then
-		local true_conditions = {}
-		if rule_a then
-			if max_rank_exemption_a then table.insert(true_conditions, "max_rank_exemption_a") end
-			if gained_rank_exemption_a then table.insert(true_conditions, "gained_rank_exemption_a") end
-			if passed_time_exemption_a then table.insert(true_conditions, "passed_time_exemption_a") end
-			if max_time_exemption_a then table.insert(true_conditions, "max_time_exemption_a") end
-		end
-		if rule_b then
-			if max_rank_exemption_b then table.insert(true_conditions, "max_rank_exemption_b") end
-			if gained_rank_exemption_b then table.insert(true_conditions, "gained_rank_exemption_b") end
-			if passed_time_exemption_b then table.insert(true_conditions, "passed_time_exemption_b") end
-			if max_time_exemption_b then table.insert(true_conditions, "max_time_exemption_b") end
-		end
-		print_dbg("Exemption conditions met: " .. table.concat(true_conditions, ", "))
-	end
-	
-	--print_dbg("Current time " .. tostring(get_game_seconds()/3600) .. " without skipped time " .. tostring(dwimg_main.skipped_time/3600) .. " is " .. tostring((get_game_seconds()-dwimg_main.skipped_time)/3600) )
-	if (rule_a == false) and (rule_b == false) then
-		return false
-	end
-	
-	if (dwimg_main.config.exemption_everything == 1 and rule_a) or (dwimg_main.config.exemption_everything == 2 and rule_b) then
-		return true
-	end
-	
-	if (rule_a and rule_a_prot[i_type]) or (rule_b and rule_b_prot[i_type]) then
-		return true
-	else
-		return false
-	end
 end

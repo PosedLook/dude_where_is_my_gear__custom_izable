@@ -171,66 +171,43 @@ function get_item_type(item, dbg_info)
 end
 
 -- --------------------------------------------------------------
--- DETACH WEAPON ATTACHEMENTS
--- --------------------------------------------------------------
-
-function detach_scope_dwimg(weapon)
-	local detach_infos = {
-	["spw_wpn"] = nil,
-	["spw_att"] = nil,
-	}
-	local parent_section = ini_sys:r_string_ex(weapon:section(),"parent_section")
-	if (not parent_section or weapon:section() == parent_section) then 
-		return nil
-	end
-	
-	local old_weapon = alife_object(weapon:id())	
-	
-	-- Determine which addon is attached to the weapon.
-	-- Create the item in the db.actor's inventory when found.
-	for k, v in pairs(utils_data.collect_sections(ini_sys, {"addons_table"})) do
-		if (string.find(weapon:section(), k)) then
-			--give_object_to_db.actor(k)
-			detach_infos["spw_att"] = alife_create_item(k, db.actor)
-			break
-		end
-	end
-	if detach_infos["spw_att"] == nil then
-		return nil
-	end
-	-- Create objects for the 'before' and 'after' detachment weapons.
-	local new_weapon = old_weapon and alife_clone_weapon(old_weapon, parent_section)
-	detach_infos["spw_wpn"] = new_weapon
-	return detach_infos
-end
-
-function detach_suppressor_dwimg(weapon)	
-	if weapon:weapon_silencer_status() == 2 then
-		if weapon:weapon_is_silencer() then
-			local supSection = utils_item.get_param(weapon:section(), weapon:id(), "silencer_name", "string")
-			local sil_info = {id = weapon:id(), section = supSection}
-			weapon:weapon_addon_detach(sil_info.section, true)
-			return true
-		end
-	end
-	return false
-end
-
-function detach_gl_dwimg(weapon)
-	if (ini_sys:r_float_ex(weapon:section(),"grenade_launcher_status") > 0) then
-		if weapon:is_weapon_gl() then
-			local supSection = utils_item.get_wpn_param(obj, weapon:section(), "grenade_launcher_name")
-			local gl_info = {id = weapon:id(), section = supSection}
-			weapon:weapon_addon_detach(gl_info.section, true)
-			return true		
-		end
-	end
-	return false
-end
-
--- --------------------------------------------------------------
 -- GET VALUES BY ITEM CATEGORY
 -- --------------------------------------------------------------
+
+function scaled_chances(chances, item, section)
+	if chances[3] == true or dwimg_main.config.enable_scale == false then
+		return chances
+	else
+		local actor_rank = db.actor:character_rank()
+
+		--[[
+					( effective_rank - dwimg_main.config.rank_scale_from       ) ^dwimg_main.config.scaling_exponent
+			mult  = ( -------------------------------------- )					
+					( dwimg_main.config.rank_scale_until - dwimg_main.config.rank_scale_from     )
+		]]
+
+		local effective_rank = clamp(actor_rank, dwimg_main.config.rank_scale_from, dwimg_main.config.rank_scale_until)
+		local rank_mult = math.pow((effective_rank - dwimg_main.config.rank_scale_from) / (dwimg_main.config.rank_scale_until - dwimg_main.config.rank_scale_from), dwimg_main.config.scaling_exponent)
+		--print_dbg("Loss: Pow^" .. dwimg_main.config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. dwimg_main.config.rank_scale_from .. " until: " .. dwimg_main.config.rank_scale_until .. " = " .. rank_mult)
+
+
+		if chances[4] > chances[1] then
+			chances[1] = chances[1] + (rank_mult * (chances[4] - chances[1]))
+		end
+
+		if not(section == "bolt" or section == "bolt_bullet") then 
+			effective_rank = clamp(actor_rank, dwimg_main.config.rank_scale_from2, dwimg_main.config.rank_scale_until2)
+			rank_mult = math.pow((effective_rank - dwimg_main.config.rank_scale_from2) / (dwimg_main.config.rank_scale_until2 - dwimg_main.config.rank_scale_from2), dwimg_main.config.scaling_exponent)
+			--print_dbg("Drop: Pow^" .. dwimg_main.config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. dwimg_main.config.rank_scale_from2 .. " until: " .. dwimg_main.config.rank_scale_until2 .. " = " .. rank_mult)
+
+			if chances[5] > chances[2] then
+				chances[2] = chances[2] + (rank_mult * (chances[5] - chances[2]))
+			end
+		end
+
+		return chances
+	end
+end
 
 function get_chances(item, section, item_id)
 	local iType = get_item_type(item, "drop&loss chance")
@@ -238,47 +215,47 @@ function get_chances(item, section, item_id)
 	if iType == dwimg_lists.item_type.GUN then
 		print_dbg("IsWeapon")
 		print_dbg("guns_chance")
-		return {dwimg_main.config.chance_of_losing_guns, dwimg_main.config.keep_guns_chance, false, dwimg_main.config.chance_of_losing_guns_anti, dwimg_main.config.keep_guns_chance_anti }
+		return {dwimg_main.config.chance_of_losing_guns, dwimg_main.config.keep_guns_chance, false, dwimg_main.config.chance_of_losing_guns_scaled, dwimg_main.config.keep_guns_chance_scaled }
 		
 	elseif iType == dwimg_lists.item_type.UPGRADED then
 		print_dbg("IsInDevices")
 		print_dbg("upgraded_chance")
-		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_anti, dwimg_main.config.keep_device_chance_anti }
+		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_scaled, dwimg_main.config.keep_device_chance_scaled }
 		
 	elseif iType == dwimg_lists.item_type.TOOL then
 		print_dbg("IsInTool_list")
 		print_dbg("tools_chance")
-		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_anti, dwimg_main.config.keep_device_chance_anti }
+		return {dwimg_main.config.chance_of_losing_devices, dwimg_main.config.keep_device_chance, false, dwimg_main.config.chance_of_losing_devices_scaled, dwimg_main.config.keep_device_chance_scaled }
 		
 	elseif iType == dwimg_lists.item_type.KIT then
 		print_dbg("IsInKits_list")
 		print_dbg("kits_chance")
-		return {dwimg_main.config.chance_of_losing_kits, dwimg_main.config.keep_kits_chance, false, dwimg_main.config.chance_of_losing_kits_anti, dwimg_main.config.keep_kits_chance_anti }
+		return {dwimg_main.config.chance_of_losing_kits, dwimg_main.config.keep_kits_chance, false, dwimg_main.config.chance_of_losing_kits_scaled, dwimg_main.config.keep_kits_chance_scaled }
 		
 	elseif iType == dwimg_lists.item_type.MEDICAL then
 		print_dbg("IsMedicalKind")
 		print_dbg("medics_chance")
-		return {dwimg_main.config.chance_of_losing_medics, dwimg_main.config.keep_medics_chance, false, dwimg_main.config.chance_of_losing_medics_anti, dwimg_main.config.keep_medics_chance_anti }	
+		return {dwimg_main.config.chance_of_losing_medics, dwimg_main.config.keep_medics_chance, false, dwimg_main.config.chance_of_losing_medics_scaled, dwimg_main.config.keep_medics_chance_scaled }	
 
 	elseif iType == dwimg_lists.item_type.ARMOR then
 		print_dbg("IsOutfit")
 		print_dbg("outfits_chance")
-		return {dwimg_main.config.chance_of_losing_outfits, dwimg_main.config.keep_outfit_chance, false, dwimg_main.config.chance_of_losing_outfits_anti, dwimg_main.config.keep_outfit_chance_anti }	
+		return {dwimg_main.config.chance_of_losing_outfits, dwimg_main.config.keep_outfit_chance, false, dwimg_main.config.chance_of_losing_outfits_scaled, dwimg_main.config.keep_outfit_chance_scaled }	
 		
 	elseif iType == dwimg_lists.item_type.ARTEFACT_PERK or iType == dwimg_lists.item_type.ARTEFACT_STAT or iType == dwimg_lists.item_type.PELT then
 		print_dbg("IsArtefact not i_attach")
 		print_dbg("artefact_chance")
-		return {dwimg_main.config.chance_of_losing_artefacts, dwimg_main.config.keep_artefact_chance, false, dwimg_main.config.chance_of_losing_artefacts_anti, dwimg_main.config.keep_artefact_chance_anti }
+		return {dwimg_main.config.chance_of_losing_artefacts, dwimg_main.config.keep_artefact_chance, false, dwimg_main.config.chance_of_losing_artefacts_scaled, dwimg_main.config.keep_artefact_chance_scaled }
 		
 	elseif iType == dwimg_lists.item_type.ATTACHEMENT_WPN then
 		print_dbg("IsWpnAttachment")
 		print_dbg("gun_attachment_chance")
-		return {dwimg_main.config.chance_of_losing_gun_attachments, dwimg_main.config.keep_gun_attachment_chance, false, dwimg_main.config.chance_of_losing_gun_attachments_anti, dwimg_main.config.keep_gun_attachment_chance_anti }
+		return {dwimg_main.config.chance_of_losing_gun_attachments, dwimg_main.config.keep_gun_attachment_chance, false, dwimg_main.config.chance_of_losing_gun_attachments_scaled, dwimg_main.config.keep_gun_attachment_chance_scaled }
 		
 	elseif iType == dwimg_lists.item_type.EXPLOSIVE then
 		print_dbg("IsExplosivesKind")
 		print_dbg("explosives_chance")
-		return {dwimg_main.config.chance_of_losing_explosives, dwimg_main.config.keep_explosives_chance, false, dwimg_main.config.chance_of_losing_explosives_anti, dwimg_main.config.keep_explosives_chance_anti }
+		return {dwimg_main.config.chance_of_losing_explosives, dwimg_main.config.keep_explosives_chance, false, dwimg_main.config.chance_of_losing_explosives_scaled, dwimg_main.config.keep_explosives_chance_scaled }
 		
 	elseif iType == dwimg_lists.item_type.AMMO then
 		print_dbg("IsAmmo")
@@ -291,13 +268,13 @@ function get_chances(item, section, item_id)
 				toggle_carried_mag(item_id)
 			end		
 		end	
-		return {dwimg_main.config.chance_of_losing_ammo, dwimg_main.config.keep_ammo_chance, false, dwimg_main.config.chance_of_losing_ammo_anti, dwimg_main.config.keep_ammo_chance_anti }
+		return {dwimg_main.config.chance_of_losing_ammo, dwimg_main.config.keep_ammo_chance, false, dwimg_main.config.chance_of_losing_ammo_scaled, dwimg_main.config.keep_ammo_chance_scaled }
 	else
 		print_dbg("misc_chance")
 		if section == "bolt" or section == "bolt_bullet" then
-			return {dwimg_main.config.chance_of_losing_items, 100, false, dwimg_main.config.chance_of_losing_items_anti, dwimg_main.config.keep_misc_items_chance_anti}	
+			return {dwimg_main.config.chance_of_losing_items, 100, false, dwimg_main.config.chance_of_losing_items_scaled, dwimg_main.config.keep_misc_items_chance_scaled}	
 		else
-			return {dwimg_main.config.chance_of_losing_items, dwimg_main.config.keep_misc_items_chance, false, dwimg_main.config.chance_of_losing_items_anti, dwimg_main.config.keep_misc_items_chance_anti }
+			return {dwimg_main.config.chance_of_losing_items, dwimg_main.config.keep_misc_items_chance, false, dwimg_main.config.chance_of_losing_items_scaled, dwimg_main.config.keep_misc_items_chance_scaled }
 		end
 	end
 end

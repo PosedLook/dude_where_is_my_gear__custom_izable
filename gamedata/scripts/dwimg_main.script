@@ -5,12 +5,7 @@ still you'll have the opportunity of getting some of your gear back if you retur
 You'll lose a % of money and also equipped items will lose condition when you drop them.
 --]] 
 
--- Configuration table to avoid 200 local variable limit
-config = {}
-local death_init = false
-local dropped_stash
 local do_item_dropping -- disable item dropping if in underground labs
-local r_obj
 local currently_respawning = nil
 local last_death_time = 0
 local respawn_done = false
@@ -18,12 +13,20 @@ local global_healing = 1
 local global_satiety = 1
 local global_thirst = -10000
 local options_vol = 1
+
+death_init = false
 skipped_time = 0
-local time_item_calc = nil
+time_item_calc = nil
+dropped_stash = nil
+r_obj = nil
 
-local ignore_items = nil
+config = {} -- Configuration table to avoid 200 local variable limit
 
-local function add_to_dropped_item_list(item, status, stash_id)
+-- ==============================================================
+-- ITEM LOSS MESSAGE
+-- ==============================================================
+
+function add_to_dropped_item_list(item, status, stash_id)
     local sleep = dwimg_utils.get_sleep_state()
     local item_name = ui_item.get_sec_name(item:section()) or 'unknown'
     local drop_stash = sleep.dropped_stashes[stash_id]
@@ -72,22 +75,9 @@ local function send_items_report_news_msg(list_lost, stash_id)
         20000)
 end
 
-function on_game_start()
-    local ini_stash = ini_file("items\\settings\\backpack_stash.ltx")
-    keep_items = utils_data.collect_section(ini_stash, "actor_backpack_keep_items", true)
-    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
-    RegisterScriptCallback("on_game_load", on_game_load)
-	RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
-    options_vol = ui_options.get("sound/general/master_volume")
-	dwimg_utils.print_dbg("V-3-1-p10")
-end
-
-function on_game_load()
-	UnregisterScriptCallback("actor_on_before_death", actor_on_before_death)
-    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
-    exec_console_cmd("snd_volume_eff " .. options_vol)
-	death_init = false
-end
+-- ==============================================================
+-- CATCH DEATH
+-- ==============================================================
 
 function actor_on_before_death(who, flags)
 
@@ -229,443 +219,9 @@ function actor_on_before_death(who, flags)
     flags.ret_value = false
 end
 
-local no_sec_dwg = {}
-local no_sec = {}
-
-local function disassemble(section, spw_target)
-	local ind = 1
-	local ini = ini_file("items\\settings\\craft.ltx")
-	local result, id, value = 0, 0, 0
-	
-	while ini:section_exist(tostring(ind)) and not(tostring(id) == section) do
-		local n = ini:line_count(tostring(ind)) or 0 
-		local i = 0
-		while i <= n-1 and not(tostring(id) == section) do
-			result, id, value = ini:r_line(tostring(ind) , i , "", "")
-			id = string.sub(id,3)
-			i = i + 1
-		end
-	ind = ind + 1
-	end
-	local t = str_explode(value,",")
-	if dwimg_utils.check_all_lists("devices",t[3]) ~= nil then
-		disassemble(t[3], spw_target)
-	end
-	for i = 5, #t - 1, 2 do
-		for i2 = 1, t[i+1] do
-			if( math.random(1,100) <= config.keep_device_part_chance ) then
-				local spw_prt = alife_create_item(t[i], spw_target)
-				no_sec[spw_prt.id] = true
-			end
-		end
-	end
-
-end
-
-local function main_disassemble(item, drop, obj, item_id, section)
-	if (IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) and math.random(1,100) <= config.broken_gun_chance) or ((IsOutfit(item) or IsHeadgear(item)) and math.random(1,100) <= config.broken_armor_chance) or (dwimg_utils.check_all_lists("devices",section) ~= nil and math.random(1,100) <= config.broken_device_chance)  then
-		local spw_target = db.actor
-		if drop then
-			spw_target = obj
-		end
-		if IsWeapon(item) or IsOutfit(item) or IsHeadgear(item) then
-			if IsWeapon(item) then
-				item:unload_magazine(true)
-			end
-
-			local spw_prt
-			local parts = item_parts.get_parts_con(item)
-			if parts then
-				for k,v in pairs(parts) do
-					if math.random(1,100) <= config.keep_gun_armor_parts_chance and (k ~= section) then
-						spw_prt = alife_create_item(k, spw_target)
-						if spw_prt then
-							no_sec[tostring(spw_prt.id)] = true
-							CreateTimeEvent("Wait_for_spawn", spw_prt.id, 0, function(id, con)
-								if level.object_by_id(id) then
-									--dwimg_utils.print_dbg("Condition: " .. con)
-									level.object_by_id(id):set_condition(con/100)
-									return true
-								else
-									return false
-								end
-							end, spw_prt.id, parts[k])
-						else
-							dwimg_utils.issue("No spw_prt spawned for "  .. section)
-						end
-					end
-				end
-			else
-				dwimg_utils.issue("Couldn't find parts of item during main disassemble")
-			end
-			
-			local installed_upgrades = utils_item.get_upgrades_installed(item)
-			local upgr_tools = {}
-			for i=1,#installed_upgrades do
-				local tool = utils_item.get_upgrade_sect_tool(section, installed_upgrades[i])
-				table.insert(upgr_tools,tool)
-			end
-			for i=1,#upgr_tools do
-				if math.random(1,100) <= config.keep_upgrade_chance then
-					spw_prt = alife_create_item(upgr_tools[i], spw_target)
-					no_sec[tostring(spw_prt.id)] = true
-				end
-			end							
-		else
-			disassemble(section, spw_target)
-		end
-		return true
-	else
-		return false
-	end
-end
-
-function scaled_chances(chances, item, section)
-	if chances[3] == true or config.enable_scale == false then
-		dwimg_utils.print_dbg("Case 1")
-		return chances
-	else
-		local actor_rank = db.actor:character_rank()
-		if ((IsWeapon(item) and not (IsGrenade(item) or IsMelee(item))) or IsOutfit(item) or IsHeadgear(item) or (IsArtefact(item) and not (ini_sys:r_string_ex(item:section(), "kind") == "i_attach")) or dwimg_utils.check_all_lists("devices",section) ~= nil ) and config.exemption_scale then
-			--dwimg_utils.print_dbg("Case 2")
-			return chances
-		end
-
-		--[[
-					( effective_rank - config.rank_scale_from       ) ^config.scaling_exponent
-			mult  = ( -------------------------------------- )					
-					( config.rank_scale_until - config.rank_scale_from     )
-		]]
-		local effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from, config.rank_scale_until)
-		local rank_mult = math.pow((effective_rank - config.rank_scale_from) / (config.rank_scale_until - config.rank_scale_from), config.scaling_exponent)
-		dwimg_utils.print_dbg("Loss: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from .. " until: " .. config.rank_scale_until .. " = " .. rank_mult)
-
-		-- category override
-		local multiplier_anti
-		if config.rank_loss_multiplier_anti_override then
-			dwimg_utils.print_dbg("Loss multiplier override: " .. chances[4])
-			multiplier_anti = chances[4] 
-		else
-			dwimg_utils.print_dbg("Loss multiplier override: disabled")
-			multiplier_anti = config.rank_loss_multiplier_anti
-		end
-
-		chances[1] = chances[1] * (1 + ((config.rank_loss_multiplier/100) * rank_mult))
-		chances[1] = chances[1] + (((100-chances[1]) * ((multiplier_anti/100)) * rank_mult))
-
-		if not(section == "bolt" or section == "bolt_bullet") then 
-			--dwimg_utils.print_dbg("Case 3*")
-			effective_rank = dwimg_utils.clamp(actor_rank, config.rank_scale_from2, config.rank_scale_until2)
-			rank_mult = math.pow((effective_rank - config.rank_scale_from2) / (config.rank_scale_until2 - config.rank_scale_from2), config.scaling_exponent)
-			dwimg_utils.print_dbg("Drop: Pow^" .. config.scaling_exponent .. ": actor_rank: " .. actor_rank .. " from: " .. config.rank_scale_from2 .. " until: " .. config.rank_scale_until2 .. " = " .. rank_mult)
-
-			-- category override
-			local multiplier_anti2
-			if config.rank_loss_multiplier_anti2_override then
-				dwimg_utils.print_dbg("Drop multiplier override: " .. chances[5])
-				multiplier_anti2 = chances[5]
-			else
-				dwimg_utils.print_dbg("Drop multiplier override: disabled")
-				multiplier_anti2 = config.rank_loss_multiplier_anti2
-			end
-			chances[2] = chances[2] - ((100-chances[2]) * ((config.rank_loss_multiplier2/100)* rank_mult))
-			chances[2] = chances[2] - (chances[2] * (((multiplier_anti2/100)) * rank_mult))
-		end
-		--dwimg_utils.print_dbg("Case 3")
-		return chances
-	end
-end
-
-local function itr_inv(temp, item)
-	dwimg_utils.print_dbg("item: " .. item:section() .. " [" .. item:id() .. "]")
-	dwimg_utils.print_dbg(ini_sys:r_string_ex(item:section(), "kind"))
-	local section = item:section()
-	local item_id = item:id()
-	time_item_calc = time_global()
-	--if ini_sys:r_float_ex(section,"cost") ~= nil and ini_sys:r_float_ex(section,"cost") ~= 0 then 
-	--	dwimg_utils.print_dbg("Cost of " .. item_id .. " is " .. ini_sys:r_float_ex(section,"cost"))
-	--end
-	
-	if ignore_items[section] then
-		dwimg_utils.print_dbg("Stopped for ignore: " .. item_id)
-	   return
-	end
-	
-	if dwimg_utils.get_item_type(item, "Quest item stop itr_inv") == dwimg_lists.item_type.QUEST then
-		dwimg_utils.print_dbg("Stopped for QuestKind: " .. item_id)
-		return
-	end
-	
-	if item_id == b_id then
-		dwimg_utils.print_dbg("Stopped for b_id: " .. item_id)
-		return
-	end
-	
-	if keep_items[section] ~= nil and not(dwimg_utils.check_all_lists("anti_keepers",section)) then
-		dwimg_utils.print_dbg("Stopped for keep_items: " .. item_id)
-		return
-	end
-						
-	if ini_sys:r_bool_ex(section, "quest_item", false) then
-		dwimg_utils.print_dbg("Stopped for quest_item: " .. item_id)
-		return
-	end
-
-	if no_sec[tostring(item_id)] then
-		dwimg_utils.print_dbg("Stopped for no spawn hook: " .. item_id)
-		return
-	end
-	
-	if dwimg_utils.get_exemption(item, section) then
-		dwimg_utils.print_dbg("Exemption: " .. item_id)						
-		return
-	end
-	
-	--condition_loss
-	if (config.max_condition_lose > 0) then
-		if IsWeapon(item) and not (ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) and (item_backpack.is_in_slot(item) or config.condition_unequipped) then
-			local parts = item_parts.get_parts_con(item)
-			if parts then
-					local count = 0
-					for k, v in pairs(parts) do
-						count = count + 1
-					end
-					local sum = 0
-					for k, v in pairs(parts) do
-						local condition_reduction =
-							(math.random(config.min_condition_lose, config.max_condition_lose))
-						if (config.min_weapon_condition < parts[k]) then
-							if config.spread_weapon_condition then
-								if math.random(1,2) == 1 then
-									parts[k] = math.floor(parts[k] - (condition_reduction / count))
-								else
-									parts[k] = math.ceil(parts[k] - (condition_reduction / count))
-								end
-							else
-								parts[k] = parts[k] - condition_reduction
-							end
-							if (parts[k] < config.min_weapon_condition) then
-								parts[k] = config.min_weapon_condition
-							end
-						end
-						sum = sum + parts[k]
-					end
-					item_parts.set_parts_con(item_id, parts)
-			end
-		elseif (IsOutfit(item) or IsHeadgear(item)) and (item_backpack.is_in_slot(item) or config.condition_unequipped) then
-				local condition = item:condition()
-				-- if killed by elemental damage increase condition lose of equipped items
-				local condition_reduction =
-					(math.random(config.min_condition_lose, config.max_condition_lose)) / 100
-				if ((config.min_armor_condition / 100) < condition ) then
-					condition = condition - condition_reduction
-					if ((config.min_armor_condition / 100) > condition) then
-						condition = config.min_armor_condition / 100
-					end
-				end
-				item:set_condition(condition)
-			
-		end
-	end
-
-	--part break
-	if ((IsWeapon(item) and not (ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) or IsOutfit(item) or IsHeadgear(item)) and (item_backpack.is_in_slot(item) or config.condition_unequipped)) and config.part_break_chance > 0 then
-		local sum, cnt = 0,0
-		local parts = item_parts.get_parts_con(item)
-		for k, v in pairs(parts) do
-			if k ~= section then
-				if config.part_break_chance >= math.random(1,100) then
-					parts[k] = 1
-				end
-				sum = sum + parts[k]
-				dwimg_utils.print_dbg("summed " .. parts[k] .. " - " .. tostring(k))
-				cnt = cnt + 1
-			end
-		end
-		if IsOutfit(item) or IsHeadgear(item) then
-			item:set_condition(dwimg_utils.clamp(math.ceil(sum/cnt),1,100)/100)
-		end
-		parts[section] = sum/cnt
-		item_parts.set_parts_con(item_id, parts)
-		
-	end
-
-	--remove scope, silencer and gl
-	if IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsMelee(item) or IsGrenade(item)) then					
-		local scope = dwimg_utils.detach_scope_dwimg(item)
-		if scope ~= nil then
-			dwimg_utils.print_dbg("Cancelled for scope: " .. item_id)
-			return
-		end
-		dwimg_utils.detach_suppressor_dwimg(item)
-		dwimg_utils.detach_gl_dwimg(item)
-	end
-
-	--remove psu and convert overflow power to exo batteries_exo
-	if IsOutfit(item) and item_exo_device.is_exo(item) and item_exo_device.check_remove_psu(item) == "st_remove_psu" then
-		local power_overflow = 0
-		if item_exo_device.get_data(item_id).power > 100 then
-			power_overflow = item_exo_device.get_data(item_id).power - 100
-		end
-		while power_overflow > 0 do 
-			local new_bat = alife_create_item("batteries_exo", db.actor)
-			no_sec[tostring(new_bat.id)] = true
-			CreateTimeEvent("Wait_for_spawn", new_bat.id, 0, function(id, charge)
-			dwimg_utils.print_dbg("Wait for " .. id)
-			if level.object_by_id(id) then
-				level.object_by_id(id):set_condition(charge/100)
-				return true
-			else
-				return false
-			end
-			end, new_bat.id, dwimg_utils.clamp(power_overflow, 0, 100))
-			power_overflow = power_overflow - dwimg_utils.clamp(power_overflow, 0, 100)
-		end
-		item_exo_device.remove_psu(item)
-	end
-	
-	--remove upgrades
-	if not(no_sec_dwg[tostring(item_id)]) and ((IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsGrenade(item) or IsMelee(item)) or IsOutfit(item) or IsHeadgear(item) or section == "wpn_binoc_inv")) and config.remove_upgrade_chance > 0  then
-		local found_upgrades = dwimg_utils.shuffle_table(utils_item.get_upgrades_installed(item, item_id, false))
-		local to_keep = dwimg_utils.binomial_sample(#found_upgrades, 100-config.remove_upgrade_chance)
-		if #found_upgrades > 0 and not(to_keep == #found_upgrades ) then 	
-			local clo_itm = alife_create_item(section, db.actor)
-			no_sec_dwg[tostring(clo_itm.id)] = true
-			item_parts.set_parts_con(clo_itm.id, item_parts.get_parts_con(item))
-			local ammo 
-			if IsWeapon(item) then
-				ammo = item:get_ammo_in_magazine()
-				item:unload_magazine(false)
-			end
-			alife_release(item)
-			dwimg_utils.print_dbg("Wait for " .. clo_itm.id)
-			CreateTimeEvent("Wait_for_spawn", clo_itm.id, 0, function(id, to_keep, found_upgrades)
-				if level.object_by_id(id) then
-					if IsWeapon(level.object_by_id(id)) then	
-						level.object_by_id(id):unload_magazine(false)
-					end
-					local skip_upgr = {}
-					local i = 1
-					while to_keep > 0 do
-						while skip_upgr[i] do
-							i = i + 1
-						end
-						local rnd_upgr = found_upgrades[i]
-						if not rnd_upgr then
-							return true
-						end
-						dwimg_utils.print_dbg("try upgrade: " .. rnd_upgr .. " for " .. id .. " with " .. to_keep .. " missing")
-						if not utils_item.has_this_upgrade(level.object_by_id(id), section, rnd_upgr) then
-							inventory_upgrades.force_upgrade = true
-							level.object_by_id(id):install_upgrade(rnd_upgr)
-							if utils_item.has_this_upgrade(level.object_by_id(id), section, rnd_upgr) then
-								to_keep = to_keep - 1
-								skip_upgr[i] = true
-								i=0
-							end
-						end
-						i = i+1
-					end
-					
-					if IsWeapon(level.object_by_id(id)) then
-						level.object_by_id(id):set_ammo_elapsed(ammo)
-					end
-					return true
-				else
-					return false
-				end
-			end, clo_itm.id, to_keep, found_upgrades)
-			dwimg_utils.print_dbg("Cancelled for upgrades: " .. item_id)
-			return
-		end
-	end
-	
-	--downgrade
-	if not(no_sec_dwg[tostring(item_id)]) and dwimg_utils.check_all_lists("devices",section) ~= nil and math.random(1, 100) <= config.downgrade_chance then
-		dwimg_utils.print_dbg("Downgrade: " .. section .. " to " .. dwimg_utils.check_all_lists("devices",section))
-		alife_release(item)
-		local spw_itm = alife_create_item(dwimg_utils.check_all_lists("devices",section), db.actor)
-		no_sec_dwg[tostring(spw_itm.id)] = true
-		--CreateTimeEvent("Wait_for_spawn", spw_itm.id, 0, function(id)
-		--  dwimg_utils.print_dbg("Wait for " .. id)
-		--  if level.object_by_id(id) then
-		--	no_sec_dwg[tostring(id)] = true
-		--	itr_inv(nil, level.object_by_id(id))
-		--	return true
-		--  else
-		--	return false
-		--  end
-		--end, spw_itm.id)
-		dwimg_utils.print_dbg("Cancelled: " .. item_id)
-		return
-	end
-
-	--[[ Here is how to get money value of item if ever needed
-		ini_sys:r_float_ex(section,"cost")
-	]]
-
-	--other condition loss
-	if (config.max_condition_lose2 > 0) then
-		if (IsMelee(item) and config.condition_melee) or (dwimg_utils.get_item_type(item, "condition loss 2") == dwimg_lists.item_type.ARTEFACT_PERK and config.condition_perk_artefact) or (dwimg_utils.get_item_type(item, "condition loss 2") == dwimg_lists.item_type.ARTEFACT_STAT and config.condition_stat_artefact) or (dwimg_utils.get_item_type(item, "condition loss 2") == dwimg_lists.item_type.PELT and config.condition_pelt) then
-			item:set_condition(dwimg_utils.clamp(item:condition()-math.random(config.min_condition_lose2, config.max_condition_lose2)/100,0.01,1))
-		end
-	end
-
-	local chances = scaled_chances(dwimg_utils.get_chances(item, section, item_id), item, section)
-	
-	local loss_roll = math.random(1, 100)
-	local loss_chance = chances[1]
-	local lose = loss_roll <= loss_chance
-
-	local drop_roll = math.random(1, 100)
-	local drop_chance = 100 - chances[2]
-	local drop = drop_roll <= drop_chance
-
-	dwimg_utils.print_dbg("    #Fate said for " .. item_id .. " | lose = " .. tostring(lose) ..  " (" .. loss_roll .. "/" .. loss_chance .. ") | drop = " ..  tostring(drop) .. " (" .. drop_roll .. "/" .. drop_chance .. ")")
-	--disassemble
-	if not(lose) then
-		if main_disassemble(item, drop, r_obj, item_id, section) then
-			alife_release(item)	
-			dwimg_utils.print_dbg("Cancelled for disassemble " .. item_id)
-			return
-		end
-	end
-
-	--drop loss keep
-	if lose then
-		-- I've noticed that for some reason bolts cannot be alife_released properly,
-		-- it always results in a stacktrace. This is a bandaid to prevent that.
-		if not IsBolt(item) then
-			alife_release(item)
-			add_to_dropped_item_list(item, 'l', dropped_stash.id)
-		else
-			dwimg_utils.print_dbg("Ignoring bolt loss " .. item_id)
-		end
-	elseif drop and do_item_dropping then
-		db.actor:transfer_item(item, r_obj)
-		add_to_dropped_item_list(item, 'd', dropped_stash.id)
-	else
-		return
-	end
-			
-end
-
-function actor_on_item_take(obj)
-	local sleep = dwimg_utils.get_sleep_state()
-	if obj and sleep.dead == true then
-		time_item_calc = time_global()
-		dwimg_utils.print_dbg("item spawn hook: [" .. obj:id() .. "]")
-		CreateTimeEvent("Wait_for_death_inits", 0, 0, function(obj)
-			dwimg_utils.print_dbg("Wait for " .. obj:id())
-			if death_init then
-				itr_inv(nil, obj)
-				return true
-			else
-				return false
-			end
-		end, obj)
-	end
-end
+-- ==============================================================
+-- INIT AND CALL PUNISHMENT CALCULATIONS
+-- ==============================================================
 
 function apply_punishments()
 	dropped_stash = nil
@@ -684,9 +240,9 @@ function apply_punishments()
 	dwimg_other_punish.lose_money()
 	dwimg_other_punish.fail_quests()
 
-	ignore_items = dwimg_utils.init_ignore()
-	no_sec_dwg = {}
-	no_sec = {}	
+	dwimg_items.ignore_items = dwimg_utils.init_ignore()
+	dwimg_items.no_sec_dwg = {}
+	dwimg_items.no_sec = {}	
 
 	if (dropped_stash) then
 		local txt = strformat(game.translate_string("st_itm_stash_of_character"), db.actor:character_name())
@@ -705,9 +261,8 @@ function apply_punishments()
 			if (r_obj) then
 				dwimg_utils.print_dbg("Dropped stash %s", dropped_stash.id)
 				death_init = true
-				db.actor:iterate_inventory(itr_inv)
+				db.actor:iterate_inventory(dwimg_items.itr_inv)
 				send_items_report_news_msg(false, dropped_stash.id)
-				dwimg_utils.print_dbg("Finished loss and drop")
 				inventory_upgrades.force_upgrade = false
 				return true
 			end
@@ -718,6 +273,10 @@ function apply_punishments()
 		dwimg_utils.issue("Did not find dropped stash")
 	end
 end
+
+-- ==============================================================
+-- PREPARE AFTER DEATH RESPAWN
+-- ==============================================================
 
 local function delete_empty_stash()
 	local sleep = dwimg_utils.get_sleep_state()
@@ -754,10 +313,28 @@ function on_tutor_gameover_respawn()
 			return false
 		else
 			dwimg_utils.print_dbg("Finished waiting for item calcs and time skip")
+			death_init = false
 			delete_empty_stash()
 			set_player_stats()
 			dwimg_respawn.respawn_teleport()
 			return true
 		end
 	end)	
+end
+
+-- ==============================================================
+-- INIT SCRIPT CALLBACKS
+-- ==============================================================
+
+function on_game_start()
+    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
+    RegisterScriptCallback("on_game_load", on_game_load)
+    options_vol = ui_options.get("sound/general/master_volume")
+	dwimg_utils.print_dbg("V-3-1-p11")
+end
+
+function on_game_load()
+	UnregisterScriptCallback("actor_on_before_death", actor_on_before_death)
+    RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
+    exec_console_cmd("snd_volume_eff " .. options_vol)
 end

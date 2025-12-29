@@ -246,12 +246,12 @@
 		<text>Does not include explosives.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_anti">
-		<text>Override: Scaled chance for dropping ammo [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_scaled">
+		<text>Scaled chance for dropping ammo [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo">
@@ -262,12 +262,12 @@
 		<text>Does not include explosives.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_anti">
-		<text>Override: Scaled chance for losing ammo [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_scaled">
+		<text>Scaled chance for losing ammo [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance">
@@ -278,12 +278,12 @@
 		<text>Includes scopes, suppressors and grenade launchers and detachable gun kits.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_anti">
-		<text>Override: Scaled chance for dropping weapon attachments [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_scaled">
+		<text>Scaled chance for dropping weapon attachments [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments">
@@ -294,12 +294,12 @@
 		<text>Includes scopes, suppressors and grenade launchers and detachable gun kits.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_anti">
-		<text>Override: Scaled chance for losing weapon attachments [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_scaled">
+		<text>Scaled chance for losing weapon attachments [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance">
@@ -310,12 +310,12 @@
 		<text>Includes explosive ammo (for grenade launchers and RPGs) as well as mines/time bombs.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_anti">
-		<text>Override: Scaled chance for dropping explosives [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_scaled">
+		<text>Scaled chance for dropping explosives [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives">
@@ -326,12 +326,12 @@
 		<text>Includes explosive ammo (for grenade launchers and RPGs) as well as mines/time bombs.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_anti">
-		<text>Override: Scaled chance for losing explosives [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_scaled">
+		<text>Scaled chance for losing explosives [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>	
 
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_ammo">
@@ -346,24 +346,24 @@
 		<text>Chance of dropping guns</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_anti">
-		<text>Override: Scaled chance for dropping guns [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_scaled">
+		<text>Scaled chance for dropping guns [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns">
 		<text>Chance of losing guns</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_anti">
-		<text>Override: Scaled chance for losing guns [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_scaled">
+		<text>Scaled chance for losing guns [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_guns">
@@ -374,24 +374,24 @@
 		<text>Chance of dropping armor</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_anti">
-		<text>Override: Scaled chance for dropping armor [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_scaled">
+		<text>Scaled chance for dropping armor [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits">
 		<text>Chance of losing armor</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_anti">
-		<text>Override: Scaled chance for losing armor [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_scaled">
+		<text>Scaled chance for losing armor [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_outfits">
@@ -402,24 +402,24 @@
 		<text>Chance of dropping artefacts and pelts</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_anti">
-		<text>Override: Scaled chance for dropping artefacts and pelts [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_scaled">
+		<text>Scaled chance for dropping artefacts and pelts [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts">
 		<text>Chance of losing artefacts and pelts</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_anti">
-		<text>Override: Scaled chance for losing artefacts and pelts [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_scaled">
+		<text>Scaled chance for losing artefacts and pelts [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance">
@@ -430,12 +430,12 @@
 		<text>Upgraded items are those which can only be obtained by crafting. Most of them are devices and belt attachements.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_anti">
-		<text>Override: Scaled chance for dropping upgraded items [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_scaled">
+		<text>Scaled chance for dropping upgraded items [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>		
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices">
@@ -446,12 +446,12 @@
 		<text>Upgraded items are those which can only be obtained by crafting. Most of them are devices and belt attachements.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_anti">
-		<text>Override: Scaled chance for losing upgraded items [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_scaled">
+		<text>Scaled chance for losing upgraded items [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_punish_break_o_downgrade_chance">
@@ -470,12 +470,12 @@
 		<text>Includes drugmaking kit, gunshmithing tools, artefact melter and hunter kit.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_anti">
-		<text>Override: Scaled chance for dropping kits [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_scaled">
+		<text>Scaled chance for dropping kits [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits">
@@ -486,60 +486,60 @@
 		<text>Includes drugmaking kit, gunshmithing tools and artefact melter.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_anti">
-		<text>Override: Scaled chance for losing kits [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_scaled">
+		<text>Scaled chance for losing kits [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance">
 		<text>Chance of dropping tools</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_anti">
-		<text>Override: Scaled chance for dropping tools [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_scaled">
+		<text>Scaled chance for dropping tools [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools">
 		<text>Chance of losing tools</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_anti">
-		<text>Override: Scaled chance for losing tools [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_scaled">
+		<text>Scaled chance for losing tools [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance">
 		<text>Chance of dropping meds</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_anti">
-		<text>Override: Scaled chance for dropping meds [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_scaled">
+		<text>Scaled chance for dropping meds [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics">
 		<text>Chance of losing meds</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_anti">
-		<text>Override: Scaled chance for losing meds [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_scaled">
+		<text>Scaled chance for losing meds [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_medics">
@@ -554,12 +554,28 @@
 		<text>All items which are not included by any other category mentioned above are considered misc items.</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_anti">
-		<text>Override: Scaled chance for dropping misc items [i]</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_scaled">
+		<text>Scaled chance for dropping misc items [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_anti_desc">
-		<text>Only takes effect if category-based item not-drop scaling chance is enabled. See Item Loss \> Scaling</text>
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items">
+		<text>Chance of losing misc items [i]</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_desc">
+		<text>All items which are not included by any other category mentioned above are considered misc items.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_scaled">
+		<text>Scaled chance for losing misc items [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_scaled_desc">
+		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_keep_inventory">
@@ -646,52 +662,12 @@
 		<text>Chance respawning without hunger and thirst</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items">
-		<text>Chance of losing misc items [i]</text>
-	</string>
-	
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_desc">
-		<text>All items which are not included by any other category mentioned above are considered misc items.</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_anti">
-		<text>Override: Scaled chance for losing misc items [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_anti_desc">
-		<text>Only takes effect if category-based item not-loss scaling chance is enabled. See Item Loss \> Scaling</text>
-	</string>
-	
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier">
-		<text>Increase item loss chance [i]</text>
-	</string>
-	
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_desc">
-		<text>Increases the chance to lose a item depending on rank by up to this amount (%). 30% loss chance and 50% item loss chance increase -> 45% loss chance.</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti">
-		<text>Decrease item not-loss chance [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti_desc">
-		<text>Decrease the chance to not lose a item depending on rank by up to this amount (%). Will use the (not-)loss chance after the loss chance increase was applied. 45% loss chance = 55% not-loss chance. 55% not-loss chance and 50% not-loss decrease -> 27,5% not-loss chance. 27,5% not-loss chance = 72,5% loss chance.</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti_override">
-		<text>Category-based item not-loss chance [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti_override_desc">
-		<text>If enabled, item not-loss scaling chance is configured per item category. The global setting above will be ignored.</text>
-	</string>
-
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from">
 		<text>Loss scaling starts at this rank [i]</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from_desc">
-		<text>Increased loss chances will start at 0% from this rank and scales linearly.</text>
+		<text>Loss chances will start to grow towards scaled loss chances once this rank is reached.</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until">
@@ -699,31 +675,7 @@
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until_desc">
-		<text>Increased loss chance will reach set values at this rank and stay at it.</text>
-	</string>
-	
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier2">
-		<text>Increase item drop chance [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier2_desc">
-		<text>Increases the chance to drop a item depending on rank by up to this amount (%). 20% drop chance and 100% item drop chance increase -> 40% drop chance.</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2">
-		<text>Decrease item not-drop chance [i]</text>
-	</string>
-	
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2_desc">
-		<text>Decrease the chance to not drop a item depending on rank by up to this amount (%). Will use the (not-)drop chance after the loss chance increase was applied. 40% drop chance = 60% not-drop chance. 60% not-drop chance and 10% not-drop decrease -> 54% not-drop chance. 54% not-drop chance = 46% drop chance.</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2_override">
-		<text>Category-based item not-drop chance [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_loss_multiplier_anti2_override_desc">
-		<text>If enabled, item not-drop scaling chance is configured per item category. The global setting above will be ignored.</text>
+		<text>Scaled loss chances will reach set values at this rank and stay at it.</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from2">
@@ -731,7 +683,7 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_from2_desc">
-		<text>Increased drop chances will start at 0% from this rank and scales linearly.</text>
+		<text>Drop chances will start to grow towards scaled drop chances once this rank is reached.</text>
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until2">
@@ -739,7 +691,7 @@
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_rank_scale_until2_desc">
-		<text>Increased drop chance will reach set values at this rank and stay at it.</text>
+		<text>Scaled drop chances will reach set values at this rank and stay at it.</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_loss_scaling_enable_scale">
@@ -1164,7 +1116,11 @@
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_loss_scaling">
-		<text>Item loss scaling over time</text>
+		<text>Item loss scaling over time [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_item_loss_scaling_desc">
+		<text>Will have no effect if setting is of lower difficulty than the item loss difficulty. (Aside from Scaling towards 100%)</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_ignore">

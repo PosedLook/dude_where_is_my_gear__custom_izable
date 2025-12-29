@@ -1,0 +1,143 @@
+function lose_rank_goodwill()
+	db.actor:set_character_rank(db.actor:character_rank() * (1-(dwimg_main.config.rank_loss/100)))
+	
+	local faction = {"stalker", "dolg", "freedom", "csky", "ecolog", "killer", "army", "bandit", "monolith", "greh", "renegade", "isg"}
+	local actor_faction = db.actor:character_community()
+	local faction_loss_flat
+	local faction_loss_perc
+	local faction_minimum
+
+	for i, current_faction in ipairs(faction) do	
+		faction_loss_flat = dwimg_main.config.goodwill_loss_flat
+		faction_loss_perc = dwimg_main.config.goodwill_loss_percent
+		faction_minimum = dwimg_main.config.min_goodwill
+
+		if actor_faction ~= current_faction then
+			if game_relations.is_factions_neutrals(current_faction, actor_faction) and dwimg_main.config.goodwill_neutrals then
+				faction_loss_flat = dwimg_main.config.goodwill_loss_flat_n
+				faction_loss_perc = dwimg_main.config.goodwill_loss_percent_n
+				faction_minimum = dwimg_main.config.min_goodwill_n
+			elseif game_relations.is_factions_enemies(current_faction, actor_faction) and dwimg_main.config.goodwill_enemies then
+				faction_loss_flat = dwimg_main.config.goodwill_loss_flat_e
+				faction_loss_perc = dwimg_main.config.goodwill_loss_percent_e
+				faction_minimum = dwimg_main.config.min_goodwill_e
+			elseif game_relations.is_factions_friends(current_faction, actor_faction) and dwimg_main.config.goodwill_friends then
+				faction_loss_flat = dwimg_main.config.goodwill_loss_flat_f
+				faction_loss_perc = dwimg_main.config.goodwill_loss_percent_f
+				faction_minimum = dwimg_main.config.min_goodwill_f
+			end
+		end
+		
+		faction_goodwill = relation_registry.community_goodwill(current_faction, AC_ID)
+		if faction_goodwill > faction_minimum then
+			faction_goodwill = faction_goodwill - faction_loss_flat
+			if faction_goodwill > faction_minimum then
+				faction_goodwill = math.ceil(faction_goodwill - (faction_goodwill - faction_minimum) * faction_loss_perc * 0.01)
+			end
+			if  faction_goodwill < faction_minimum then
+				faction_goodwill = faction_minimum
+			end
+			relation_registry.set_community_goodwill(current_faction, AC_ID, faction_goodwill )
+		end
+	end
+end
+
+function lose_money()
+	if not(dwimg_main.config.exemption_money and (dwimg_main.config.max_rank_exemption2 > db.actor:character_rank())) then
+		local denominations = {{
+			name = "money_1000",
+			value = 1000
+		}, {
+			name = "money_100",
+			value = 100
+		}, {
+			name = "money_10",
+			value = 10
+		}, {
+			name = "roubles",
+			value = 1
+		}}
+
+		local current_money = db.actor:money()
+		local money_to_lose = math.random(math.floor(current_money * dwimg_main.config.min_money_percentage), math.floor(current_money * dwimg_main.config.max_money_percentage))
+		if money_to_lose > dwimg_main.config.max_lost_money + db.actor:character_rank() * dwimg_main.config.money_y_rank then
+			money_to_lose = dwimg_main.config.max_lost_money + db.actor:character_rank() * dwimg_main.config.money_y_rank
+		end
+		if (current_money - money_to_lose) < dwimg_main.config.min_money_to_keep_general then
+			if (dwimg_main.config.min_money_to_keep_general >= current_money) then
+				money_to_lose = 0
+			else
+				money_to_lose = current_money - dwimg_main.config.min_money_to_keep_general
+			end
+		end
+		if (current_money - money_to_lose) < dwimg_main.config.min_money_to_keep_inventory then
+			if (dwimg_main.config.min_money_to_keep_inventory >= current_money) then
+				money_to_lose = 0
+			else
+				money_to_lose = current_money - dwimg_main.config.min_money_to_keep_inventory
+			end
+		end
+
+        db.actor:give_money(-money_to_lose)
+        
+        current_money = db.actor:money()
+        local money_left = math.floor(math.random((db.actor:money() * dwimg_main.config.min_money_to_drop_percentage),
+            (db.actor:money() * dwimg_main.config.max_money_to_drop_percentage)))
+            
+        if (current_money - money_left) < dwimg_main.config.min_money_to_keep_inventory then
+            if (dwimg_main.config.min_money_to_keep_inventory >= current_money) then
+                money_left = 0
+            else
+                money_left = current_money - dwimg_main.config.min_money_to_keep_inventory
+            end
+        end
+        db.actor:give_money(-money_left)
+
+		for _, denom in ipairs(denominations) do
+			local num_items_to_create = math.floor(money_left / denom.value)
+			money_left = money_left % denom.value
+			for i = 1, num_items_to_create do
+				alife_create_item(denom.name, dropped_stash)
+			end
+		end
+
+		dwimg_utils.print_dbg("Total money to lose: " .. money_to_lose)
+	end
+end
+
+function fail_quests()  
+    local tm = task_manager.get_task_manager()  
+    local task_info = tm.task_info  
+    local task_ini = task_manager.task_ini  
+      
+    for task_id, info in pairs(task_info) do  
+        if db.actor:get_task(task_id, true) and math.random(1,100) <= dwimg_main.config.quest_fail_chance and   
+           info.status ~= "fail" and   
+           info.status ~= "completed" then  
+              
+            local is_storyline = task_ini:r_bool_ex(task_id, "storyline", false)  
+              
+            if not is_storyline then  
+                local stage_complete = task_ini:r_float_ex(task_id, "stage_complete") or 254  
+                local is_at_completion_stage = (info.stage == stage_complete)  
+                  
+                local is_truly_finished = is_at_completion_stage and   
+                                        info.status ~= "fail" and   
+                                        info.status ~= "completed" and  
+                                        info.stage ~= 255  
+                  
+                if not is_truly_finished then  
+                    -- Отметить как отмененное актером, чтобы избежать штрафов  
+                    info.cancelled_by_actor = true  
+                      
+                    -- Использовать стандартный метод провала для правильного уведомления  
+                    tm:set_task_failed(task_id)  
+                      
+                    printf("Failed secondary task without penalty: %s", task_id)  
+                else  
+                    printf("Preserved task ready for reward: %s (stage %s/%s)", task_id, info.stage, stage_complete)  
+                end  
+            end  
+        end  
+    end  
+end

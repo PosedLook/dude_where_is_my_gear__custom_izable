@@ -76,13 +76,7 @@ function on_game_start()
     local ini_stash = ini_file("items\\settings\\backpack_stash.ltx")
     keep_items = utils_data.collect_section(ini_stash, "actor_backpack_keep_items", true)
     RegisterScriptCallback("actor_on_before_death", actor_on_before_death)
-    RegisterScriptCallback("actor_on_sleep", actor_on_sleep)
-    RegisterScriptCallback("actor_on_stash_create", actor_on_stash_create)
-    RegisterScriptCallback("actor_on_stash_remove", actor_on_stash_remove)
     RegisterScriptCallback("on_game_load", on_game_load)
-    --RegisterScriptCallback("actor_on_before_hit", actor_on_before_hit)
-    RegisterScriptCallback("on_before_save_input", on_before_save_input)
-    --RegisterScriptCallback("on_key_press", on_key_press)
 	RegisterScriptCallback("actor_on_item_take", actor_on_item_take)
     options_vol = ui_options.get("sound/general/master_volume")
 	dwimg_utils.print_dbg("V-3-1-p10")
@@ -237,112 +231,6 @@ end
 
 local no_sec_dwg = {}
 local no_sec = {}
-
-local function lose_rank_goodwill()
-
-	db.actor:set_character_rank(db.actor:character_rank() * (1-(config.rank_loss/100)))
-	
-	local faction = {"stalker", "dolg", "freedom", "csky", "ecolog", "killer", "army", "bandit", "monolith", "greh", "renegade", "isg"}
-	local actor_faction = db.actor:character_community()
-	local faction_loss_flat
-	local faction_loss_perc
-	local faction_minimum
-	for i, current_faction in ipairs(faction) do
-		
-		faction_loss_flat = config.goodwill_loss_flat
-		faction_loss_perc = config.goodwill_loss_percent
-		faction_minimum = config.min_goodwill
-		if actor_faction ~= current_faction then
-			if game_relations.is_factions_neutrals(current_faction, actor_faction) and config.goodwill_neutrals then
-				faction_loss_flat = config.goodwill_loss_flat_n
-				faction_loss_perc = config.goodwill_loss_percent_n
-				faction_minimum = config.min_goodwill_n
-			elseif game_relations.is_factions_enemies(current_faction, actor_faction) and config.goodwill_enemies then
-				faction_loss_flat = config.goodwill_loss_flat_e
-				faction_loss_perc = config.goodwill_loss_percent_e
-				faction_minimum = config.min_goodwill_e
-			elseif game_relations.is_factions_friends(current_faction, actor_faction) and config.goodwill_friends then
-				faction_loss_flat = config.goodwill_loss_flat_f
-				faction_loss_perc = config.goodwill_loss_percent_f
-				faction_minimum = config.min_goodwill_f
-			end
-		end
-		
-		faction_goodwill = relation_registry.community_goodwill(current_faction, AC_ID)
-		if faction_goodwill > faction_minimum then
-			faction_goodwill = faction_goodwill - faction_loss_flat
-			if faction_goodwill > faction_minimum then
-				faction_goodwill = math.ceil(faction_goodwill - (faction_goodwill - faction_minimum) * faction_loss_perc * 0.01)
-			end
-			if  faction_goodwill < faction_minimum then
-				faction_goodwill = faction_minimum
-			end
-			relation_registry.set_community_goodwill(current_faction, AC_ID, faction_goodwill )
-		end
-	end
-
-end
-
-local function lose_money()
-	if not(config.exemption_money and (config.max_rank_exemption2 > db.actor:character_rank())) then
-		local denominations = {{
-			name = "money_1000",
-			value = 1000
-		}, {
-			name = "money_100",
-			value = 100
-		}, {
-			name = "money_10",
-			value = 10
-		}, {
-			name = "roubles",
-			value = 1
-		}}
-		local current_money = db.actor:money()
-		local money_to_lose = math.random(math.floor(current_money * config.min_money_percentage), math.floor(current_money * config.max_money_percentage))
-		if money_to_lose > config.max_lost_money + db.actor:character_rank() * config.money_y_rank then
-			money_to_lose = config.max_lost_money + db.actor:character_rank() * config.money_y_rank
-		end
-		if (current_money - money_to_lose) < config.min_money_to_keep_general then
-			if (config.min_money_to_keep_general >= current_money) then
-				money_to_lose = 0
-			else
-				money_to_lose = current_money - config.min_money_to_keep_general
-			end
-		end
-		if (current_money - money_to_lose) < config.min_money_to_keep_inventory then
-			if (config.min_money_to_keep_inventory >= current_money) then
-				money_to_lose = 0
-			else
-				money_to_lose = current_money - config.min_money_to_keep_inventory
-			end
-		end
-		local money_left = 0
-
-			db.actor:give_money(-money_to_lose)
-			current_money = db.actor:money()
-			money_left = math.floor(math.random((db.actor:money() * config.min_money_to_drop_percentage),
-				(db.actor:money() * config.max_money_to_drop_percentage)))
-				
-			if (current_money - money_left) < config.min_money_to_keep_inventory then
-				if (config.min_money_to_keep_inventory >= current_money) then
-					money_left = 0
-				else
-					money_left = current_money - config.min_money_to_keep_inventory
-				end
-			end
-			db.actor:give_money(-money_left)
-
-		for _, denom in ipairs(denominations) do
-			local num_items_to_create = math.floor(money_left / denom.value)
-			money_left = money_left % denom.value
-			for i = 1, num_items_to_create do
-				alife_create_item(denom.name, dropped_stash)
-			end
-		end
-		dwimg_utils.print_dbg("Total money to lose: " .. money_to_lose)
-	end
-end
 
 local function disassemble(section, spw_target)
 	local ind = 1
@@ -779,43 +667,6 @@ function actor_on_item_take(obj)
 	end
 end
 
-function fail_quests()  
-    local tm = task_manager.get_task_manager()  
-    local task_info = tm.task_info  
-    local task_ini = task_manager.task_ini  
-      
-    for task_id, info in pairs(task_info) do  
-        if db.actor:get_task(task_id, true) and math.random(1,100) <= config.quest_fail_chance and   
-           info.status ~= "fail" and   
-           info.status ~= "completed" then  
-              
-            local is_storyline = task_ini:r_bool_ex(task_id, "storyline", false)  
-              
-            if not is_storyline then  
-                local stage_complete = task_ini:r_float_ex(task_id, "stage_complete") or 254  
-                local is_at_completion_stage = (info.stage == stage_complete)  
-                  
-                local is_truly_finished = is_at_completion_stage and   
-                                        info.status ~= "fail" and   
-                                        info.status ~= "completed" and  
-                                        info.stage ~= 255  
-                  
-                if not is_truly_finished then  
-                    -- Отметить как отмененное актером, чтобы избежать штрафов  
-                    info.cancelled_by_actor = true  
-                      
-                    -- Использовать стандартный метод провала для правильного уведомления  
-                    tm:set_task_failed(task_id)  
-                      
-                    printf("Failed secondary task without penalty: %s", task_id)  
-                else  
-                    printf("Preserved task ready for reward: %s (stage %s/%s)", task_id, info.stage, stage_complete)  
-                end  
-            end  
-        end  
-    end  
-end
-
 function apply_punishments()
 	dropped_stash = nil
 	r_obj = nil
@@ -823,130 +674,49 @@ function apply_punishments()
     dropped_stash = alife_create("inv_backpack", db.actor:position(), db.actor:level_vertex_id(), db.actor:game_vertex_id())
     local sleep = dwimg_utils.get_sleep_state()
 	
-			if not sleep.dropped_stashes then
-				sleep.dropped_stashes = {}
+	sleep.dropped_stashes[dropped_stash.id] = {
+		last_dropped_item_list = {},
+		last_lost_item_list = {},
+		time = dwimg_utils.get_game_seconds()
+	}
+
+	dwimg_other_punish.lose_rank_goodwill()
+	dwimg_other_punish.lose_money()
+	dwimg_other_punish.fail_quests()
+
+	ignore_items = dwimg_utils.init_ignore()
+	no_sec_dwg = {}
+	no_sec = {}	
+
+	if (dropped_stash) then
+		local txt = strformat(game.translate_string("st_itm_stash_of_character"), db.actor:character_name())
+		level.map_add_object_spot_ser(dropped_stash.id, "treasure", txt)
+		--actor_menu.set_msg(1, game.translate_string("st_stash_created"), 4)
+
+		local m_data = alife_storage_manager.get_state()
+		if not (m_data.player_created_stashes) then
+			m_data.player_created_stashes = {}
+		end
+
+		m_data.player_created_stashes[dropped_stash.id] = itm_backpack
+		
+		local function transfer_items(id, dwg_sec_check)
+			r_obj = level.object_by_id(id)
+			if (r_obj) then
+				dwimg_utils.print_dbg("Dropped stash %s", dropped_stash.id)
+				death_init = true
+				db.actor:iterate_inventory(itr_inv)
+				send_items_report_news_msg(false, dropped_stash.id)
+				dwimg_utils.print_dbg("Finished loss and drop")
+				inventory_upgrades.force_upgrade = false
+				return true
 			end
-			sleep.dropped_stashes[dropped_stash.id] = {
-				last_dropped_item_list = {},
-				last_lost_item_list = {},
-				time = dwimg_utils.get_game_seconds()
-			}
-
-			lose_rank_goodwill()
-			lose_money()
-			fail_quests()
-
-			ignore_items = dwimg_utils.init_ignore()
-			no_sec_dwg = {}
-			no_sec = {}	
-
-			if (dropped_stash) then
-				local txt = strformat(game.translate_string("st_itm_stash_of_character"), db.actor:character_name())
-				level.map_add_object_spot_ser(dropped_stash.id, "treasure", txt)
-				--actor_menu.set_msg(1, game.translate_string("st_stash_created"), 4)
-
-				local m_data = alife_storage_manager.get_state()
-				if not (m_data.player_created_stashes) then
-					m_data.player_created_stashes = {}
-				end
-
-				m_data.player_created_stashes[dropped_stash.id] = itm_backpack
-				
-				local function transfer_items(id, dwg_sec_check)
-					r_obj = level.object_by_id(id)
-					if (r_obj) then
-						dwimg_utils.print_dbg("Dropped stash %s", dropped_stash.id)
-						death_init = true
-						db.actor:iterate_inventory(itr_inv)
-						send_items_report_news_msg(false, dropped_stash.id)
-						dwimg_utils.print_dbg("Finished loss and drop")
-						inventory_upgrades.force_upgrade = false
-						return true
-					end
-					return false
-				end
-				CreateTimeEvent("RAX SleepSpawn", "actor_backpack", 0, transfer_items, dropped_stash.id, false)
-			end
-end
-
-function save_position(stash_data)
-    local sleep = dwimg_utils.get_sleep_state()
-    pos = db.actor:position()
-    dwimg_utils.print_dbg("SAVE POSITION %s| %s %s %s |", level.name(), pos.x, pos.y, pos.z)
-    if stash_data then
-        sleep.stash_save = {}
-        sleep.stash_created = true
-        sleep.stash_save.level = level.name()
-        sleep.stash_save.posX = pos.x
-        sleep.stash_save.posY = pos.y
-        sleep.stash_save.posZ = pos.z
-        sleep.stash_save.position = vector():set(sleep.stash_save.posX or 0, sleep.stash_save.posY or 0,
-            sleep.stash_save.posZ or 0)
-        sleep.stash_save.level_vert = db.actor:level_vertex_id()
-        sleep.stash_save.game_vert = db.actor:game_vertex_id()
-        sleep.stash_save.stash_id = stash_data.stash_id
-        sleep.type = "stash"
-        level.map_add_object_spot_ser(stash_data.stash_id, "ui_pda2_actor_sleep_location", "Respawn")
-    else
-        sleep.level = level.name()
-        sleep.posX = pos.x
-        sleep.posY = pos.y
-        sleep.posZ = pos.z
-        sleep.position = vector():set(sleep.posX or 0, sleep.posY or 0, sleep.posZ or 0)
-        sleep.level_vert = db.actor:level_vertex_id()
-        sleep.game_vert = db.actor:game_vertex_id()
-        sleep.sleep_created = true
-        sleep.type = "sleep"
-    end
-    local save_message = strformat("Respawn point set.", text)
-    exec_console_cmd("main_menu off")
-    actor_menu.set_msg(1, save_message, 4) 
-end
-
-function actor_on_sleep()
-    if not config.use_sleep_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
-		return
+			return false
+		end
+		CreateTimeEvent("RAX SleepSpawn", "actor_backpack", 0, transfer_items, dropped_stash.id, false)
+	else
+		dwimg_utils.issue("Did not find dropped stash")
 	end
-	local sleep = dwimg_utils.get_sleep_state()
-	dwimg_utils.print_dbg("SET POSITION on SLEEP " .. tostring(config.use_sleep_respawn))
-	sleep.sleep_created = true
-	save_position()
-end
-
-function actor_on_stash_create(stash_data)
-    if not(config.use_stash_respawn) or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
-		return
-	end
-    local sleep = dwimg_utils.get_sleep_state()
-    sleep.stash_created = true
-    save_position(stash_data)
-end
-
-function actor_on_stash_remove(stash_data)
-    local sleep = dwimg_utils.get_sleep_state()
-    if sleep.stash_save and (stash_data.stash_id == sleep.stash_save.stash_id) then
-        sleep.stash_created = false;
-        sleep.stash_save = nil
-        sleep.type = "sleep"
-    end
-    if sleep.dropped_stashes and sleep.dropped_stashes[stash_data.stash_id] then
-        send_items_report_news_msg(true, stash_data.stash_id)
-        sleep.dropped_stashes[stash_data.stash_id] = nil
-    end
-end
-
-function on_before_save_input(flags, typ_, text)
-	if not config.use_campfire_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
-		return
-	end
-    local sleep = dwimg_utils.get_sleep_state()
-    local nearby_campfire = bind_campfire.get_nearby_campfire(10, true)
-    if not nearby_campfire then
-        return
-    end
-	dwimg_utils.print_dbg("SET POSITION on CAMPFIRE " .. tostring(config.use_campfire_respawn))
-	sleep.sleep_created = true
-	save_position()
 end
 
 local function delete_empty_stash()
@@ -977,60 +747,6 @@ local function set_player_stats()
 	actor_status_thirst.actor_on_update()
 end
 
-local function respawn_teleport()
-	local sleep = dwimg_utils.get_sleep_state()
-	
-	if sleep and (sleep.posX and sleep.level and (sleep.level ~= level.name())) or
-		(sleep.stash_save and sleep.stash_save.posX and sleep.stash_save.level and
-			(sleep.stash_save.level ~= level.name())) then
-		dwimg_utils.print_dbg("SAME LEVEL TELEPORT")
-		if sleep.stash_created and config.use_stash_respawn then
-			ChangeLevel(vector():set(sleep.stash_save.posX, sleep.stash_save.posY, sleep.stash_save.posZ), sleep.stash_save.level_vert,
-				sleep.stash_save.game_vert, VEC_ZERO, false)
-		else
-			ChangeLevel(vector():set(sleep.posX, sleep.posY, sleep.posZ), sleep.level_vert,
-				sleep.game_vert, VEC_ZERO, false)
-		end
-	elseif sleep and (sleep.posX or sleep.stash_save and sleep.stash_save.posX) then
-		local player_lvid = db.actor:level_vertex_id()
-		local player_gvid = db.actor:game_vertex_id()
-		dwimg_utils.print_dbg("DIFFERENT LEVEL TELEPORT")
-		if sleep.stash_created and config.use_stash_respawn then
-			xr_effects.change_level_now(vector():set(sleep.stash_save.posX,  sleep.stash_save.posY, sleep.stash_save.posZ), player_lvid,
-				player_gvid, VEC_ZERO, false)
-		else
-			xr_effects.change_level_now(vector():set(sleep.posX, sleep.posY, sleep.posZ), player_lvid,
-				player_gvid, VEC_ZERO, false)
-		end
-	elseif db.actor:character_community() == "actor_stalker" then -- if loner >>
-		dwimg_utils.print_dbg("LONER TELEPORT")
-		xr_effects.change_level_now(vector():set(-246.0744, -24.8076, -136.0753), 14372, 372, VEC_ZERO, true) -- sidorovich's bunker
-	elseif db.actor:character_community() == "actor_army" then -- if military >>
-		xr_effects.change_level_now(vector():set(-123.26, -28.4, -379.96), 133511, 450, VEC_ZERO, true) -- southern checkpoint
-	elseif db.actor:character_community() == "actor_bandit" then -- if bandit >>
-		xr_effects.change_level_now(vector():set(20.72, 7.85, -42.93), 189149, 1515, VEC_ZERO, true) -- northern fdb.actory
-	elseif db.actor:character_community() == "actor_csky" then -- if clear sky >>
-		xr_effects.change_level_now(vector():set(-140.56, 1.5, -317.99), 75660, 136, VEC_ZERO, true) -- hidden base
-	elseif db.actor:character_community() == "actor_dolg" then -- if duty >>
-		xr_effects.change_level_now(vector():set(229.09, -5.449, 128.31), 59298, 1704, VEC_ZERO, true) -- duty headquarter
-	elseif db.actor:character_community() == "actor_ecolog" then -- if ecologist >>
-		xr_effects.change_level_now(vector():set(28.96, -10.05, -280.12), 78646, 2281, VEC_ZERO, true) -- sakharovs bunker
-	elseif db.actor:character_community() == "actor_freedom" then -- if freedom >>
-		xr_effects.change_level_now(vector():set(-18.02, -2.46, -31.74), 274912, 2092, VEC_ZERO, true) -- military base
-	elseif db.actor:character_community() == "actor_killer" then -- if mercenary >>
-		xr_effects.change_level_now(vector():set(-56.6, 8.92, 37.57), 96425, 2367, VEC_ZERO, true) -- sports center
-	elseif db.actor:character_community() == "actor_monolith" then -- if monolith >>
-		xr_effects.change_level_now(vector():set(-3.59, -3.50, 189.80), 98087, 3069, VEC_ZERO, true) -- cultural center
-	elseif db.actor:character_community() == "actor_monolith" then -- if sin >>
-		xr_effects.change_level_now(vector():set(-152.36056518555, 2.2933793067932, -26.791021347046), 5570, 2772,
-			VEC_ZERO, true) -- red forest old mine
-	elseif db.actor:character_community() == "actor_renegade" then -- if renegade >>
-		xr_effects.change_level_now(vector():set(-179.78, 4.13, 417.23), 52100, 80, VEC_ZERO, true) -- tuzla outpost
-	else -- if unisg/ other >>
-		xr_effects.change_level_now(vector():set(136.32, 28.9, 240.395), 348892, 4920, VEC_ZERO, true) -- hideout in outskirts
-	end
-end
-
 function on_tutor_gameover_respawn()
 	CreateTimeEvent("Wait_for_item_calc", time_item_calc, 0, function() 
 		if time_item_calc + 1000 > time_global() then
@@ -1040,7 +756,7 @@ function on_tutor_gameover_respawn()
 			dwimg_utils.print_dbg("Finished waiting for item calcs and time skip")
 			delete_empty_stash()
 			set_player_stats()
-			respawn_teleport()
+			dwimg_respawn.respawn_teleport()
 			return true
 		end
 	end)	

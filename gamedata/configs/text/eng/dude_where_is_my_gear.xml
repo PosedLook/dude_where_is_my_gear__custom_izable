@@ -247,12 +247,9 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_scaled">
-		<text>Scaled chance for dropping ammo [i]</text>
+		<text>Scaled max chance of dropping ammo</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_ammo_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo">
 		<text>Chance of losing ammo [i]</text>
@@ -263,11 +260,7 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_scaled">
-		<text>Scaled chance for losing ammo [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_ammo_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
+		<text>Scaled max chance of losing ammo</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance">
@@ -279,13 +272,9 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_scaled">
-		<text>Scaled chance for dropping weapon attachments [i]</text>
+		<text>Scaled max chance of dropping weapon attachments</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_gun_attachment_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments">
 		<text>Chance of losing weapon attachments [i]</text>
 	</string>
@@ -295,13 +284,9 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_scaled">
-		<text>Scaled chance for losing weapon attachments [i]</text>
+		<text>Scaled max chance of losing weapon attachments</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_gun_attachments_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance">
 		<text>Chance of dropping explosives [i]</text>
 	</string>
@@ -311,13 +296,9 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_scaled">
-		<text>Scaled chance for dropping explosives [i]</text>
+		<text>Scaled max chance of dropping explosives</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_explosives_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives">
 		<text>Chance of losing explosives [i]</text>
 	</string>	
@@ -327,12 +308,8 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_scaled">
-		<text>Scaled chance for losing explosives [i]</text>
+		<text>Scaled max chance of losing explosives</text>
 	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_explosives_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>	
 
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_ammo">
 		<text>Enable protection for ammo [i]</text>
@@ -347,25 +324,17 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_scaled">
-		<text>Scaled chance for dropping guns [i]</text>
+		<text>Scaled max chance of dropping guns</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_guns_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns">
 		<text>Chance of losing guns</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_scaled">
-		<text>Scaled chance for losing guns [i]</text>
+		<text>Scaled max chance of losing guns</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_guns_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_guns">
 		<text>Enable protection for guns</text>
 	</string>
@@ -375,25 +344,17 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_scaled">
-		<text>Scaled chance for dropping armor [i]</text>
+		<text>Scaled max chance of dropping armor</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_outfit_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits">
 		<text>Chance of losing armor</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_scaled">
-		<text>Scaled chance for losing armor [i]</text>
+		<text>Scaled max chance of losing armor</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_outfits_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_outfits">
 		<text>Enable protection for armors</text>
 	</string>
@@ -403,25 +364,17 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_scaled">
-		<text>Scaled chance for dropping artefacts and pelts [i]</text>
+		<text>Scaled max chance of dropping artefacts and pelts</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_artefact_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts">
 		<text>Chance of losing artefacts and pelts</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_scaled">
-		<text>Scaled chance for losing artefacts and pelts [i]</text>
+		<text>Scaled max chance of losing artefacts and pelts</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_artefacts_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance">
 		<text>Chance of dropping upgraded items [i]</text>
 	</string>
@@ -431,13 +384,9 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_scaled">
-		<text>Scaled chance for dropping upgraded items [i]</text>
+		<text>Scaled max chance of dropping upgraded items</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_device_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>		
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices">
 		<text>Chance of losing upgraded items [i]</text>
 	</string>
@@ -447,11 +396,7 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_scaled">
-		<text>Scaled chance for losing upgraded items [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_devices_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
+		<text>Scaled max chance of losing upgraded items</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_punish_break_o_downgrade_chance">
@@ -471,13 +416,9 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_scaled">
-		<text>Scaled chance for dropping kits [i]</text>
+		<text>Scaled max chance of dropping kits</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_kits_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits">
 		<text>Chance of losing kits [i]</text>
 	</string>
@@ -487,35 +428,23 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_scaled">
-		<text>Scaled chance for losing kits [i]</text>
+		<text>Scaled max chance of losing kits</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_kits_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance">
 		<text>Chance of dropping tools</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_scaled">
-		<text>Scaled chance for dropping tools [i]</text>
+		<text>Scaled max chance of dropping tools</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_tools_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools">
 		<text>Chance of losing tools</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_scaled">
-		<text>Scaled chance for losing tools [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_tools_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
+		<text>Scaled max chance of losing tools</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance">
@@ -523,25 +452,17 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_scaled">
-		<text>Scaled chance for dropping meds [i]</text>
+		<text>Scaled max chance of dropping meds</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_medics_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics">
 		<text>Chance of losing meds</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_scaled">
-		<text>Scaled chance for losing meds [i]</text>
+		<text>Scaled max chance of losing meds [i]</text>
 	</string>
 
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_medics_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
-	</string>
-	
 	<string id="ui_mcm_dude_where_is_my_gear_protection_exemption_medics">
 		<text>Protect meds</text>
 	</string>
@@ -555,11 +476,7 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_scaled">
-		<text>Scaled chance for dropping misc items [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_keep_misc_items_chance_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
+		<text>Scaled max chance of dropping misc items</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items">
@@ -571,11 +488,7 @@
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_scaled">
-		<text>Scaled chance for losing misc items [i]</text>
-	</string>
-
-	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_scaled_desc">
-		<text>Ignored if less than regular chance\n Enable and set scaling under Item Loss \> Scaling</text>
+		<text>Scaled max chance of losing misc items</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_keep_inventory">
@@ -1014,7 +927,15 @@
 	<string id="ui_mcm_dwimg_loss_desc">
 		<text>Loss chance will be rolled first. Drop chance second. If neither succeeds the item will be kept. (E.g. 50% loss chance and 60% drop chance results in: 50% lost, 30% dropped and 20% kept)</text>
 	</string>
-	
+
+	<string id="ui_mcm_dwimg_scaling_1_desc">
+		<text>If scaling is enabled, drop and loss chances are initially set to their starting values, and will progress up to the "Scaled max" depending on the player's progress between the scaling min and max rank.</text>
+	</string>
+
+	<string id="ui_mcm_dwimg_scaling_2_desc">
+		<text>Scaled max chances only take effect if scaling is enabled under Item Loss &gt; Scaling. If a scaled max chance is lower than the starting chance, it will have no effect.</text>
+	</string>
+
 	<string id="ui_mcm_dude_where_is_my_gear_presets_custom_presets_chosen_preset">
 		<text>Select preset slot</text>
 	</string>

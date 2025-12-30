@@ -1,7 +1,7 @@
 # Dude, Where's My Gear?!
 
 A mod for S.T.A.L.K.E.R. Anomaly GAMMA <br> <br>
-*(may work for Vanilla Anomaly too but it is not fully supportet)*
+*(may work for Vanilla Anomaly too but it is not fully supported)*
 
 ## Original Mod & Author
 This [mod](https://www.moddb.com/mods/stalker-anomaly/addons/dude-wheres-my-gear) was originally made by [santii](https://www.moddb.com/members/santii90).

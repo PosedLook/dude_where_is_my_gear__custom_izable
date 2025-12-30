@@ -87,6 +87,8 @@ function on_mcm_load()
 	
 	local lose_keep = {id = "lose_keep", text = "ui_mcm_dwimg_lose_keep", sh = true, gr = {
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_loss_desc", clr = {255, 255 ,255 ,255}, },
+		{id = "desc_scaling_1",						type = "desc", text = "ui_mcm_dwimg_scaling_1_desc", clr = {255, 255 ,255 ,255}, },
+		{id = "desc_scaling_2", 					type = "desc", text = "ui_mcm_dwimg_scaling_2_desc", clr = {150, 213, 255,255}, },
 		{id = "chance_of_losing_guns",	 			type = "track", val = 2, min=0,    max=100,  step=1,    def = 0},
 		{id = "chance_of_losing_guns_scaled",		type = "track", val = 2, min=0,    max=100,  step=1,    def = 0},
 		{id = "keep_guns_chance",          			type = "track", val = 2, min=0,    max=100,  step=1,    def = 0},

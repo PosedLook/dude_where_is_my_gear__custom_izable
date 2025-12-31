@@ -276,9 +276,6 @@ local function main_disassemble(item, drop, obj, item_id, section)
 			spw_target = obj
 		end
 		if IsWeapon(item) or IsOutfit(item) or IsHeadgear(item) then
-			if IsWeapon(item) then
-				item:unload_magazine(true)
-			end
 
 			local spw_prt
 			local parts = item_parts.get_parts_con(item)
@@ -332,20 +329,24 @@ end
 -- ==============================================================
 
 function itr_inv(temp, item)
-	dwimg_utils.print_dbg("item: " .. item:section() .. " [" .. item:id() .. "]")
-	dwimg_utils.print_dbg(ini_sys:r_string_ex(item:section(), "kind"))
+	dwimg_utils.print_dbg("item: " .. item:section() .. " [" .. ini_sys:r_string_ex(item:section(), "kind") .. "] " .. " [" .. item:id() .. "]")
 	local section = item:section()
 	local item_id = item:id()
 	dwimg_main.time_item_calc = time_global()
 	--if ini_sys:r_float_ex(section,"cost") ~= nil and ini_sys:r_float_ex(section,"cost") ~= 0 then 
 	--	dwimg_utils.print_dbg("Cost of " .. item_id .. " is " .. ini_sys:r_float_ex(section,"cost"))
 	--end
-	
-	if ignore_items[section] then
-		dwimg_utils.print_dbg("Stopped for ignore: " .. item_id)
-	   return
+
+	if ini_sys:r_bool_ex(section, "quest_item", false) then
+		dwimg_utils.print_dbg("Stopped for quest_item: " .. item_id)
+		return
 	end
-	
+
+	if no_sec[tostring(item_id)] then
+		dwimg_utils.print_dbg("Stopped for no spawn hook: " .. item_id)
+		return
+	end
+
 	if dwimg_utils.get_item_type(item, "Quest item stop itr_inv") == dwimg_lists.item_type.QUEST then
 		dwimg_utils.print_dbg("Stopped for QuestKind: " .. item_id)
 		return
@@ -355,20 +356,56 @@ function itr_inv(temp, item)
 		dwimg_utils.print_dbg("Stopped for b_id: " .. item_id)
 		return
 	end
+
+	if ignore_items[section] then
+		dwimg_utils.print_dbg("Stopped for ignore: " .. item_id)
+	   return
+	end
 	
 	if keep_items[section] ~= nil and not(dwimg_utils.check_all_lists("anti_keepers",section)) then
 		dwimg_utils.print_dbg("Stopped for keep_items: " .. item_id)
 		return
 	end
-						
-	if ini_sys:r_bool_ex(section, "quest_item", false) then
-		dwimg_utils.print_dbg("Stopped for quest_item: " .. item_id)
-		return
+
+	if dwimg_utils.get_item_type(item, nil) == dwimg_lists.item_type.GUN then
+		if magazines and magazine_binder and magazines.eject_magazine and magazine_binder.is_supported_weapon and magazine_binder.is_supported_weapon(item) then
+			magazines.eject_magazine(item)
+		else
+			item:force_unload_magazine(true)
+		end
 	end
 
-	if no_sec[tostring(item_id)] then
-		dwimg_utils.print_dbg("Stopped for no spawn hook: " .. item_id)
-		return
+	--remove scope, silencer and gl
+	if dwimg_utils.get_item_type(item, nil) == dwimg_lists.item_type.GUN then					
+		detach_suppressor_dwimg(item)
+		detach_gl_dwimg(item)
+		if detach_scope_dwimg(item) ~= nil then
+			dwimg_utils.print_dbg("Cancelled for scope: " .. item_id)
+			return
+		end
+	end
+
+	--remove psu and convert overflow power to exo batteries_exo
+	if IsOutfit(item) and item_exo_device.is_exo(item) and item_exo_device.check_remove_psu(item) == "st_remove_psu" then
+		local power_overflow = 0
+		if item_exo_device.get_data(item_id).power > 100 then
+			power_overflow = item_exo_device.get_data(item_id).power - 100
+		end
+		while power_overflow > 0 do 
+			local new_bat = alife_create_item("batteries_exo", db.actor)
+			no_sec[tostring(new_bat.id)] = true
+			CreateTimeEvent("Wait_for_spawn", new_bat.id, 0, function(id, charge)
+			dwimg_utils.print_dbg("Wait for " .. id)
+			if level.object_by_id(id) then
+				level.object_by_id(id):set_condition(charge/100)
+				return true
+			else
+				return false
+			end
+			end, new_bat.id, dwimg_utils.clamp(power_overflow, 0, 100))
+			power_overflow = power_overflow - dwimg_utils.clamp(power_overflow, 0, 100)
+		end
+		item_exo_device.remove_psu(item)
 	end
 	
 	if get_exemption(item, section) then
@@ -409,7 +446,6 @@ function itr_inv(temp, item)
 			end
 		elseif (IsOutfit(item) or IsHeadgear(item)) and (item_backpack.is_in_slot(item) or dwimg_main.config.condition_unequipped) then
 				local condition = item:condition()
-				-- if killed by elemental damage increase condition lose of equipped items
 				local condition_reduction =
 					(math.random(dwimg_main.config.min_condition_lose, dwimg_main.config.max_condition_lose)) / 100
 				if ((dwimg_main.config.min_armor_condition / 100) < condition ) then
@@ -442,40 +478,6 @@ function itr_inv(temp, item)
 		parts[section] = sum/cnt
 		item_parts.set_parts_con(item_id, parts)
 		
-	end
-
-	--remove scope, silencer and gl
-	if IsWeapon(item) and not(ini_sys:r_string_ex(section, "kind") == "w_explosive" or IsMelee(item) or IsGrenade(item)) then					
-		local scope = detach_scope_dwimg(item)
-		if scope ~= nil then
-			dwimg_utils.print_dbg("Cancelled for scope: " .. item_id)
-			return
-		end
-		detach_suppressor_dwimg(item)
-		detach_gl_dwimg(item)
-	end
-
-	--remove psu and convert overflow power to exo batteries_exo
-	if IsOutfit(item) and item_exo_device.is_exo(item) and item_exo_device.check_remove_psu(item) == "st_remove_psu" then
-		local power_overflow = 0
-		if item_exo_device.get_data(item_id).power > 100 then
-			power_overflow = item_exo_device.get_data(item_id).power - 100
-		end
-		while power_overflow > 0 do 
-			local new_bat = alife_create_item("batteries_exo", db.actor)
-			no_sec[tostring(new_bat.id)] = true
-			CreateTimeEvent("Wait_for_spawn", new_bat.id, 0, function(id, charge)
-			dwimg_utils.print_dbg("Wait for " .. id)
-			if level.object_by_id(id) then
-				level.object_by_id(id):set_condition(charge/100)
-				return true
-			else
-				return false
-			end
-			end, new_bat.id, dwimg_utils.clamp(power_overflow, 0, 100))
-			power_overflow = power_overflow - dwimg_utils.clamp(power_overflow, 0, 100)
-		end
-		item_exo_device.remove_psu(item)
 	end
 	
 	--remove upgrades
@@ -540,16 +542,6 @@ function itr_inv(temp, item)
 		alife_release(item)
 		local spw_itm = alife_create_item(dwimg_utils.check_all_lists("devices",section), db.actor)
 		no_sec_dwg[tostring(spw_itm.id)] = true
-		--CreateTimeEvent("Wait_for_spawn", spw_itm.id, 0, function(id)
-		--  dwimg_utils.print_dbg("Wait for " .. id)
-		--  if level.object_by_id(id) then
-		--	no_sec_dwg[tostring(id)] = true
-		--	itr_inv(nil, level.object_by_id(id))
-		--	return true
-		--  else
-		--	return false
-		--  end
-		--end, spw_itm.id)
 		dwimg_utils.print_dbg("Cancelled: " .. item_id)
 		return
 	end
@@ -608,19 +600,12 @@ end
 -- SCRIPT CALLBACKS
 -- ==============================================================
 
-function actor_on_item_take(obj)
+function actor_on_item_take(item)
 	local sleep = dwimg_utils.get_sleep_state()
-	if obj and sleep.dead == true then
+	if item and dwimg_main.death_init then
+		dwimg_utils.print_dbg("item spawn hook# " .. "item: " .. item:section() .. " [" .. ini_sys:r_string_ex(item:section(), "kind") .. "] " .. " [" .. item:id() .. "]")
 		dwimg_main.time_item_calc = time_global()
-		dwimg_utils.print_dbg("item spawn hook: [" .. obj:id() .. "]")
-		CreateTimeEvent("Wait_for_dead_item_spawns", 0, 0, function(obj)
-			if dwimg_main.death_init then
-				itr_inv(nil, obj)
-				return true
-			else
-				return false
-			end
-		end, obj)
+		itr_inv(nil, item)
 	end
 end
 

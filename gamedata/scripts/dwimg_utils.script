@@ -160,7 +160,8 @@ function get_item_type(item, dbg_info)
 	elseif g_type == "i_quest" then
 		r_type = dwimg_lists.item_type.QUEST
 	end
-	
-	print_dbg("Item type of <" .. tostring(item:section()) .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
+	if dbg_info then
+		print_dbg("Item type of <" .. tostring(item:section()) .. "> for <" .. dbg_info .. "> is <" .. r_type .. ">")
+	end
 	return r_type
 end

@@ -97,7 +97,7 @@ function lose_money()
 			local num_items_to_create = math.floor(money_left / denom.value)
 			money_left = money_left % denom.value
 			for i = 1, num_items_to_create do
-				alife_create_item(denom.name, dropped_stash)
+				alife_create_item(denom.name, dwimg_main.dropped_stash)
 			end
 		end
 

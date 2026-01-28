@@ -314,6 +314,7 @@ function on_tutor_gameover_respawn()
 		else
 			dwimg_utils.print_dbg("Finished waiting for item calcs and time skip")
 			death_init = false
+			dwimg.items.handle_reattaching()
 			delete_empty_stash()
 			set_player_stats()
 			dwimg_respawn.respawn_teleport()

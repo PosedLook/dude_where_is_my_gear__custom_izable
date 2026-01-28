@@ -1,4 +1,6 @@
 local keep_items = nil
+local reattach = {}
+local expect_reattach = {}
 
 ignore_items = nil
 no_sec_dwg = {}
@@ -181,6 +183,27 @@ end
 -- DETACH WEAPON ATTACHEMENTS
 -- --------------------------------------------------------------
 
+function handle_reattaching()
+	for k, v in pairs(reattach) do
+		local base_item = alife_object(k)
+		if v.new_item and alife_object(v.new_item.id) and v.new_item.sec == alife_object(v.new_item.id):section() then
+			base_item = alife_object(v.new_item.id)
+		end
+		if base_item == nil then
+			dwimg_utils.print_dbg("Reattach for " .. tostring(k) .. " has no (longer) a base to attach to")
+		else
+			for k2, v2 in pairs(v) do
+				if k2 == "scope" and alife_object(v2.id) and alife_object(v2.id):section() == v2.sec  then
+					item_weapon.attach_scope(alife_object(v2.id), base_item)
+				end
+				if (k2 == "sil" or k2 == "gl") and alife_object(v2.id) and alife_object(v2.id):section() == v2.sec  then
+					base_item:weapon_addon_attach(alife_object(v2.id))
+				end
+			end
+		end
+	end
+end
+
 local function detach_scope_dwimg(weapon)
 	local detach_infos = {
 	["spw_wpn"] = nil,
@@ -208,6 +231,11 @@ local function detach_scope_dwimg(weapon)
 	-- Create objects for the 'before' and 'after' detachment weapons.
 	local new_weapon = old_weapon and alife_clone_weapon(old_weapon, parent_section)
 	detach_infos["spw_wpn"] = new_weapon
+	if reattach[weapon:id()] == nil then
+		reattach[weapon:id()] = {sec = weapon:section()}
+	end
+	reattach[weapon:id()].new_item, reattach[weapon:id()].scope = {id = detach_infos["spw_wpn"]:id(), sec = detach_infos["spw_wpn"]:section()}, {id = detach_infos["spw_att"]:id(), sec = detach_infos["spw_att"]:section()}
+	
 	return detach_infos
 end
 
@@ -215,8 +243,12 @@ local function detach_suppressor_dwimg(weapon)
 	if weapon:weapon_silencer_status() == 2 then
 		if weapon:weapon_is_silencer() then
 			local supSection = utils_item.get_param(weapon:section(), weapon:id(), "silencer_name", "string")
-			local sil_info = {id = weapon:id(), section = supSection}
+			local sil_info = {id = weapon:id(), section = supSection}		
 			weapon:weapon_addon_detach(sil_info.section, true)
+			if expect_reattach[weapon:id()] == nil then
+				expect_reattach[weapon:id()] = {sec = weapon:section()}
+			end
+			expect_reattach[weapon:id()].section, expect_reattach[weapon:id()].type = sil_info.section, "sil"
 			return true
 		end
 	end
@@ -229,6 +261,10 @@ local function detach_gl_dwimg(weapon)
 			local supSection = utils_item.get_wpn_param(obj, weapon:section(), "grenade_launcher_name")
 			local gl_info = {id = weapon:id(), section = supSection}
 			weapon:weapon_addon_detach(gl_info.section, true)
+			if expect_reattach[weapon:id()] == nil then
+				expect_reattach[weapon:id()] = {sec = weapon:section()}
+			end
+			expect_reattach[weapon:id()].section, expect_reattach[weapon:id()].type = gl_info.section, "gl"
 			return true		
 		end
 	end
@@ -605,6 +641,18 @@ function actor_on_item_take(item)
 	if item and dwimg_main.death_init then
 		dwimg_utils.print_dbg("item spawn hook# " .. "item: " .. item:section() .. " [" .. ini_sys:r_string_ex(item:section(), "kind") .. "] " .. " [" .. item:id() .. "]")
 		dwimg_main.time_item_calc = time_global()
+		
+		for	k, v in pairs(expect_reattach) do
+			if v.section == item:section() then
+				dwimg_utils.print_dbg("Found reattach info " .. "[" .. item:id() ..  "]")
+				if reattach.k == nil then
+					reattach.k = {sec = v.sec}
+				end
+				reattach.k[v.type] = {id = item:id(), sec = item:section() }
+				break
+			end
+		end
+
 		itr_inv(nil, item)
 	end
 end

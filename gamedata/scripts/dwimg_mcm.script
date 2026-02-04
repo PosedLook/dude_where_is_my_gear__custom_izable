@@ -158,6 +158,14 @@ function on_mcm_load()
 
 	}}
 	table.insert(item_loss.gr, loss_scaling)
+
+	local stash_item_loss = {id = "stash_item_loss", text = "ui_mcm_dwimg_stash_item_loss", sh = true, gr = {
+		{id = "stash_loss_desc",					type = "desc", text = "ui_mcm_dwimg_stash_item_loss_desc", clr = {255, 255 ,255 ,255}, },
+		{id = "stash_loss_chance",        	        type = "input", val = 2, min=0, max=100, def = 0},
+		{id = "stash_loss_start",        	        type = "track", val = 2, min=0,    max=96,  step=1,    def = 0},
+		{id = "consider_loss_chance",  	     	  	type = "check", val = 1, def = true},
+	}}
+	table.insert(item_loss.gr, stash_item_loss)
 	
 	local item_punish = {id = "item_punish", text = "ui_mcm_dwimg_item_punish", gr = {}}
 	table.insert(op.gr, item_punish)

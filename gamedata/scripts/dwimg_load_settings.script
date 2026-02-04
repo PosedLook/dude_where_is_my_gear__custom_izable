@@ -107,7 +107,12 @@ local function load_settings_item_loss()
 	end
 	if dwimg_main.config.rank_scale_until2 <= dwimg_main.config.rank_scale_from2 then
 		dwimg_main.config.rank_scale_until2 = dwimg_main.config.rank_scale_from2 + 1
-	end		
+	end
+	--stash item loss
+	dwimg_main.config.stash_loss_chance = dwimg_mcm.get_config("item_loss/stash_item_loss/stash_loss_chance")
+	dwimg_main.config.stash_loss_start = dwimg_mcm.get_config("item_loss/stash_item_loss/stash_loss_start")
+	dwimg_main.config.consider_loss_chance = dwimg_mcm.get_config("item_loss/stash_item_loss/consider_loss_chance")
+	dwimg_items.settings_loaded()
 end
 
 local function load_settings_ignore()

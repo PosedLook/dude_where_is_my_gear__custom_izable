@@ -34,6 +34,10 @@
 		<text>Scaling</text>
 	</string>
 
+    <string id="ui_mcm_dwimg_stash_item_loss">
+		<text>Stash item loss</text>
+	</string>
+
     <string id="ui_mcm_dwimg_protection">
 		<text>Grace period</text>
 	</string>
@@ -489,6 +493,30 @@
 
 	<string id="ui_mcm_dude_where_is_my_gear_item_loss_lose_keep_chance_of_losing_items_scaled">
 		<text>Scaled max chance of losing misc items</text>
+	</string>
+	
+	<string id="ui_mcm_dwimg_stash_item_loss_desc">
+		<text>Lose items over time from your dropped stash if you don't recover them fast enough.</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_stash_item_loss_stash_loss_chance">
+		<text>Chance to lose item per hour</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_stash_item_loss_stash_loss_chance">
+		<text>Chance to lose item per hour</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_stash_item_loss_stash_loss_start">
+		<text>Item loss starts after X hours</text>
+	</string>
+	
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_stash_item_loss_consider_loss_chance">
+		<text>Consider item category [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_item_loss_stash_item_loss_consider_loss_chance_desc">
+		<text>The loss chance ever hour is multiplied by the loss chance of the item category (e.g. items with 0% loss chance are never lost from dropped stashes, with 50% half as fast and with 100% at normal rate)</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_money_min_money_to_keep_inventory">

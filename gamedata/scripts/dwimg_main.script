@@ -67,7 +67,7 @@ local function create_report_msg_string(list_lost_only, stash_id)
     return msg
 end
 
-local function send_items_report_news_msg(list_lost, stash_id)
+function send_items_report_news_msg(list_lost, stash_id)
     local items_recount = create_report_msg_string(list_lost, stash_id)
     local msg = list_lost and "You lost or got stolen:" or
                     "You woke up and did a quick item recount, looks like this is missing:"
@@ -80,12 +80,8 @@ end
 -- ==============================================================
 
 function actor_on_before_death(who, flags)
-
-	do_item_dropping = true -- Drop items by default
 	if has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") then
 		return
-	elseif dwimg_utils.check_all_lists("ignored_levels", level.name()) then
-		do_item_dropping = false -- Don't drop items in labs
 	end
 
 	dwimg_utils.print_dbg("Is undead")
@@ -233,7 +229,8 @@ function apply_punishments()
 	sleep.dropped_stashes[dropped_stash.id] = {
 		last_dropped_item_list = {},
 		last_lost_item_list = {},
-		time = dwimg_utils.get_game_seconds()
+		time = dwimg_utils.get_game_seconds(),
+		loss_time = dwimg_utils.get_game_seconds(),
 	}
 
 	dwimg_other_punish.lose_rank_goodwill()

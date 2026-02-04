@@ -63,7 +63,7 @@ local function actor_on_stash_remove(stash_data)
         sleep.type = "sleep"
     end
     if sleep.dropped_stashes and sleep.dropped_stashes[stash_data.stash_id] then
-        send_items_report_news_msg(true, stash_data.stash_id)
+        dwimg_main.send_items_report_news_msg(true, stash_data.stash_id)
         sleep.dropped_stashes[stash_data.stash_id] = nil
     end
 end

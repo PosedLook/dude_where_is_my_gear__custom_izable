@@ -63,8 +63,8 @@ end
 
 function get_sleep_state()
 	local state = alife_storage_manager.get_state().dude_where_is_my_gear
-	if not state then
-		state = deep_copy_table(dwimg_lists.blank_sleep_state)
+	if state == nil then
+		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(dwimg_lists.blank_sleep_state)
 	else
 		for i, v in pairs(dwimg_lists.blank_sleep_state) do
             if state[i] == nil then
@@ -76,7 +76,6 @@ function get_sleep_state()
 			end
 		end
 	end
-
 	return alife_storage_manager.get_state().dude_where_is_my_gear
 end
 

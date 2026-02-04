@@ -587,7 +587,7 @@ function itr_inv(temp, item)
 		else
 			dwimg_utils.print_dbg("Ignoring bolt loss " .. item_id)
 		end
-	elseif drop and do_item_dropping then
+	elseif drop and not(dwimg_utils.check_all_lists("ignored_levels", level.name())) then
 		db.actor:transfer_item(item, dwimg_main.r_obj)
 		dwimg_main.add_to_dropped_item_list(item, 'd', dwimg_main.dropped_stash.id)
 	else
@@ -600,7 +600,11 @@ end
 -- SCRIPT CALLBACKS
 -- ==============================================================
 
-function actor_on_item_take(item)
+-- --------------------------------------------------------------
+-- HOOK ITEMS SPAWNED
+-- --------------------------------------------------------------
+
+local function actor_on_item_take(item)
 	local sleep = dwimg_utils.get_sleep_state()
 	if item and dwimg_main.death_init then
 		dwimg_utils.print_dbg("item spawn hook# " .. "item: " .. item:section() .. " [" .. ini_sys:r_string_ex(item:section(), "kind") .. "] " .. " [" .. item:id() .. "]")
@@ -608,6 +612,81 @@ function actor_on_item_take(item)
 		itr_inv(nil, item)
 	end
 end
+
+-- --------------------------------------------------------------
+-- STASH ITEM LOSS OVER TIME
+-- --------------------------------------------------------------
+
+local tracked_stashes = {}
+local function actor_on_update()
+	local curr_time = game.get_game_time()
+	if (previous_time == nil) then previous_time = curr_time end
+	if not (curr_time:diffSec(previous_time) > 5) then
+		return
+	end
+	previous_time = curr_time
+	local sleep = dwimg_utils.get_sleep_state()
+	local no_trackers = true
+	for stash_id, v  in pairs(tracked_stashes) do
+		no_trackers = false
+		local se_obj, obj = alife_object(stash_id), get_object_by_id(stash_id)
+		local curr_game_time = dwimg_utils.get_game_seconds()
+		if se_obj then
+			local time_passed = math.floor((curr_game_time - sleep.dropped_stashes[stash_id]["loss_time"])/3600) - dwimg_main.config.stash_loss_start
+			if obj and time_passed  > 1 then
+				dwimg_utils.print_dbg("Time passed " .. time_passed)
+				local keep_chance = (1 - (dwimg_main.config.stash_loss_chance / 100))^(time_passed)
+				dwimg_utils.print_dbg("obj and chance is " .. keep_chance)
+				local empty_stash = true
+				obj:iterate_inventory_box( function(owner,itm)
+					local tmp_keep_chance = dwimg_main.config.consider_loss_chance and 1-(((1-keep_chance) * (scaled_chances(get_chances(itm, itm:section(), itm:id()), itm, itm:section())[1])/100)) or keep_chance
+					
+					if tmp_keep_chance*100 >= math.random(1,100) then
+						empty_stash = false
+						dwimg_utils.print_dbg("Kept " .. itm:section() .. " with chance " .. tmp_keep_chance)
+					else
+						dwimg_utils.print_dbg("Lost " .. itm:section() .. " with chance " .. tmp_keep_chance)
+						alife_release(itm)
+					end	
+				end)
+				if empty_stash == true  then	
+					sleep.dropped_stashes[stash_id] = nil
+					level.map_remove_object_spot(obj, "treasure")
+					alife_release(obj)
+					dwimg_utils.print_dbg("Emptied stash detected and deleted!")
+				else
+					sleep.dropped_stashes[stash_id]["loss_time"] = sleep.dropped_stashes[stash_id]["loss_time"] + time_passed * 3600
+				end
+			end
+		else
+			dwimg_utils.print_dbg("Untracking no se_obj")
+			tracked_stashes[stash_id] = nil
+		end
+	end
+	if no_trackers == true then
+		dwimg_utils.print_dbg("No more tracking")
+		UnregisterScriptCallback("actor_on_update", actor_on_update)	
+	end
+end
+
+function settings_loaded()
+	if dwimg_main.config.stash_loss_chance > 0 then
+		UnregisterScriptCallback("actor_on_update", actor_on_update)
+		tracked_stashes = {}
+		local sleep = dwimg_utils.get_sleep_state()
+		for k, v in pairs(sleep.dropped_stashes) do
+			dwimg_utils.print_dbg("Added stash tracking for " .. tostring(k))
+			tracked_stashes[k] = true
+		end
+		RegisterScriptCallback("actor_on_update", actor_on_update)
+	else
+		UnregisterScriptCallback("actor_on_update", actor_on_update)
+	end
+end
+
+-- --------------------------------------------------------------
+-- INIT SCRIPTCALLBACKS
+-- --------------------------------------------------------------
 
 function on_game_start()
 	RegisterScriptCallback("actor_on_item_take", actor_on_item_take)

@@ -291,7 +291,6 @@ function on_mcm_load()
 	
 	local debug = {id = "debug", text = "ui_mcm_dwimg_debug", sh = true, gr = {
 		{id = "display_issue",              		type = "check", val = 1, def = true},
-		{id = "use_dwimglog",	                 	type = "check", val = 1, def = false},
 		{id = "print_preset",	                 	type = "check", val = 1, def = false},
 		{id = "edit_preset",	                 	type = "check", val = 1, def = false},
 	}}

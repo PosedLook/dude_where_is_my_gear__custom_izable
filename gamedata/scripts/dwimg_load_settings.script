@@ -360,7 +360,6 @@ function load_settings()
 	end
 
     dwimg_main.config.display_issue = dwimg_mcm.get_config("debug/display_issue")
-    dwimg_main.config.use_dwimglog = dwimg_mcm.get_config("debug/use_dwimglog")
 
 	init_protections()
 end

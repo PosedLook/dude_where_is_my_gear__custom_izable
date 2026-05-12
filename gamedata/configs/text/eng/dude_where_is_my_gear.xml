@@ -6,6 +6,10 @@
 		<text>Dude where's my gear?</text>
 	</string>
 	
+    <string id="ui_mcm_dwimg_main_settings">
+		<text>Main</text>
+	</string>	
+
     <string id="ui_mcm_dwimg_money">
 		<text>Money</text>
 	</string>
@@ -91,7 +95,23 @@
 	</string>
 	
     <string id="ui_mcm_dwimg_debug">
-		<text>Debug/Dev</text>
+		<text>Debug</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_on_off">
+		<text>Mod active on save [i]</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_on_off_desc">
+		<text>Bound to a savefile - only changeable in-game! (On: Mod enabled / Standby: Mod disabled (use if save has used or will use this mod) / Off: Mod disabled [use for faster transitions/MCM loading or to avoid crashes & errors] )</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_on_off_def">
+		<text>Default activity [i]</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_on_off_def_desc">
+		<text>Choose whether the mod should be active or not on new games</text>
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">
@@ -1090,6 +1110,18 @@
 	
 	<string id="ui_mcm_dude_where_is_my_gear_presets_default_presets_def_preset_character">
 		<text>Character / Goodwill</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_turned_off">
+		<text>Off</text>
+	</string>	
+
+	<string id="ui_mcm_lst_dwimg_standby">
+		<text>Standby</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_turned_on">
+		<text>On</text>
 	</string>
 
 	<string id="ui_mcm_lst_no_preset">

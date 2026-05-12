@@ -3,9 +3,15 @@ local mcd_id = "dude_where_is_my_gear"
 function on_mcm_load()
 	local op = { id= mcd_id ,gr={}} -- {id = mcd_id, type = "slide", link = "ui_options_slider_player", text = "ui_mcm_menu_" .. mcd_id, size = {512, 50}, spacing = 20},
 	
+	local main_settings = {id = "main_settings", text = "ui_mcm_dwimg_main_settings", sh = true, gr = {	
+		{id = "on_off",                				type = "list", val = 2, content = { {2, "dwimg_turned_on"}, {1, "dwimg_standby"}, {0, "dwimg_turned_off"} } , def=1},
+		{id = "on_off_def",            				type = "list", val = 2, content = { {2, "dwimg_turned_on"}, {1, "dwimg_standby"}, {0, "dwimg_turned_off"} } , def=1},
+	}}
+	table.insert(op.gr, main_settings)
+
 	local presets = {id = "presets", text = "ui_mcm_dwimg_presets", gr = {}}
 	table.insert(op.gr, presets)
-	
+
 	local default_presets = {id = "default_presets", text = "ui_mcm_dwimg_default_presets", sh = true, gr = {
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_def_presets", clr = {255, 255 ,255 ,255}, },
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_def_presets_dif", clr = {255, 255 ,255 ,255}, },		

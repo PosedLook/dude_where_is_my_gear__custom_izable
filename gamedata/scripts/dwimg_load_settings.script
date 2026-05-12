@@ -54,6 +54,13 @@ function handle_setting_corrections()
 	if dwimg_main.config.max_health < dwimg_main.config.min_health then
 		dwimg_main.config.max_health = dwimg_main.config.min_health
 	end
+	local sleep = dwimg_utils.get_sleep_state()
+	if sleep.on_off == nil then
+		dwimg_utils.print_dbg("Get default on_off with " .. dwimg_main.config.on_off_def)
+		dwimg_main.config.on_off = dwimg_main.config.on_off_def
+	end
+	dwimg_utils.print_dbg("Set save game on_off with " .. dwimg_main.config.on_off)
+	sleep.on_off = dwimg_main.config.on_off
 end
 
 -- --------------------------------------------------------------
@@ -173,7 +180,7 @@ end
 
 function on_game_start()
     RegisterScriptCallback("on_option_change", load_settings)
-    RegisterScriptCallback("on_game_load", load_settings)
+    RegisterScriptCallback("on_game_load", load_settings_alt)
 end
 
 function load_settings()
@@ -190,6 +197,16 @@ function load_settings()
 	end
 
     --dwimg_main.config.display_issue = dwimg_mcm.get_config("debug/display_issue")
+	handle_setting_corrections()
 	init_protections()
 	dwimg_items.settings_loaded()
+end
+
+function load_settings_alt()
+	local sleep = dwimg_utils.get_sleep_state()
+	if sleep.on_off and dwimg_mcm then
+		dwimg_utils.print_dbg("Get save game on_off with " .. sleep.on_off)
+		dwimg_mcm.set_config("main_settings/on_off", sleep.on_off)
+	end
+	load_settings()
 end

@@ -4,7 +4,7 @@
 
 -- deletes old stashes
 local function handle_stashes()
-    local sleep = dwimg_utils.get_sleep_state()
+	local sleep = dwimg_utils.get_sleep_state()
 	if dwimg_main.config.remove_previous_stash == 0 then
 		return
 	end
@@ -38,7 +38,10 @@ local function handle_stashes()
 end
 
 -- sets stats (e.g. health) and re-inits some variables 
-function actor_on_first_update() 
+function actor_on_first_update()
+    if dwimg_main.config.on_off == 0 then
+		return
+	end
     local sleep = dwimg_utils.get_sleep_state()
 	if sleep.dead then
 		if db.actor.bleeding > 0 then

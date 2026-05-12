@@ -208,5 +208,9 @@ function load_settings_alt()
 		dwimg_utils.print_dbg("Get save game on_off with " .. sleep.on_off)
 		dwimg_mcm.set_config("main_settings/on_off", sleep.on_off)
 	end
-	load_settings()
+	if dwimg_mcm.get_config("main_settings/on_off") ~=0 then
+		load_settings()
+	else
+		dwimg_main.config.on_off = 0
+	end
 end

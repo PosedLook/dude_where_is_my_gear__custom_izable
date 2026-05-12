@@ -606,6 +606,9 @@ end
 
 local function actor_on_item_take(item)
 	local sleep = dwimg_utils.get_sleep_state()
+    if dwimg_main.config.on_off ~= 2 then
+		return
+	end
 	if item and dwimg_main.death_init then
 		dwimg_utils.print_dbg("item spawn hook# " .. "item: " .. item:section() .. " [" .. ini_sys:r_string_ex(item:section(), "kind") .. "] " .. " [" .. item:id() .. "]")
 		dwimg_main.time_item_calc = time_global()
@@ -619,6 +622,7 @@ end
 
 local tracked_stashes = {}
 local function actor_on_update()
+	
 	local curr_time = game.get_game_time()
 	if (previous_time == nil) then previous_time = curr_time end
 	if not (curr_time:diffSec(previous_time) > 5) then
@@ -673,6 +677,9 @@ function settings_loaded()
 	if dwimg_main.config.stash_loss_chance > 0 then
 		UnregisterScriptCallback("actor_on_update", actor_on_update)
 		tracked_stashes = {}
+	    if dwimg_main.config.on_off ~=2 then
+			return
+		end
 		local sleep = dwimg_utils.get_sleep_state()
 		for k, v in pairs(sleep.dropped_stashes) do
 			dwimg_utils.print_dbg("Added stash tracking for " .. tostring(k))

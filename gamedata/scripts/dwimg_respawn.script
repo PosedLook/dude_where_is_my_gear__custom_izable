@@ -37,7 +37,10 @@ local function save_position(stash_data)
 end
 
 local function actor_on_sleep()
-    if not dwimg_main.config.use_sleep_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
+    if dwimg_main.config.on_off == 0 then
+		return
+	end
+	if not dwimg_main.config.use_sleep_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
 		return
 	end
 	local sleep = dwimg_utils.get_sleep_state()
@@ -47,6 +50,9 @@ local function actor_on_sleep()
 end
 
 local function actor_on_stash_create(stash_data)
+    if dwimg_main.config.on_off == 0 then
+		return
+	end
     if not(dwimg_main.config.use_stash_respawn) or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
 		return
 	end
@@ -56,6 +62,9 @@ local function actor_on_stash_create(stash_data)
 end
 
 local function actor_on_stash_remove(stash_data)
+    if dwimg_main.config.on_off == 0 then
+		return
+	end
     local sleep = dwimg_utils.get_sleep_state()
     if sleep.stash_save and (stash_data.stash_id == sleep.stash_save.stash_id) then
         sleep.stash_created = false;
@@ -69,6 +78,9 @@ local function actor_on_stash_remove(stash_data)
 end
 
 local function on_before_save_input(flags, typ_, text)
+    if dwimg_main.config.on_off == 0 then
+		return
+	end
 	if not dwimg_main.config.use_campfire_respawn or has_alife_info("bar_arena_fight") or has_alife_info("bar_arena_start") or dwimg_utils.check_all_lists("ignored_levels", level.name()) then
 		return
 	end

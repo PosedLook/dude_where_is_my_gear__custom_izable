@@ -175,6 +175,29 @@ function check_presets()
 end
 
 -- ==============================================================
+-- REMOVAL
+-- ==============================================================
+
+local function remove_mod()
+	local type = dwimg_mcm.get_config("main_settings/removal_type")
+	local sleep = dwimg_utils.get_sleep_state()
+	if type >= 1 then
+		for stash_id, _ in pairs(sleep.dropped_stashes) do
+			level.map_remove_object_spot(stash_id, "treasure")
+		end
+	end
+	if type >=2 then
+		for stash_id, _ in pairs(sleep.dropped_stashes) do
+			sleep.dropped_stashes[stash_id] = nil
+			alife_release_id(stash_id)
+		end		
+	end
+	if type >=3 then
+		sleep = {removed = true}
+	end
+end
+
+-- ==============================================================
 -- SCRIPT CALLBACKS
 -- ==============================================================
 
@@ -184,6 +207,20 @@ function on_game_start()
 end
 
 function load_settings()
+	--check for removal
+	local sleep = dwimg_utils.get_sleep_state()
+	if dwimg_mcm.get_config("main_settings/removal_type") ~= 0 and dwimg_mcm.get_config("main_settings/confirm_removal") == true then
+		remove_mod()
+	end
+	if dwimg_mcm.get_config("main_settings/removal_type") ~= 0 or dwimg_mcm.get_config("main_settings/confirm_removal") == true then
+		dwimg_mcm.set_config("main_settings/removal_type", 0)
+		dwimg_mcm.set_config("main_settings/confirm_removal", false)
+	end
+	if sleep.removed == true then
+		return
+	end
+
+	--load settings
 	check_presets()
 
 	if dwimg_mcm.get_config("debug/print_preset") then
@@ -203,6 +240,7 @@ function load_settings()
 end
 
 function load_settings_alt()
+	--init default on_off
 	local sleep = dwimg_utils.get_sleep_state()
 	if sleep.on_off and dwimg_mcm then
 		dwimg_utils.print_dbg("Get save game on_off with " .. sleep.on_off)

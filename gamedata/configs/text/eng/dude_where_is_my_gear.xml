@@ -98,8 +98,12 @@
 		<text>Debug</text>
 	</string>
 
+    <string id="ui_mcm_dwimg_on_off_desc">
+		<text>Turn this mod on/off for each independent playthrough. If you have not manually chosen a setting for this playthrough yet (old save or new game) it will automatically set it to the default value.</text>
+	</string>
+
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_on_off">
-		<text>Mod active on save [i]</text>
+		<text>Mod active [i]</text>
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_on_off_desc">
@@ -112,6 +116,18 @@
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_on_off_def_desc">
 		<text>Choose whether the mod should be active or not on new games</text>
+	</string>
+
+    <string id="ui_mcm_dwimg_removal_desc">
+		<text>Disabling this mod mid playthrough may leave behind some unwanted clutter. Automaticall remove it by using this feature. Deleting mod save data will make it impossible to re-enable the mod without console commands for this playthrough!</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_removal_settings">
+		<text>Remove mod data from save</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_confirm_removal">
+		<text>Confirm removal</text>
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">
@@ -1122,6 +1138,22 @@
 
 	<string id="ui_mcm_lst_dwimg_turned_on">
 		<text>On</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_no_removal">
+		<text>---</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_mark_removal">
+		<text>Remove stash markers</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_stash_removal">
+		<text>Remove dropped stashes + above</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_all_removal">
+		<text>Remove mod save data + above</text>
 	</string>
 
 	<string id="ui_mcm_lst_no_preset">

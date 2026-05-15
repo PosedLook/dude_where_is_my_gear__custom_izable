@@ -65,6 +65,8 @@ function get_sleep_state()
 	local state = alife_storage_manager.get_state().dude_where_is_my_gear
 	if state == nil then
 		alife_storage_manager.get_state().dude_where_is_my_gear = deep_copy_table(dwimg_lists.blank_sleep_state)
+	elseif state.removed == true then
+		return {on_off = 0, removed = true}
 	else
 		for i, v in pairs(dwimg_lists.blank_sleep_state) do
             if state[i] == nil then

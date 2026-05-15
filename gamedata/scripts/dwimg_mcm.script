@@ -4,11 +4,11 @@ function on_mcm_load()
 	local op = { id= mcd_id ,gr={}} -- {id = mcd_id, type = "slide", link = "ui_options_slider_player", text = "ui_mcm_menu_" .. mcd_id, size = {512, 50}, spacing = 20},
 	
 	local main_settings = {id = "main_settings", text = "ui_mcm_dwimg_main_settings", sh = true, gr = {	
-		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_on_off", clr = {255, 255 ,255 ,255}, },
+		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_on_off_desc", clr = {255, 255 ,255 ,255}, },
 		{id = "on_off",                				type = "list", val = 2, content = { {2, "dwimg_turned_on"}, {1, "dwimg_standby"}, {0, "dwimg_turned_off"} } , def=1},
 		{id = "on_off_def",            				type = "list", val = 2, content = { {2, "dwimg_turned_on"}, {1, "dwimg_standby"}, {0, "dwimg_turned_off"} } , def=1},
 		{type = "title", text = ""},
-		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_removal", clr = {255, 255 ,255 ,255}, },
+		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_removal_desc", clr = {255, 255 ,255 ,255}, },
 		{id = "removal_type",            			type = "list", val = 2, content = { {0, "dwimg_no_removal"}, {1, "dwimg_mark_removal"}, {2, "dwimg_stash_removal"}, {3, "dwimg_all_removal"} } , def=1},		
 		{id = "confirm_removal",	              	type = "check", val = 1, def = false, clr = {255, 0 , 0, 255}},
 	}}

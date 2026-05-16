@@ -119,7 +119,7 @@
 	</string>
 
     <string id="ui_mcm_dwimg_removal_desc">
-		<text>Disabling this mod mid playthrough may leave behind some unwanted clutter. Automaticall remove it by using this feature. Deleting mod save data will make it impossible to re-enable the mod without console commands for this playthrough!</text>
+		<text>Disabling this mod mid playthrough may leave behind some unwanted clutter. Automatically remove it by using this feature. Deleting mod save data will make it impossible to re-enable the mod without console commands for this playthrough!</text>
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_removal_type">
@@ -128,6 +128,10 @@
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_confirm_removal">
 		<text>Confirm removal</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_soulslike_overwrite">
+		<text>Handle soulslike conflict [i]</text>
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">
@@ -1154,6 +1158,14 @@
 
 	<string id="ui_mcm_lst_dwimg_all_removal">
 		<text>Remove mod save data + above</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_pref_soulslike">
+		<text>Prefer Jabbers Soulslike</text>
+	</string>
+
+	<string id="ui_mcm_lst_dwimg_pref_dwimg">
+		<text>Prefer this mod</text>
 	</string>
 
 	<string id="ui_mcm_lst_no_preset">

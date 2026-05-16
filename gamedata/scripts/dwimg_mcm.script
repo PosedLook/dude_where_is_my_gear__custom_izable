@@ -9,8 +9,10 @@ function on_mcm_load()
 		{id = "on_off_def",            				type = "list", val = 2, content = { {2, "dwimg_turned_on"}, {1, "dwimg_standby"}, {0, "dwimg_turned_off"} } , def=1},
 		{type = "title", text = ""},
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_removal_desc", clr = {255, 255 ,255 ,255}, },
-		{id = "removal_type",            			type = "list", val = 2, content = { {0, "dwimg_no_removal"}, {1, "dwimg_mark_removal"}, {2, "dwimg_stash_removal"}, {3, "dwimg_all_removal"} } , def=0},		
+		{id = "removal_type",            			type = "list", val = 2, content = { {0, "dwimg_no_removal"}, {1, "dwimg_mark_removal"}, {2, "dwimg_stash_removal"}, {3, "dwimg_all_removal"} } , def=0},
 		{id = "confirm_removal",	              	type = "check", val = 1, def = false, clr = {255, 0 , 0, 255}},
+		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_soulslike_desc", clr = {255, 255 ,255 ,255}, },
+		{id = "soulslike_overwrite",       			type = "list", val = 2, content = { {0, "dwimg_pref_soulslike"}, {1, "dwimg_pref_dwimg"}, } , def=0},
 	}}
 	table.insert(op.gr, main_settings)
 

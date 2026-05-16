@@ -201,6 +201,28 @@ local function remove_mod()
 end
 
 -- ==============================================================
+-- SOULSLIKE OVERWRITE
+-- ==============================================================
+
+function soulslike.IsSoulslikeMode()
+	if alife_storage_manager.get_state().enable_soulslike_mode == true then
+		if dwimg_mcm.get_config("main_settings/on_off") == 0 then
+			return true
+		else
+			if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 0 then
+				dwimg_main.config.on_off = 0
+				dwimg_mcm.set_config("main_settings/on_off", 0)
+				return true
+			else
+				return false
+			end
+		end
+	else
+		return false
+	end
+end
+
+-- ==============================================================
 -- SCRIPT CALLBACKS
 -- ==============================================================
 

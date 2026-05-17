@@ -13,6 +13,11 @@ function on_mcm_load()
 		{id = "confirm_removal",	              	type = "check", val = 1, def = false, clr = {255, 0 , 0, 255}},
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_soulslike_desc", clr = {255, 255 ,255 ,255}, },
 		{id = "soulslike_overwrite",       			type = "list", val = 2, content = { {0, "dwimg_pref_soulslike"}, {1, "dwimg_pref_dwimg"}, } , def=0},
+		{id = "use_soulslike_ambush",              	type = "check", val = 1, def = false},
+		--RF
+		--Hidden_Stash
+		--Looter
+		--Hardcore
 	}}
 	table.insert(op.gr, main_settings)
 

@@ -196,29 +196,6 @@ local function remove_mod()
 		alife_storage_manager.get_state().dude_where_is_my_gear = {removed = true}
 		dwimg_main.config.on_off = 0
 		dwimg_mcm.set_config("main_settings/on_off", 0)
-		dwimg_utils.print_dbg("Removed!!")
-	end
-end
-
--- ==============================================================
--- SOULSLIKE OVERWRITE
--- ==============================================================
-
-function soulslike.IsSoulslikeMode()
-	if alife_storage_manager.get_state().enable_soulslike_mode == true then
-		if dwimg_mcm.get_config("main_settings/on_off") == 0 then
-			return true
-		else
-			if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 0 then
-				dwimg_main.config.on_off = 0
-				dwimg_mcm.set_config("main_settings/on_off", 0)
-				return true
-			else
-				return false
-			end
-		end
-	else
-		return false
 	end
 end
 
@@ -241,9 +218,10 @@ function load_settings()
 		dwimg_mcm.set_config("main_settings/confirm_removal", false)
 	end
 	local sleep = dwimg_utils.get_sleep_state()
-	if sleep.removed == true then
+	if sleep.removed == true or (dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 0 and soulslike.IsSoulslikeMode() == true) then
 		dwimg_main.config.on_off = 0
-		dwimg_mcm.set_config("main_settings/on_off", 0)		
+		dwimg_mcm.set_config("main_settings/on_off", 0)
+		sleep.on_off = 0	
 		return
 	end
 

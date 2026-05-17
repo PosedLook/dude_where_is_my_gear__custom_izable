@@ -19,6 +19,7 @@ skipped_time = 0
 time_item_calc = nil
 dropped_stash = nil
 r_obj = nil
+souls_stash = nil
 
 config = {} -- Configuration table to avoid 200 local variable limit
 
@@ -244,34 +245,45 @@ function apply_punishments()
 	dwimg_items.no_sec_dwg = {}
 	dwimg_items.no_sec = {}	
 
-	if (dropped_stash) then
-		local txt = strformat(game.translate_string("st_itm_stash_of_character"), db.actor:character_name())
-		level.map_add_object_spot_ser(dropped_stash.id, "treasure", txt)
-		--actor_menu.set_msg(1, game.translate_string("st_stash_created"), 4)
-
-		local m_data = alife_storage_manager.get_state()
-		if not (m_data.player_created_stashes) then
-			m_data.player_created_stashes = {}
-		end
-
-		m_data.player_created_stashes[dropped_stash.id] = itm_backpack
-		
-		local function transfer_items(id, dwg_sec_check)
-			r_obj = level.object_by_id(id)
-			if (r_obj) then
-				dwimg_utils.print_dbg("Dropped stash %s", dropped_stash.id)
-				death_init = true
-				db.actor:iterate_inventory(dwimg_items.itr_inv)
-				send_items_report_news_msg(false, dropped_stash.id)
-				inventory_upgrades.force_upgrade = false
-				return true
-			end
+	dwimg_soulslike.continue_soulslike = 1
+	CreateTimeEvent("Wait_for_soulslike_calc", dwimg_soulslike.continue_soulslike, 0, function()
+		if dwimg_soulslike.continue_soulslike ~= 2 and soulslike and soulslike.IsSoulslikeMode() and dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") or false) then
+			time_item_calc = time_global()
 			return false
+		else
+			dwimg_utils.print_dbg("Finished waiting for soulslike calcs")
+			if (dropped_stash) then
+				local txt = strformat(game.translate_string("st_itm_stash_of_character"), db.actor:character_name())
+				level.map_add_object_spot_ser(dropped_stash.id, "treasure", txt)
+				--actor_menu.set_msg(1, game.translate_string("st_stash_created"), 4)
+
+				local m_data = alife_storage_manager.get_state()
+				if not (m_data.player_created_stashes) then
+					m_data.player_created_stashes = {}
+				end
+
+				m_data.player_created_stashes[dropped_stash.id] = itm_backpack
+				
+				local function transfer_items(id, dwg_sec_check)
+					r_obj = level.object_by_id(id)
+					if (r_obj) then
+						dwimg_utils.print_dbg("Dropped stash %s", dropped_stash.id)
+						death_init = true
+						db.actor:iterate_inventory(dwimg_items.itr_inv)
+						send_items_report_news_msg(false, dropped_stash.id)
+						inventory_upgrades.force_upgrade = false
+						return true
+					end
+					time_item_calc = time_global()
+					return false
+				end
+				CreateTimeEvent("RAX SleepSpawn", "actor_backpack", 0, transfer_items, dropped_stash.id, false)
+			else
+				dwimg_utils.issue("Did not find dropped stash")
+			end
+			return true
 		end
-		CreateTimeEvent("RAX SleepSpawn", "actor_backpack", 0, transfer_items, dropped_stash.id, false)
-	else
-		dwimg_utils.issue("Did not find dropped stash")
-	end
+	end)
 end
 
 -- ==============================================================
@@ -317,7 +329,6 @@ function on_tutor_gameover_respawn()
 			delete_empty_stash()
 			set_player_stats()
 			dwimg_respawn.respawn_teleport()
-			return true
 		end
 	end)	
 end

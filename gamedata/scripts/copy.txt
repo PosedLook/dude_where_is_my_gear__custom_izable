@@ -1,0 +1,163 @@
+_oldsoul_create_by_id = soulslike_scenario_logic_factory.create_by_id
+function soulslike_scenario_logic_factory.create_by_id(scenario_id, state)
+    local cap_obj =  _oldsoul_create_by_id(scenario_id, state)
+
+    return cap_obj
+end
+
+local _oldsoul_OnDeath = soulslike_scenarios.SoulslikeScenarioLogic.OnDeath
+function soulslike_scenarios.SoulslikeScenarioLogic:OnDeath()
+    dwimg_utils.print_dbg("Overwritten!!")
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false and true) then
+        dwimg_utils.print_dbg("Cancelled!!")
+        return
+    else
+        dwimg_utils.print_dbg("Kept!!")
+        _oldsoul_OnDeath(self)
+    end
+end
+
+_oldsoul_HealActor = soulslike_scenarios.SoulslikeScenarioLogic.HealActor
+function soulslike_scenarios.SoulslikeScenarioLogic:HealActor()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_HealActor(self)
+    end
+end
+
+_oldsoul_ApplyRankLoss = soulslike_scenarios.SoulslikeScenarioLogic.ApplyRankLoss
+function soulslike_scenarios.SoulslikeScenarioLogic:ApplyRankLoss()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_ApplyRankLoss(self)
+    end
+end
+
+_oldsoul_ApplyReputationLoss = soulslike_scenarios.SoulslikeScenarioLogic.ApplyReputationLoss
+function soulslike_scenarios.SoulslikeScenarioLogic:ApplyReputationLoss()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_ApplyReputationLoss(self)
+    end
+end
+
+_oldsoul_ApplyTransferItemsPreConditions = soulslike_scenarios.SoulslikeScenarioLogic.ApplyTransferItemsPreConditions
+function soulslike_scenarios.SoulslikeScenarioLogic:ApplyTransferItemsPreConditions()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_ApplyTransferItemsPreConditions(self)
+    end
+end
+
+_oldsoul_def_CreateStash = soulslike_scenarios.DefaultSoulslikeScenarioLogic.CreateStash
+function soulslike_scenarios.DefaultSoulslikeScenarioLogic:CreateStash()
+    dwimg_main.souls_stash = _oldsoul_def_CreateStash(self)
+    return dwimg_main.souls_stash
+end
+
+_oldsoul_rf_CreateStash = soulslike_scenarios.RFDetectorSoulslikeScenarioLogic.CreateStash
+function soulslike_scenarios.RFDetectorSoulslikeScenarioLogic:CreateStash()
+    dwimg_main.souls_stash = _oldsoul_rf_CreateStash(self)
+    return dwimg_main.souls_stash
+end
+
+_oldsoul_hidden_CreateStash = soulslike_scenarios.HiddenStashSoulslikeScenarioLogic.CreateStash
+function soulslike_scenarios.HiddenStashSoulslikeScenarioLogic:CreateStash()
+    dwimg_main.souls_stash = _oldsoul_hidden_CreateStash(self)
+    return dwimg_main.souls_stash
+end
+
+_oldsoul_TransferItem = soulslike_scenarios.SoulslikeScenarioLogic.TransferItem
+function soulslike_scenarios.SoulslikeScenarioLogic:TransferItem(item, container, looter)
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_TransferItem(self, item, container, looter)
+    end
+end
+
+_oldsoul_ApplyMoneyLoss = soulslike_scenarios.SoulslikeScenarioLogic.ApplyMoneyLoss
+function soulslike_scenarios.SoulslikeScenarioLogic:ApplyMoneyLoss()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_ApplyMoneyLoss(self)
+    end
+end
+
+_oldsoul_RespawnActor = soulslike_scenarios.SoulslikeScenarioLogic.RespawnActor
+function soulslike_scenarios.SoulslikeScenarioLogic:RespawnActor()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_RespawnActor(self)
+    end
+end
+
+_oldsoul_OnRespawn = soulslike_scenarios.SoulslikeScenarioLogic.OnRespawn
+function soulslike_scenarios.SoulslikeScenarioLogic:OnRespawn()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_OnRespawn(self)
+    end
+end
+
+_oldsoul_GiveFoodAndWater = soulslike_scenarios.SoulslikeScenarioLogic.GiveFoodAndWater
+function soulslike_scenarios.SoulslikeScenarioLogic:GiveFoodAndWater()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_GiveFoodAndWater(self)
+    end
+end
+
+_oldsoul_GiveOutfit = soulslike_scenarios.SoulslikeScenarioLogic.GiveOutfit
+function soulslike_scenarios.SoulslikeScenarioLogic:GiveOutfit()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_GiveOutfit(self)
+    end
+end
+
+_oldsoul_GiveMask = soulslike_scenarios.SoulslikeScenarioLogic.GiveMask
+function soulslike_scenarios.SoulslikeScenarioLogic:GiveMask()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_GiveMask(self)
+    end
+end
+
+_oldsoul_SpawnAmbush = soulslike_scenarios.SoulslikeScenarioLogic.SpawnAmbush
+function soulslike_scenarios.SoulslikeScenarioLogic:SpawnAmbush()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false then
+        return
+    else
+        _oldsoul_SpawnAmbush(self)
+    end
+end
+
+_oldsoul_SendWakeupMessage = soulslike_scenarios.SoulslikeScenarioLogic.SendWakeupMessage
+function soulslike_scenarios.SoulslikeScenarioLogic:SendWakeupMessage()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_SendWakeupMessage(self)
+    end
+end
+
+_oldsoul_force_save = soulslike_scenarios.SoulslikeScenarioLogic.force_save
+function soulslike_scenarios.SoulslikeScenarioLogic:force_save()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        return
+    else
+        _oldsoul_force_save(self)
+    end
+end
+

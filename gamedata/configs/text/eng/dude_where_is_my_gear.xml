@@ -134,6 +134,14 @@
 		<text>Handle soulslike conflict [i]</text>
 	</string>
 
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_ambush">
+		<text>Use Soulslike ambushes [i]</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_ambush_desc">
+		<text>If Jabbers Soulslike is installed and this mod is turned on, it will integrate its ambush mechanics. May not be compatible with every Jabbers Soulslike version. Settings from Jabbers Soulslike in MCM will be used.</text>
+	</string>
+
     <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">
 		<text>Min percentage of money that can be lost.</text>
 	</string>

@@ -239,7 +239,7 @@ function apply_punishments()
 	dwimg_items.no_sec = {}	
 
 	CreateTimeEvent("Wait_for_soulslike_calc", dwimg_soulslike.continue_soulslike, 0, function()
-		if dwimg_soulslike.continue_soulslike ~= 2 and soulslike and soulslike.IsSoulslikeMode() and dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") or dwimg_mcm.get_config("main_settings/use_soulslike_stalker_looter") or false) then
+		if dwimg_soulslike.continue_soulslike ~= 2 and soulslike and soulslike.IsSoulslikeMode() and dwimg_mcm.get_config("main_settings/on_off") == 2 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") or dwimg_mcm.get_config("main_settings/use_soulslike_stalker_looter") or false) then
 			time_item_calc = time_global()
 			return false
 		else
@@ -285,7 +285,7 @@ end
 -- ==============================================================
 
 local function soulslike_stuff()
-	if soulslike.IsSoulslikeMode and dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+	if soulslike.IsSoulslikeMode and dwimg_mcm.get_config("main_settings/on_off") == 2 then
 		--soulslike: try fake ItemTransfer for looter tracking
 		if (dwimg_mcm.get_config("main_settings/use_soulslike_stalker_looter") or dwimg_mcm.get_config("main_settings/use_soulslike_tarkov_looter")) and dwimg_soulslike.cap_obj and dwimg_soulslike.cap_obj.logic_state.looter then
 			dwimg_utils.print_dbg("dwimg soul looter fake track init")

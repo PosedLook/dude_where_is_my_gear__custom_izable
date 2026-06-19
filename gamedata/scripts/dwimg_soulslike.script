@@ -5,7 +5,7 @@ souls_id = 0
 
 _oldsoul_is_soulslike = soulslike.IsSoulslikeMode
 function soulslike.IsSoulslikeMode()
-    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/force_soulslike") == true then
+    if dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/force_soulslike") == true then
         return true
     else
         return _oldsoul_is_soulslike
@@ -25,7 +25,7 @@ function overwrite_souls_functions()
     local _oldsoul_OnDeath = cap_obj.OnDeath
     function cap_obj:OnDeath()
         dwimg_utils.print_dbg("dwimg soul summoned")
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false and dwimg_mcm.get_config("main_settings/use_soulslike_stalker_looter") == false) then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false and dwimg_mcm.get_config("main_settings/use_soulslike_stalker_looter") == false) then
             dwimg_utils.print_dbg("dwimg soul unnecessary!!")
             return
         else
@@ -35,7 +35,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_HealActor = cap_obj.HealActor
     function cap_obj:HealActor()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_HealActor(self)
@@ -44,7 +44,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_ApplyRankLoss = cap_obj.ApplyRankLoss
     function cap_obj:ApplyRankLoss()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_ApplyRankLoss(self)
@@ -53,7 +53,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_ApplyReputationLoss = cap_obj.ApplyReputationLoss
     function cap_obj:ApplyReputationLoss()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_ApplyReputationLoss(self)
@@ -62,7 +62,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_ApplyTransferItemsPreConditions = cap_obj.ApplyTransferItemsPreConditions
     function cap_obj:ApplyTransferItemsPreConditions()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_ApplyTransferItemsPreConditions(self)
@@ -77,7 +77,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_TransferItem = cap_obj.TransferItem
     function cap_obj:TransferItem(item, container, looter)
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if and dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_TransferItem(self, item, container, looter)
@@ -86,7 +86,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_ApplyMoneyLoss = cap_obj.ApplyMoneyLoss
     function cap_obj:ApplyMoneyLoss()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_ApplyMoneyLoss(self)
@@ -95,7 +95,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_RespawnActor = cap_obj.RespawnActor
     function cap_obj:RespawnActor()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             continue_soulslike = 2            
             return
         else
@@ -106,7 +106,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_SpawnAmbush = cap_obj.SpawnAmbush
     function cap_obj:SpawnAmbush()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false then
             dwimg_utils.print_dbg("dwimg soul spawn no ambush")
             return
         else
@@ -117,7 +117,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_OnRespawn = cap_obj.OnRespawn
     function cap_obj:OnRespawn()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             cap_obj:SpawnAmbush()
             return
         else
@@ -127,7 +127,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_GiveFoodAndWater = cap_obj.GiveFoodAndWater
     function cap_obj:GiveFoodAndWater()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_GiveFoodAndWater(self)
@@ -136,7 +136,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_GiveOutfit = cap_obj.GiveOutfit
     function cap_obj:GiveOutfit()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_GiveOutfit(self)
@@ -145,7 +145,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_GiveMask = cap_obj.GiveMask
     function cap_obj:GiveMask()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_GiveMask(self)
@@ -154,7 +154,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_SendWakeupMessage = cap_obj.SendWakeupMessage
     function cap_obj:SendWakeupMessage()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_SendWakeupMessage(self)
@@ -163,7 +163,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_force_save = cap_obj.force_save
     function cap_obj:force_save()
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_force_save(self)

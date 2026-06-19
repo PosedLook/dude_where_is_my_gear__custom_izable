@@ -338,7 +338,7 @@ function itr_inv(temp, item)
 	--end
 
 	--soulslike
-	if (dwimg_soulslike.cap_obj and soulslike and soulslike.IsSoulslikeMode() and dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/use_soulslike_ambush")) then
+	if (dwimg_soulslike.cap_obj and soulslike and soulslike.IsSoulslikeMode() and dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/use_soulslike_ambush")) then
 		dwimg_soulslike.cap_obj.logic_state.has_mutant_bait = dwimg_soulslike.cap_obj.logic_state.has_mutant_bait or SYS_GetParam(0, section, "kind") == "i_mutant_raw" or SYS_GetParam(0, section, "kind") == "i_food" or SYS_GetParam(0, section, "kind") == "i_mutant_belt"
 		if dwimg_soulslike.cap_obj.logic_state.has_mutant_bait then
 			dwimg_utils.print_dbg("dwimg soul allows mutant ambush")
@@ -591,7 +591,7 @@ function itr_inv(temp, item)
 	end
 
 	--soulslike_looter
-	if dwimg_soulslike.cap_obj and soulslike.IsSoulslikeMode and dwimg_main.config.soulslike_overwrite == 1 and dwimg_main.config.on_off == 2 then
+	if dwimg_soulslike.cap_obj and soulslike.IsSoulslikeMode and dwimg_main.config.on_off == 2 then
 		dwimg_utils.print_dbg("dwimg soul test looter")
 		if dwimg_main.config.use_soulslike_tarkov_looter and dwimg_soulslike.soul_looter then
 			no_sec[tostring(item_id)] = true

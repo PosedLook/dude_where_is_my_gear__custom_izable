@@ -134,14 +134,6 @@
 		<text>Jabbers Soulslike integration (Install this mod after Jabbers Soulslike / with higher priority! Will use certain Jabbers Soulslike MCM settings.)</text>
 	</string>
 
-    <string id="ui_mcm_dude_where_is_my_gear_main_settings_soulslike_overwrite">
-		<text>Handle soulslike conflict [i]</text>
-	</string>
-
-    <string id="ui_mcm_dude_where_is_my_gear_main_settings_soulslike_overwrite_desc">
-		<text>Use this mod for Jabbers Soulslike integration</text>
-	</string>
-
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_force_soulslike">
 		<text>Use integrations even if Soulslike is disabled</text>
 	</string>

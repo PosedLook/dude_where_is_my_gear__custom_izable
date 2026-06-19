@@ -218,7 +218,7 @@ function load_settings()
 		dwimg_mcm.set_config("main_settings/confirm_removal", false)
 	end
 	local sleep = dwimg_utils.get_sleep_state()
-	if sleep.removed == true or (dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 0 and soulslike.IsSoulslikeMode() == true) then
+	if sleep.removed == true then
 		dwimg_main.config.on_off = 0
 		dwimg_mcm.set_config("main_settings/on_off", 0)
 		sleep.on_off = 0	

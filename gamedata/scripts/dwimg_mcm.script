@@ -11,9 +11,19 @@ function on_mcm_load()
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_removal_desc", clr = {255, 255 ,255 ,255}, },
 		{id = "removal_type",            			type = "list", val = 2, content = { {0, "dwimg_no_removal"}, {1, "dwimg_mark_removal"}, {2, "dwimg_stash_removal"}, {3, "dwimg_all_removal"} } , def=0},
 		{id = "confirm_removal",	              	type = "check", val = 1, def = false, clr = {255, 0 , 0, 255}},
+		{type = "title", text = ""},
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_soulslike_desc", clr = {255, 255 ,255 ,255}, },
 		{id = "soulslike_overwrite",       			type = "list", val = 2, content = { {0, "dwimg_pref_soulslike"}, {1, "dwimg_pref_dwimg"}, } , def=0},
+		{id = "force_soulslike",	              	type = "check", val = 1, def = false},		
+		{type = "title", text = ""},		
 		{id = "use_soulslike_ambush",              	type = "check", val = 1, def = false},
+		{type = "title", text = ""},		
+		{id = "use_soulslike_stalker_looter",       type = "check", val = 1, def = false},
+		{id = "loot_lost",       					type = "check", val = 1, def = false},
+		{id = "loot_dropped",       				type = "check", val = 1, def = false},
+		{id = "use_soulslike_tarkov_looter",     	type = "check", val = 1, def = false},
+		{type = "title", text = ""},
+
 		--RF
 		--Hidden_Stash
 		--Looter

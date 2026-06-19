@@ -130,17 +130,49 @@
 		<text>Confirm removal</text>
 	</string>
 
+    <string id="ui_mcm_dwimg_soulslike_desc">
+		<text>Jabbers Soulslike integration (Install this mod after Jabbers Soulslike / with higher priority! Will use certain Jabbers Soulslike MCM settings.)</text>
+	</string>
+
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_soulslike_overwrite">
 		<text>Handle soulslike conflict [i]</text>
 	</string>
 
-    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_ambush">
-		<text>Use Soulslike ambushes [i]</text>
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_soulslike_overwrite_desc">
+		<text>Use this mod for Jabbers Soulslike integration</text>
 	</string>
 
-    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_ambush_desc">
-		<text>If Jabbers Soulslike is installed and this mod is turned on, it will integrate its ambush mechanics. May not be compatible with every Jabbers Soulslike version. Settings from Jabbers Soulslike in MCM will be used.</text>
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_force_soulslike">
+		<text>Use integrations even if Soulslike is disabled</text>
 	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_ambush">
+		<text>Use Soulslike ambushes</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_stalker_looter">
+		<text>Use Soulslike stalker looters</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_stalker_looter">
+		<text>Use Soulslike stalker looters</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_loot_lost">
+		<text>Lost items will be looted instead</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_loot_dropped">
+		<text>Dropped items will be looted instead</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_tarkov_looter">
+		<text>Use Soulslike tarkov looter [i]</text>
+	</string>	
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_tarkov_looter_desc">
+		<text>Small chance for a looter to steal a single weapon part</text>
+	</string>	
 
     <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">
 		<text>Min percentage of money that can be lost.</text>

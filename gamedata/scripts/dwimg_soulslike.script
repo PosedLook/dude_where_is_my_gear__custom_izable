@@ -1,5 +1,16 @@
 continue_soulslike = 0
 cap_obj = nil
+souls_stash = nil
+souls_id = 0
+
+_oldsoul_is_soulslike = soulslike.IsSoulslikeMode
+function soulslike.IsSoulslikeMode()
+    if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/force_soulslike") == true then
+        return true
+    else
+        return _oldsoul_is_soulslike
+    end
+end
 
 _oldsoul_clear = soulslike_classes.TimedQueue.Clear
 function soulslike_classes.TimedQueue:Clear()
@@ -8,14 +19,13 @@ function soulslike_classes.TimedQueue:Clear()
     _oldsoul_clear(self)
 end
 
-_oldsoul_create_by_id = soulslike_scenario_logic_factory.create_by_id
-function soulslike_scenario_logic_factory.create_by_id(scenario_id, state)
-    cap_obj =  _oldsoul_create_by_id(scenario_id, state)
+function overwrite_souls_functions()
+    dwimg_utils.print_dbg("dwimg soul overwritten")
 
     local _oldsoul_OnDeath = cap_obj.OnDeath
     function cap_obj:OnDeath()
         dwimg_utils.print_dbg("dwimg soul summoned")
-        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false and true) then
+        if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and (dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == false and dwimg_mcm.get_config("main_settings/use_soulslike_stalker_looter") == false) then
             dwimg_utils.print_dbg("dwimg soul unnecessary!!")
             return
         else
@@ -61,14 +71,13 @@ function soulslike_scenario_logic_factory.create_by_id(scenario_id, state)
 
     local _oldsoul_CreateStash = cap_obj.CreateStash
     function cap_obj:CreateStash()
-        dwimg_main.souls_stash = _oldsoul_CreateStash(self)
-        return dwimg_main.souls_stash
+        souls_stash = _oldsoul_CreateStash(self)
+        return souls_stash
     end
 
     local _oldsoul_TransferItem = cap_obj.TransferItem
     function cap_obj:TransferItem(item, container, looter)
         if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
-            local sec = item:section()
             return
         else
             _oldsoul_TransferItem(self, item, container, looter)
@@ -101,16 +110,7 @@ function soulslike_scenario_logic_factory.create_by_id(scenario_id, state)
             dwimg_utils.print_dbg("dwimg soul spawn no ambush")
             return
         else
-            if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/use_soulslike_ambush") == true then
-                dwimg_utils.print_dbg("dwimg soul spawn ambush")
-                if cap_obj.logic_state.has_mutant_bait then
-                    dwimg_utils.print_dbg("dwimg soul bait init")
-                    if cap_obj.logic_state.has_mutant_bait == true then
-                        dwimg_utils.print_dbg("dwimg soul bait true")
-                    end
-                end
-            end
-            dwimg_utils.print_dbg("dwimg soul killer " .. tostring(cap_obj.logic_state.killer_type)) 
+            dwimg_utils.print_dbg("dwimg soul spawn ambush")
             _oldsoul_SpawnAmbush(self)
         end
     end
@@ -118,7 +118,7 @@ function soulslike_scenario_logic_factory.create_by_id(scenario_id, state)
     local _oldsoul_OnRespawn = cap_obj.OnRespawn
     function cap_obj:OnRespawn()
         if dwimg_mcm.get_config("main_settings/soulslike_overwrite") == 1 and dwimg_mcm.get_config("main_settings/on_off") == 2 then
-                cap_obj:SpawnAmbush()
+            cap_obj:SpawnAmbush()
             return
         else
             _oldsoul_OnRespawn(self)
@@ -169,9 +169,26 @@ function soulslike_scenario_logic_factory.create_by_id(scenario_id, state)
             _oldsoul_force_save(self)
         end
     end
+end
 
+_oldsoul_create_by_id = soulslike_scenario_logic_factory.create_by_id
+function soulslike_scenario_logic_factory.create_by_id(scenario_id, state)
+    cap_obj = _oldsoul_create_by_id(scenario_id, state)
+    overwrite_souls_functions()
+    souls_id = scenario_id
     return cap_obj
 end
+
+_oldsoul_create_new = soulslike_scenario_logic_factory.create_new
+function soulslike_scenario_logic_factory.create_new(hits)
+    cap_obj =  _oldsoul_create_new(hits)
+    dwimg_utils.print_dbg("dwimg soul nilled")
+    soul_looter = cap_obj.logic_state.looter_id and level.object_by_id(cap_obj.logic_state.looter_id) or nil
+    souls_stash = nil
+    return cap_obj
+end
+
+
 
 
 

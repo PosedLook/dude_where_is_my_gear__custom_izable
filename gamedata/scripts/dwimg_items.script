@@ -590,6 +590,25 @@ function itr_inv(temp, item)
 		end
 	end
 
+	--soulslike_looter
+	if dwimg_soulslike.cap_obj and soulslike.IsSoulslikeMode and dwimg_main.config.soulslike_overwrite == 1 and dwimg_main.config.on_off == 2 then
+		dwimg_utils.print_dbg("dwimg soul test looter")
+		if dwimg_main.config.use_soulslike_tarkov_looter and dwimg_soulslike.soul_looter then
+			no_sec[tostring(item_id)] = true
+			if dwimg_soulslike.cap_obj:TryTarkovLooter(item, db.actor, dwimg_soulslike.soul_looter) then
+				dwimg_utils.print_dbg("dwimg soul tarkov looted")
+			end			
+		end
+		if ((lose and dwimg_main.config.loot_lost) or (drop and dwimg_main.config.loot_dropped)) and dwimg_main.config.use_soulslike_stalker_looter and dwimg_soulslike.souls_stash and dwimg_soulslike.cap_obj.logic_state.looter_type == soulslike.entity_type.Stalker and dwimg_soulslike.soul_looter then
+			if dwimg_soulslike.cap_obj:TryStalkerLooter(item, dwimg_main.r_obj, dwimg_soulslike.soul_looter) then
+				dwimg_utils.print_dbg("dwimg soul stalker looted")
+				dwimg_main.add_to_dropped_item_list(item, 'l', dwimg_main.dropped_stash.id)
+				return
+			end
+		end
+	end
+
+
 	--drop loss keep
 	if lose then
 		-- I've noticed that for some reason bolts cannot be alife_released properly,

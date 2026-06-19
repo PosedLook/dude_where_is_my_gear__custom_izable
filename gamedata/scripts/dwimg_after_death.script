@@ -44,22 +44,26 @@ function actor_on_first_update()
 	end
     local sleep = dwimg_utils.get_sleep_state()
 	if sleep.dead then
-		if db.actor.bleeding > 0 then
-			dwimg_utils.print_dbg("Leftover bleeding " .. db.actor.bleeding)
-		elseif sleep.bleed > 0 then
-			dwimg_utils.print_dbg("Denied bleeding " .. sleep.bleed)
-		else
-			dwimg_utils.print_dbg("Never bleeded " .. db.actor.bleeding)
-		end
 		dwimg_utils.print_dbg("No longer an undead first update")
 		db.actor.bleeding = 1
 		db.actor.health = sleep.healing
 		db.actor.psy_health = 1
 		db.actor.power = 1
+		db.actor.radiation = 0
+		db.actor:set_health_ex(sleep.healing)
 		bind_stalker_ext.invulnerable_time = time_global() - 1
-		
+    	flags.ret_value = false		
+		if zzz_player_injuries then
+			zzz_player_injuries.health.head=zzz_player_injuries.maxhp.head
+			zzz_player_injuries.health.torso=zzz_player_injuries.maxhp.torso
+			zzz_player_injuries.health.leftarm=zzz_player_injuries.maxhp.leftarm
+			zzz_player_injuries.health.rightarm=zzz_player_injuries.maxhp.rightarm
+			zzz_player_injuries.health.leftleg=zzz_player_injuries.maxhp.leftleg
+			zzz_player_injuries.health.rightleg=zzz_player_injuries.maxhp.rightleg
+		end
+
 		if sleep.health_status_msg and sleep.wounds_status_msg then
-			db.actor:give_game_news("Recovery", sleep.wounds_status_msg .. sleep.health_status_msg, "ui_inGame2_neutral_2_mask", 0, 20000)
+			--db.actor:give_game_news("Recovery", sleep.wounds_status_msg .. sleep.health_status_msg, "ui_inGame2_neutral_2_mask", 0, 20000)
 		end
 		
 		if not ((db.actor:character_rank() - sleep.rank < dwimg_main.config.gained_rank_exemption) or (dwimg_main.config.passed_time_exemption > (dwimg_utils.get_game_seconds() - sleep.time)/3600)) then

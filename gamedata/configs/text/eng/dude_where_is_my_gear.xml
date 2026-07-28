@@ -164,6 +164,14 @@
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_tarkov_looter_desc">
 		<text>Small chance for a looter to steal a single weapon part</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_respawn_point">
+		<text>Use Soulslike respawn point [i]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_respawn_point_desc">
+		<text>Allows to set a respawn point at resting sites via the sleep pop-up.</text>
 	</string>	
 
     <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">

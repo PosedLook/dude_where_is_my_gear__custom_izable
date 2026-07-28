@@ -3,6 +3,10 @@ cap_obj = nil
 souls_stash = nil
 souls_id = 0
 
+-- ==============================================================
+-- SOULSLIKE SCENARIO
+-- ==============================================================
+
 _oldsoul_is_soulslike = soulslike.IsSoulslikeMode
 function soulslike.IsSoulslikeMode()
     if dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_mcm.get_config("main_settings/force_soulslike") == true then
@@ -77,7 +81,7 @@ function overwrite_souls_functions()
 
     local _oldsoul_TransferItem = cap_obj.TransferItem
     function cap_obj:TransferItem(item, container, looter)
-        if and dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/on_off") == 2 then
             return
         else
             _oldsoul_TransferItem(self, item, container, looter)
@@ -188,7 +192,38 @@ function soulslike_scenario_logic_factory.create_new(hits)
     return cap_obj
 end
 
+-- ==============================================================
+-- SOULSLIKE SLEEP DIALOG
+-- ==============================================================
 
+_InitControls = ui_sleep_dialog.UISleep.InitControls
+_oldsoul_InitControls = soulslike_sleep_dialog.ui_sleep_dialog.UISleep.InitControls
+function ui_sleep_dialog.UISleep.InitControls(self)
+    if dwimg_mcm.get_config("main_settings/on_off") == 2 and not(dwimg_main.config.use_soulslike_respawn_point) then
+        _InitControls(self)
+        return
+    else
+        _oldsoul_InitControls(self)
+    end   
+end
 
+_OnButtonSleep = ui_sleep_dialog.UISleep.OnButtonSleep
+_oldsoul_OnButtonSleep = ui_sleep_dialog.UISleep.OnButtonSleep
+function ui_sleep_dialog.UISleep.OnButtonSleep(self) 
+    if dwimg_mcm.get_config("main_settings/on_off") == 2 and not(dwimg_main.config.use_soulslike_respawn_point) then
+        _OnButtonSleep(self)
+        return
+    else
+        _oldsoul_OnButtonSleep(self)
+    end  
+end
 
-
+_oldsoul_OnButtonSetSpawn = ui_sleep_dialog.UISleep.OnButtonSetSpawn
+function ui_sleep_dialog.UISleep:OnButtonSetSpawn()
+    if dwimg_mcm.get_config("main_settings/on_off") == 2 and dwimg_main.config.use_soulslike_respawn_point then
+        dwimg_respawn.save_position()
+        return
+    else
+        _oldsoul_OnButtonSetSpawn(self)
+    end  
+end

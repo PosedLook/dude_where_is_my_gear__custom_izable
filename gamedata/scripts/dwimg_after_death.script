@@ -37,6 +37,21 @@ local function handle_stashes()
 	end
 end
 
+function actor_on_movement_changed()
+	bind_stalker_ext.invulnerable_time = time_global() - 1
+	db.actor.radiation = 0
+	if zzz_player_injuries then
+		zzz_player_injuries.health.head=zzz_player_injuries.maxhp.head
+		zzz_player_injuries.health.torso=zzz_player_injuries.maxhp.torso
+		zzz_player_injuries.health.leftarm=zzz_player_injuries.maxhp.leftarm
+		zzz_player_injuries.health.rightarm=zzz_player_injuries.maxhp.rightarm
+		zzz_player_injuries.health.leftleg=zzz_player_injuries.maxhp.leftleg
+		zzz_player_injuries.health.rightleg=zzz_player_injuries.maxhp.rightleg
+	end
+	dwimg_utils.print_dbg("No longer invincible")
+	UnregisterScriptCallback("actor_on_movement_changed",actor_on_movement_changed)	
+end
+
 -- sets stats (e.g. health) and re-inits some variables 
 function actor_on_first_update()
     if dwimg_main.config.on_off == 0 then
@@ -45,14 +60,13 @@ function actor_on_first_update()
     local sleep = dwimg_utils.get_sleep_state()
 	if sleep.dead then
 		dwimg_utils.print_dbg("No longer an undead first update")
+		bind_stalker_ext.invulnerable_time = time_global() + 999999
 		db.actor.bleeding = 1
 		db.actor.health = sleep.healing
 		db.actor.psy_health = 1
 		db.actor.power = 1
 		db.actor.radiation = 0
 		db.actor:set_health_ex(sleep.healing)
-		bind_stalker_ext.invulnerable_time = time_global() - 1
-    	flags.ret_value = false		
 		if zzz_player_injuries then
 			zzz_player_injuries.health.head=zzz_player_injuries.maxhp.head
 			zzz_player_injuries.health.torso=zzz_player_injuries.maxhp.torso
@@ -78,6 +92,7 @@ function actor_on_first_update()
 		--get_console():execute("hud_draw on")
 		sleep.dead = false
 		dwimg_utils.print_dbg("No longer undead")
+		RegisterScriptCallback("actor_on_movement_changed",actor_on_movement_changed)
 	end
 end
 

@@ -21,6 +21,7 @@ function on_mcm_load()
 		{id = "loot_lost",       					type = "check", val = 1, def = false},
 		{id = "loot_dropped",       				type = "check", val = 1, def = false},
 		{id = "use_soulslike_tarkov_looter",     	type = "check", val = 1, def = false},
+		{id = "use_soulslike_respawn_point",     	type = "check", val = 1, def = false},
 		{type = "title", text = ""},
 
 		--RF

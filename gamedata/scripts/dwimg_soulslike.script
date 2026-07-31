@@ -16,12 +16,26 @@ function soulslike.IsSoulslikeMode()
     end
 end
 
+_oldsoul_is_hardcore_save_enabled = soulslike_mcm.is_hardcore_save_enabled
+function soulslike_mcm.is_hardcore_save_enabled()
+    if dwimg_mcm.get_config("main_settings/on_off") == 2 then
+        if dwimg_mcm.get_config("main_settings/use_soulslike_save") == true then
+            return true
+        else
+            return false
+        end
+    else
+        return _oldsoul_is_hardcore_save_enabled
+    end
+end
+
 _oldsoul_clear = soulslike_classes.TimedQueue.Clear
 function soulslike_classes.TimedQueue:Clear()
     dwimg_utils.print_dbg("dwimg soul ended without/after scenario")
     continue_soulslike = 2
     _oldsoul_clear(self)
 end
+
 
 function overwrite_souls_functions()
     dwimg_utils.print_dbg("dwimg soul overwritten")

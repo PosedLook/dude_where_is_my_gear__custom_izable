@@ -14,7 +14,9 @@ function on_mcm_load()
 		{type = "title", text = ""},
 		{id = "desc_mcm", 							type = "desc", text = "ui_mcm_dwimg_soulslike_desc", clr = {255, 255 ,255 ,255}, },
 		{id = "force_soulslike",	              	type = "check", val = 1, def = false},		
-		{type = "title", text = ""},		
+		{type = "title", text = ""},
+		{id = "use_soulslike_save",              	type = "check", val = 1, def = false},
+		{type = "title", text = ""},				
 		{id = "use_soulslike_ambush",              	type = "check", val = 1, def = false},
 		{type = "title", text = ""},		
 		{id = "use_soulslike_stalker_looter",       type = "check", val = 1, def = false},
@@ -319,8 +321,7 @@ function on_mcm_load()
 	
 	local debug = {id = "debug", text = "ui_mcm_dwimg_debug", sh = true, gr = {
 		{id = "display_issue",              		type = "check", val = 1, def = true},
-		{id = "print_preset",	                 	type = "check", val = 1, def = false},
-		{id = "edit_preset",	                 	type = "check", val = 1, def = false},
+		{id = "print_preset",	                 	type = "check", val = 1, def = true},
 	}}
 	table.insert(op.gr, debug)
 	

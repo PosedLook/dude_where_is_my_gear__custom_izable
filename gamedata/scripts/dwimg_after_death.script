@@ -49,6 +49,10 @@ function actor_on_movement_changed()
 		zzz_player_injuries.health.rightleg=zzz_player_injuries.maxhp.rightleg
 	end
 	dwimg_utils.print_dbg("No longer invincible")
+	--soulslike respawn hardcore save
+	if soulslike and soulslike_mcm and soulslike_mcm.is_hardcore_save_enabled() and soulslike.IsSoulslikeMode() then
+		soulslike.force_save("respawn")
+	end
 	UnregisterScriptCallback("actor_on_movement_changed",actor_on_movement_changed)	
 end
 

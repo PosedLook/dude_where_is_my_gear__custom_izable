@@ -131,11 +131,15 @@
 	</string>
 
     <string id="ui_mcm_dwimg_soulslike_desc">
-		<text>Jabbers Soulslike integration (Install this mod after Jabbers Soulslike / with higher priority! Will use certain Jabbers Soulslike MCM settings.)</text>
+		<text>Jabbers Soulslike integration (Install this mod with higher priority! Will use certain Jabbers Soulslike MCM settings.)</text>
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_force_soulslike">
 		<text>Use integrations even if Soulslike is disabled</text>
+	</string>
+
+    <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_save">
+		<text>Use Soulslike hardcore saves</text>
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_ambush">
@@ -167,11 +171,11 @@
 	</string>
 
     <string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_respawn_point">
-		<text>Use Soulslike respawn point [i]</text>
+		<text>Use Soulslike respawn point [!]</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_main_settings_use_soulslike_respawn_point_desc">
-		<text>Allows to set a respawn point at resting sites via the sleep pop-up.</text>
+		<text>Allows to set a respawn point at resting sites via the sleep pop-up. !Need to reload the game after changing this setting!</text>
 	</string>	
 
     <string id="ui_mcm_dude_where_is_my_gear_money_min_money_percentage">
@@ -993,7 +997,11 @@
 	</string>
 	
 	<string id="ui_mcm_dude_where_is_my_gear_character_quest_fail_chance">
-		<text>Chance to fail a secondary quest</text>
+		<text>Chance to fail a secondary quest [!]</text>
+	</string>
+
+	<string id="ui_mcm_dude_where_is_my_gear_character_quest_fail_chance_desc">
+		<text>!May fail non-story quests that are not replayable (e.g. Hip quest)!</text>
 	</string>
 
 	<string id="ui_mcm_dude_where_is_my_gear_day_time_time_skip_enable_wake_hours">
